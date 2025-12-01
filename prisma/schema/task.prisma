@@ -1,0 +1,26 @@
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  status      TaskStatus @default(PENDING)
+  priority    Int        @default(1)
+
+  // Assigned to Employee
+  employeeId String
+  employee   Employee @relation("EmployeeTasks", fields: [employeeId], references: [id])
+
+  // Assigned by Manager/Admin
+  assignedByManagerId String?
+  assignedByManager   Manager? @relation("AssignedByManager", fields: [assignedByManagerId], references: [id])
+
+  assignedByAdminId String?
+  assignedByAdmin   Admin?  @relation("AssignedByAdmin", fields: [assignedByAdminId], references: [id])
+
+  // Related system
+  systemId String
+  system   System @relation(fields: [systemId], references: [id])
+
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

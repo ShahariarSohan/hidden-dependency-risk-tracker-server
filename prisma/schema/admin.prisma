@@ -1,0 +1,8 @@
+model Admin {
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [id], references: [id])
+  name          String
+  assignedTasks Task[]   @relation("AssignedByAdmin")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

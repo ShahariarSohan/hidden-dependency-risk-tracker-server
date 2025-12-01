@@ -1,0 +1,11 @@
+model System {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  criticality Int      @default(1)
+  teamId      String?
+  team        Team?    @relation(fields: [teamId], references: [id])
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
