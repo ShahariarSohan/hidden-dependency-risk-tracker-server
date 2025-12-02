@@ -5,6 +5,7 @@ model Admin {
   name          String
   contactNumber String
   assignedTasks Task[]   @relation("AssignedByAdmin")
+  isDeleted     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   @@map("admins")

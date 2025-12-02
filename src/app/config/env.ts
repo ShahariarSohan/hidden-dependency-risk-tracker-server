@@ -11,6 +11,10 @@ interface EnvConfig {
   ADMIN_PASSWORD: string;
   BCRYPT_SALT_ROUND: string;
   ADMIN_CONTACT_NUMBER: string;
+  ACCESS_TOKEN_SECRET: string;
+  REFRESH_TOKEN_SECRET: string;
+  ACCESS_TOKEN_EXPIRES_IN: string;
+  REFRESH_TOKEN_EXPIRES_IN: string;
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -23,6 +27,10 @@ const loadEnvVariables = (): EnvConfig => {
     "ADMIN_PASSWORD",
     "BCRYPT_SALT_ROUND",
     "ADMIN_CONTACT_NUMBER",
+    "ACCESS_TOKEN_SECRET",
+    "REFRESH_TOKEN_SECRET",
+    "ACCESS_TOKEN_EXPIRES_IN",
+    "REFRESH_TOKEN_EXPIRES_IN",
   ];
   requiredVariables.forEach((key) => {
     if (!process.env[key]) {
@@ -39,6 +47,10 @@ const loadEnvVariables = (): EnvConfig => {
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
     BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string,
     ADMIN_CONTACT_NUMBER: process.env.ADMIN_CONTACT_NUMBER as string,
+    ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
+    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET as string,
+    ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
+    REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
   };
 };
 

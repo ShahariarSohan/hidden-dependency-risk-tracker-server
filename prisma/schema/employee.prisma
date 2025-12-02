@@ -7,6 +7,7 @@ model Employee {
   contactNumber String
   team      Team?    @relation(fields: [teamId], references: [id])
   tasks     Task[]   @relation("EmployeeTasks")
+  isDeleted Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("employees")

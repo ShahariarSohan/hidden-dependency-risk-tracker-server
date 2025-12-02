@@ -1,12 +1,19 @@
+import  httpStatus  from 'http-status-codes';
 import bcrypt from "bcrypt";
 import { Employee, Manager } from "../../../../prisma/generated/client";
 import { prisma } from "../../config/prisma";
 import { envVariables } from "../../config/env";
 import { IEmployee, IManager } from "../../interfaces/user.interface";
 import { UserRole } from "../../interfaces/userRole";
+import AppError from "../../errorHelpers/AppError";
 
 const createEmployee = async (employeeData: IEmployee): Promise<Employee> => {
-    console.log(employeeData)
+    const existingUser = await prisma.user.findUnique({
+      where: { email: employeeData.email },
+    });
+    if (existingUser) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Email already exists");
+    }
   const hashedPassword: string = await bcrypt.hash(
     employeeData.password,
     Number(envVariables.BCRYPT_SALT_ROUND)
@@ -37,6 +44,12 @@ const createEmployee = async (employeeData: IEmployee): Promise<Employee> => {
   return result;
 };
 const createManager = async (managerData: IManager): Promise<Manager> => {
+    const existingUser = await prisma.user.findUnique({
+      where: { email: managerData.email },
+    });
+    if (existingUser) {
+      throw new AppError(httpStatus.BAD_REQUEST,"Email already exists");
+    }
   const hashedPassword: string = await bcrypt.hash(
     managerData.password,
     Number(envVariables.BCRYPT_SALT_ROUND)

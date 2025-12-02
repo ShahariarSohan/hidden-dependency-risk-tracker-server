@@ -6,6 +6,7 @@ model System {
   teamId      String?
   team        Team?    @relation(fields: [teamId], references: [id])
   tasks       Task[]
+  status    Status     @default(ACTIVE)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   @@unique([name,teamId])
