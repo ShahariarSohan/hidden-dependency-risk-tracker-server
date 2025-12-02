@@ -1,6 +1,7 @@
 model Admin {
   id            String   @id @default(uuid())
-  user          User     @relation(fields: [id], references: [id])
+  email     String     @unique
+  user          User     @relation(fields: [email], references: [email])
   name          String
   assignedTasks Task[]   @relation("AssignedByAdmin")
   createdAt     DateTime @default(now())

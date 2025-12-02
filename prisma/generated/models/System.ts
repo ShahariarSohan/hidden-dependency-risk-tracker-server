@@ -250,6 +250,7 @@ export type SystemOrderByWithRelationInput = {
 
 export type SystemWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  name_teamId?: Prisma.SystemNameTeamIdCompoundUniqueInput
   AND?: Prisma.SystemWhereInput | Prisma.SystemWhereInput[]
   OR?: Prisma.SystemWhereInput[]
   NOT?: Prisma.SystemWhereInput | Prisma.SystemWhereInput[]
@@ -261,7 +262,7 @@ export type SystemWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"System"> | Date | string
   team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   tasks?: Prisma.TaskListRelationFilter
-}, "id">
+}, "id" | "name_teamId">
 
 export type SystemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -362,6 +363,11 @@ export type SystemUncheckedUpdateManyInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SystemNameTeamIdCompoundUniqueInput = {
+  name: string
+  teamId: string
 }
 
 export type SystemCountOrderByAggregateInput = {

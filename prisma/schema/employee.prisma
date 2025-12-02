@@ -1,7 +1,8 @@
 model Employee {
   id        String   @id @default(uuid())
   name      String
-  user      User     @relation(fields: [id], references: [id])
+  email     String     @unique
+  user          User     @relation(fields: [email], references: [email])
   teamId    String?
   team      Team?    @relation(fields: [teamId], references: [id])
   tasks     Task[]   @relation("EmployeeTasks")

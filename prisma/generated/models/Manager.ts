@@ -27,6 +27,7 @@ export type AggregateManager = {
 export type ManagerMinAggregateOutputType = {
   id: string | null
   name: string | null
+  email: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -34,6 +35,7 @@ export type ManagerMinAggregateOutputType = {
 export type ManagerMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  email: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -41,6 +43,7 @@ export type ManagerMaxAggregateOutputType = {
 export type ManagerCountAggregateOutputType = {
   id: number
   name: number
+  email: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -50,6 +53,7 @@ export type ManagerCountAggregateOutputType = {
 export type ManagerMinAggregateInputType = {
   id?: true
   name?: true
+  email?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -57,6 +61,7 @@ export type ManagerMinAggregateInputType = {
 export type ManagerMaxAggregateInputType = {
   id?: true
   name?: true
+  email?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -64,6 +69,7 @@ export type ManagerMaxAggregateInputType = {
 export type ManagerCountAggregateInputType = {
   id?: true
   name?: true
+  email?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -144,6 +150,7 @@ export type ManagerGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type ManagerGroupByOutputType = {
   id: string
   name: string
+  email: string
   createdAt: Date
   updatedAt: Date
   _count: ManagerCountAggregateOutputType | null
@@ -172,6 +179,7 @@ export type ManagerWhereInput = {
   NOT?: Prisma.ManagerWhereInput | Prisma.ManagerWhereInput[]
   id?: Prisma.StringFilter<"Manager"> | string
   name?: Prisma.StringFilter<"Manager"> | string
+  email?: Prisma.StringFilter<"Manager"> | string
   createdAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -181,6 +189,7 @@ export type ManagerWhereInput = {
 export type ManagerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -189,6 +198,7 @@ export type ManagerOrderByWithRelationInput = {
 
 export type ManagerWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  email?: string
   AND?: Prisma.ManagerWhereInput | Prisma.ManagerWhereInput[]
   OR?: Prisma.ManagerWhereInput[]
   NOT?: Prisma.ManagerWhereInput | Prisma.ManagerWhereInput[]
@@ -197,11 +207,12 @@ export type ManagerWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   assignedTasks?: Prisma.TaskListRelationFilter
-}, "id">
+}, "id" | "email">
 
 export type ManagerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ManagerCountOrderByAggregateInput
@@ -215,37 +226,42 @@ export type ManagerScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ManagerScalarWhereWithAggregatesInput | Prisma.ManagerScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   name?: Prisma.StringWithAggregatesFilter<"Manager"> | string
+  email?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Manager"> | Date | string
 }
 
 export type ManagerCreateInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutManagersInput
+  user: Prisma.UserCreateNestedOneWithoutManagerInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedByManagerInput
 }
 
 export type ManagerUncheckedCreateInput = {
   id?: string
   name: string
+  email: string
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedByManagerInput
 }
 
 export type ManagerUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutManagersNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutManagerNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedByManagerNestedInput
 }
 
 export type ManagerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedByManagerNestedInput
@@ -254,11 +270,13 @@ export type ManagerUncheckedUpdateInput = {
 export type ManagerCreateManyInput = {
   id?: string
   name: string
+  email: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ManagerUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -267,6 +285,7 @@ export type ManagerUpdateManyMutationInput = {
 export type ManagerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -274,6 +293,7 @@ export type ManagerUncheckedUpdateManyInput = {
 export type ManagerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -281,6 +301,7 @@ export type ManagerCountOrderByAggregateInput = {
 export type ManagerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -288,6 +309,7 @@ export type ManagerMaxOrderByAggregateInput = {
 export type ManagerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -295,16 +317,6 @@ export type ManagerMinOrderByAggregateInput = {
 export type ManagerNullableScalarRelationFilter = {
   is?: Prisma.ManagerWhereInput | null
   isNot?: Prisma.ManagerWhereInput | null
-}
-
-export type ManagerListRelationFilter = {
-  every?: Prisma.ManagerWhereInput
-  some?: Prisma.ManagerWhereInput
-  none?: Prisma.ManagerWhereInput
-}
-
-export type ManagerOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type ManagerCreateNestedOneWithoutAssignedTasksInput = {
@@ -323,58 +335,50 @@ export type ManagerUpdateOneWithoutAssignedTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ManagerUpdateToOneWithWhereWithoutAssignedTasksInput, Prisma.ManagerUpdateWithoutAssignedTasksInput>, Prisma.ManagerUncheckedUpdateWithoutAssignedTasksInput>
 }
 
-export type ManagerCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput> | Prisma.ManagerCreateWithoutUserInput[] | Prisma.ManagerUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutUserInput | Prisma.ManagerCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ManagerCreateManyUserInputEnvelope
-  connect?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
+export type ManagerCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutUserInput
+  connect?: Prisma.ManagerWhereUniqueInput
 }
 
-export type ManagerUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput> | Prisma.ManagerCreateWithoutUserInput[] | Prisma.ManagerUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutUserInput | Prisma.ManagerCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ManagerCreateManyUserInputEnvelope
-  connect?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
+export type ManagerUncheckedCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutUserInput
+  connect?: Prisma.ManagerWhereUniqueInput
 }
 
-export type ManagerUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput> | Prisma.ManagerCreateWithoutUserInput[] | Prisma.ManagerUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutUserInput | Prisma.ManagerCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ManagerUpsertWithWhereUniqueWithoutUserInput | Prisma.ManagerUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ManagerCreateManyUserInputEnvelope
-  set?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
-  disconnect?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
-  delete?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
-  connect?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
-  update?: Prisma.ManagerUpdateWithWhereUniqueWithoutUserInput | Prisma.ManagerUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ManagerUpdateManyWithWhereWithoutUserInput | Prisma.ManagerUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.ManagerScalarWhereInput | Prisma.ManagerScalarWhereInput[]
+export type ManagerUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutUserInput
+  upsert?: Prisma.ManagerUpsertWithoutUserInput
+  disconnect?: Prisma.ManagerWhereInput | boolean
+  delete?: Prisma.ManagerWhereInput | boolean
+  connect?: Prisma.ManagerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ManagerUpdateToOneWithWhereWithoutUserInput, Prisma.ManagerUpdateWithoutUserInput>, Prisma.ManagerUncheckedUpdateWithoutUserInput>
 }
 
-export type ManagerUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput> | Prisma.ManagerCreateWithoutUserInput[] | Prisma.ManagerUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutUserInput | Prisma.ManagerCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ManagerUpsertWithWhereUniqueWithoutUserInput | Prisma.ManagerUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ManagerCreateManyUserInputEnvelope
-  set?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
-  disconnect?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
-  delete?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
-  connect?: Prisma.ManagerWhereUniqueInput | Prisma.ManagerWhereUniqueInput[]
-  update?: Prisma.ManagerUpdateWithWhereUniqueWithoutUserInput | Prisma.ManagerUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ManagerUpdateManyWithWhereWithoutUserInput | Prisma.ManagerUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.ManagerScalarWhereInput | Prisma.ManagerScalarWhereInput[]
+export type ManagerUncheckedUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutUserInput
+  upsert?: Prisma.ManagerUpsertWithoutUserInput
+  disconnect?: Prisma.ManagerWhereInput | boolean
+  delete?: Prisma.ManagerWhereInput | boolean
+  connect?: Prisma.ManagerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ManagerUpdateToOneWithWhereWithoutUserInput, Prisma.ManagerUpdateWithoutUserInput>, Prisma.ManagerUncheckedUpdateWithoutUserInput>
 }
 
 export type ManagerCreateWithoutAssignedTasksInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutManagersInput
+  user: Prisma.UserCreateNestedOneWithoutManagerInput
 }
 
 export type ManagerUncheckedCreateWithoutAssignedTasksInput = {
   id?: string
   name: string
+  email: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -396,20 +400,23 @@ export type ManagerUpdateToOneWithWhereWithoutAssignedTasksInput = {
 }
 
 export type ManagerUpdateWithoutAssignedTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutManagersNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutManagerNestedInput
 }
 
 export type ManagerUncheckedUpdateWithoutAssignedTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ManagerCreateWithoutUserInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -417,6 +424,7 @@ export type ManagerCreateWithoutUserInput = {
 }
 
 export type ManagerUncheckedCreateWithoutUserInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -428,44 +436,19 @@ export type ManagerCreateOrConnectWithoutUserInput = {
   create: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput>
 }
 
-export type ManagerCreateManyUserInputEnvelope = {
-  data: Prisma.ManagerCreateManyUserInput | Prisma.ManagerCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type ManagerUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.ManagerWhereUniqueInput
+export type ManagerUpsertWithoutUserInput = {
   update: Prisma.XOR<Prisma.ManagerUpdateWithoutUserInput, Prisma.ManagerUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.ManagerCreateWithoutUserInput, Prisma.ManagerUncheckedCreateWithoutUserInput>
+  where?: Prisma.ManagerWhereInput
 }
 
-export type ManagerUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.ManagerWhereUniqueInput
+export type ManagerUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.ManagerWhereInput
   data: Prisma.XOR<Prisma.ManagerUpdateWithoutUserInput, Prisma.ManagerUncheckedUpdateWithoutUserInput>
 }
 
-export type ManagerUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.ManagerScalarWhereInput
-  data: Prisma.XOR<Prisma.ManagerUpdateManyMutationInput, Prisma.ManagerUncheckedUpdateManyWithoutUserInput>
-}
-
-export type ManagerScalarWhereInput = {
-  AND?: Prisma.ManagerScalarWhereInput | Prisma.ManagerScalarWhereInput[]
-  OR?: Prisma.ManagerScalarWhereInput[]
-  NOT?: Prisma.ManagerScalarWhereInput | Prisma.ManagerScalarWhereInput[]
-  id?: Prisma.StringFilter<"Manager"> | string
-  name?: Prisma.StringFilter<"Manager"> | string
-  createdAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
-}
-
-export type ManagerCreateManyUserInput = {
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
 export type ManagerUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -473,16 +456,11 @@ export type ManagerUpdateWithoutUserInput = {
 }
 
 export type ManagerUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedByManagerNestedInput
-}
-
-export type ManagerUncheckedUpdateManyWithoutUserInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -519,6 +497,7 @@ export type ManagerCountOutputTypeCountAssignedTasksArgs<ExtArgs extends runtime
 export type ManagerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  email?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -529,6 +508,7 @@ export type ManagerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type ManagerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  email?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -537,6 +517,7 @@ export type ManagerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type ManagerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  email?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -545,11 +526,12 @@ export type ManagerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type ManagerSelectScalar = {
   id?: boolean
   name?: boolean
+  email?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ManagerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["manager"]>
+export type ManagerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "createdAt" | "updatedAt", ExtArgs["result"]["manager"]>
 export type ManagerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.Manager$assignedTasksArgs<ExtArgs>
@@ -571,6 +553,7 @@ export type $ManagerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    email: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["manager"]>
@@ -1000,6 +983,7 @@ export interface Prisma__ManagerClient<T, Null = never, ExtArgs extends runtime.
 export interface ManagerFieldRefs {
   readonly id: Prisma.FieldRef<"Manager", 'String'>
   readonly name: Prisma.FieldRef<"Manager", 'String'>
+  readonly email: Prisma.FieldRef<"Manager", 'String'>
   readonly createdAt: Prisma.FieldRef<"Manager", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Manager", 'DateTime'>
 }

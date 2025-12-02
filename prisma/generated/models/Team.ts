@@ -189,15 +189,15 @@ export type TeamOrderByWithRelationInput = {
 
 export type TeamWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  name?: string
   AND?: Prisma.TeamWhereInput | Prisma.TeamWhereInput[]
   OR?: Prisma.TeamWhereInput[]
   NOT?: Prisma.TeamWhereInput | Prisma.TeamWhereInput[]
-  name?: Prisma.StringFilter<"Team"> | string
   createdAt?: Prisma.DateTimeFilter<"Team"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Team"> | Date | string
   employees?: Prisma.EmployeeListRelationFilter
   systems?: Prisma.SystemListRelationFilter
-}, "id">
+}, "id" | "name">
 
 export type TeamOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

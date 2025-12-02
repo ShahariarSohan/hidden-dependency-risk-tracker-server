@@ -78,6 +78,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const AdminScalarFieldEnum = {
   id: 'id',
+  email: 'email',
   name: 'name',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -89,6 +90,7 @@ export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof Ad
 export const EmployeeScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  email: 'email',
   teamId: 'teamId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -100,6 +102,7 @@ export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typ
 export const ManagerScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  email: 'email',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

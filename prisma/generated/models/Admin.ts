@@ -26,6 +26,7 @@ export type AggregateAdmin = {
 
 export type AdminMinAggregateOutputType = {
   id: string | null
+  email: string | null
   name: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -33,6 +34,7 @@ export type AdminMinAggregateOutputType = {
 
 export type AdminMaxAggregateOutputType = {
   id: string | null
+  email: string | null
   name: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -40,6 +42,7 @@ export type AdminMaxAggregateOutputType = {
 
 export type AdminCountAggregateOutputType = {
   id: number
+  email: number
   name: number
   createdAt: number
   updatedAt: number
@@ -49,6 +52,7 @@ export type AdminCountAggregateOutputType = {
 
 export type AdminMinAggregateInputType = {
   id?: true
+  email?: true
   name?: true
   createdAt?: true
   updatedAt?: true
@@ -56,6 +60,7 @@ export type AdminMinAggregateInputType = {
 
 export type AdminMaxAggregateInputType = {
   id?: true
+  email?: true
   name?: true
   createdAt?: true
   updatedAt?: true
@@ -63,6 +68,7 @@ export type AdminMaxAggregateInputType = {
 
 export type AdminCountAggregateInputType = {
   id?: true
+  email?: true
   name?: true
   createdAt?: true
   updatedAt?: true
@@ -143,6 +149,7 @@ export type AdminGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type AdminGroupByOutputType = {
   id: string
+  email: string
   name: string
   createdAt: Date
   updatedAt: Date
@@ -171,6 +178,7 @@ export type AdminWhereInput = {
   OR?: Prisma.AdminWhereInput[]
   NOT?: Prisma.AdminWhereInput | Prisma.AdminWhereInput[]
   id?: Prisma.StringFilter<"Admin"> | string
+  email?: Prisma.StringFilter<"Admin"> | string
   name?: Prisma.StringFilter<"Admin"> | string
   createdAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
@@ -180,6 +188,7 @@ export type AdminWhereInput = {
 
 export type AdminOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -189,6 +198,7 @@ export type AdminOrderByWithRelationInput = {
 
 export type AdminWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  email?: string
   AND?: Prisma.AdminWhereInput | Prisma.AdminWhereInput[]
   OR?: Prisma.AdminWhereInput[]
   NOT?: Prisma.AdminWhereInput | Prisma.AdminWhereInput[]
@@ -197,10 +207,11 @@ export type AdminWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   assignedTasks?: Prisma.TaskListRelationFilter
-}, "id">
+}, "id" | "email">
 
 export type AdminOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -214,21 +225,24 @@ export type AdminScalarWhereWithAggregatesInput = {
   OR?: Prisma.AdminScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AdminScalarWhereWithAggregatesInput | Prisma.AdminScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Admin"> | string
+  email?: Prisma.StringWithAggregatesFilter<"Admin"> | string
   name?: Prisma.StringWithAggregatesFilter<"Admin"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Admin"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Admin"> | Date | string
 }
 
 export type AdminCreateInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutAdminsInput
+  user: Prisma.UserCreateNestedOneWithoutAdminInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedByAdminInput
 }
 
 export type AdminUncheckedCreateInput = {
   id?: string
+  email: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -236,15 +250,17 @@ export type AdminUncheckedCreateInput = {
 }
 
 export type AdminUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAdminNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedByAdminNestedInput
 }
 
 export type AdminUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -253,12 +269,14 @@ export type AdminUncheckedUpdateInput = {
 
 export type AdminCreateManyInput = {
   id?: string
+  email: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type AdminUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -266,6 +284,7 @@ export type AdminUpdateManyMutationInput = {
 
 export type AdminUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -273,6 +292,7 @@ export type AdminUncheckedUpdateManyInput = {
 
 export type AdminCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -280,6 +300,7 @@ export type AdminCountOrderByAggregateInput = {
 
 export type AdminMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -287,6 +308,7 @@ export type AdminMaxOrderByAggregateInput = {
 
 export type AdminMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -295,16 +317,6 @@ export type AdminMinOrderByAggregateInput = {
 export type AdminNullableScalarRelationFilter = {
   is?: Prisma.AdminWhereInput | null
   isNot?: Prisma.AdminWhereInput | null
-}
-
-export type AdminListRelationFilter = {
-  every?: Prisma.AdminWhereInput
-  some?: Prisma.AdminWhereInput
-  none?: Prisma.AdminWhereInput
-}
-
-export type AdminOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -331,57 +343,49 @@ export type AdminUpdateOneWithoutAssignedTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutAssignedTasksInput, Prisma.AdminUpdateWithoutAssignedTasksInput>, Prisma.AdminUncheckedUpdateWithoutAssignedTasksInput>
 }
 
-export type AdminCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput> | Prisma.AdminCreateWithoutUserInput[] | Prisma.AdminUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutUserInput | Prisma.AdminCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AdminCreateManyUserInputEnvelope
-  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+export type AdminCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutUserInput
+  connect?: Prisma.AdminWhereUniqueInput
 }
 
-export type AdminUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput> | Prisma.AdminCreateWithoutUserInput[] | Prisma.AdminUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutUserInput | Prisma.AdminCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AdminCreateManyUserInputEnvelope
-  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+export type AdminUncheckedCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutUserInput
+  connect?: Prisma.AdminWhereUniqueInput
 }
 
-export type AdminUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput> | Prisma.AdminCreateWithoutUserInput[] | Prisma.AdminUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutUserInput | Prisma.AdminCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AdminUpsertWithWhereUniqueWithoutUserInput | Prisma.AdminUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AdminCreateManyUserInputEnvelope
-  set?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
-  disconnect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
-  delete?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
-  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
-  update?: Prisma.AdminUpdateWithWhereUniqueWithoutUserInput | Prisma.AdminUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AdminUpdateManyWithWhereWithoutUserInput | Prisma.AdminUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
+export type AdminUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutUserInput
+  upsert?: Prisma.AdminUpsertWithoutUserInput
+  disconnect?: Prisma.AdminWhereInput | boolean
+  delete?: Prisma.AdminWhereInput | boolean
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutUserInput, Prisma.AdminUpdateWithoutUserInput>, Prisma.AdminUncheckedUpdateWithoutUserInput>
 }
 
-export type AdminUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput> | Prisma.AdminCreateWithoutUserInput[] | Prisma.AdminUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutUserInput | Prisma.AdminCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AdminUpsertWithWhereUniqueWithoutUserInput | Prisma.AdminUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AdminCreateManyUserInputEnvelope
-  set?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
-  disconnect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
-  delete?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
-  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
-  update?: Prisma.AdminUpdateWithWhereUniqueWithoutUserInput | Prisma.AdminUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AdminUpdateManyWithWhereWithoutUserInput | Prisma.AdminUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
+export type AdminUncheckedUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutUserInput
+  upsert?: Prisma.AdminUpsertWithoutUserInput
+  disconnect?: Prisma.AdminWhereInput | boolean
+  delete?: Prisma.AdminWhereInput | boolean
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutUserInput, Prisma.AdminUpdateWithoutUserInput>, Prisma.AdminUncheckedUpdateWithoutUserInput>
 }
 
 export type AdminCreateWithoutAssignedTasksInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutAdminsInput
+  user: Prisma.UserCreateNestedOneWithoutAdminInput
 }
 
 export type AdminUncheckedCreateWithoutAssignedTasksInput = {
   id?: string
+  email: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -404,20 +408,23 @@ export type AdminUpdateToOneWithWhereWithoutAssignedTasksInput = {
 }
 
 export type AdminUpdateWithoutAssignedTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAdminNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutAssignedTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AdminCreateWithoutUserInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -425,6 +432,7 @@ export type AdminCreateWithoutUserInput = {
 }
 
 export type AdminUncheckedCreateWithoutUserInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -436,44 +444,19 @@ export type AdminCreateOrConnectWithoutUserInput = {
   create: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput>
 }
 
-export type AdminCreateManyUserInputEnvelope = {
-  data: Prisma.AdminCreateManyUserInput | Prisma.AdminCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type AdminUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.AdminWhereUniqueInput
+export type AdminUpsertWithoutUserInput = {
   update: Prisma.XOR<Prisma.AdminUpdateWithoutUserInput, Prisma.AdminUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.AdminCreateWithoutUserInput, Prisma.AdminUncheckedCreateWithoutUserInput>
+  where?: Prisma.AdminWhereInput
 }
 
-export type AdminUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.AdminWhereUniqueInput
+export type AdminUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.AdminWhereInput
   data: Prisma.XOR<Prisma.AdminUpdateWithoutUserInput, Prisma.AdminUncheckedUpdateWithoutUserInput>
 }
 
-export type AdminUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.AdminScalarWhereInput
-  data: Prisma.XOR<Prisma.AdminUpdateManyMutationInput, Prisma.AdminUncheckedUpdateManyWithoutUserInput>
-}
-
-export type AdminScalarWhereInput = {
-  AND?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
-  OR?: Prisma.AdminScalarWhereInput[]
-  NOT?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
-  id?: Prisma.StringFilter<"Admin"> | string
-  name?: Prisma.StringFilter<"Admin"> | string
-  createdAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
-}
-
-export type AdminCreateManyUserInput = {
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
 export type AdminUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -481,16 +464,11 @@ export type AdminUpdateWithoutUserInput = {
 }
 
 export type AdminUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedByAdminNestedInput
-}
-
-export type AdminUncheckedUpdateManyWithoutUserInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -526,6 +504,7 @@ export type AdminCountOutputTypeCountAssignedTasksArgs<ExtArgs extends runtime.T
 
 export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
   name?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -536,6 +515,7 @@ export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 
 export type AdminSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
   name?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -544,6 +524,7 @@ export type AdminSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type AdminSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
   name?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -552,12 +533,13 @@ export type AdminSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type AdminSelectScalar = {
   id?: boolean
+  email?: boolean
   name?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["admin"]>
+export type AdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["admin"]>
 export type AdminInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.Admin$assignedTasksArgs<ExtArgs>
@@ -578,6 +560,7 @@ export type $AdminPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    email: string
     name: string
     createdAt: Date
     updatedAt: Date
@@ -1007,6 +990,7 @@ export interface Prisma__AdminClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface AdminFieldRefs {
   readonly id: Prisma.FieldRef<"Admin", 'String'>
+  readonly email: Prisma.FieldRef<"Admin", 'String'>
   readonly name: Prisma.FieldRef<"Admin", 'String'>
   readonly createdAt: Prisma.FieldRef<"Admin", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Admin", 'DateTime'>
