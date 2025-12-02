@@ -5,4 +5,5 @@ model Manager {
   assignedTasks Task[]   @relation("AssignedByManager")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  @@map("managers")
 }

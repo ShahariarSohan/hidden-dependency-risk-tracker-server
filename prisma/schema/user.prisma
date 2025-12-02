@@ -5,7 +5,8 @@ model User {
   role      Role       @default(EMPLOYEE)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  admins    Admin[]
-  employees Employee[]
-  managers  Manager[]
+  admin    Admin?
+  employee Employee?
+  manager  Manager?
+  @@map("users")
 }

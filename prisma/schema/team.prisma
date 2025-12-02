@@ -1,8 +1,9 @@
 model Team {
   id        String     @id @default(uuid())
-  name      String
+  name      String    @unique
   employees Employee[]
   systems   System[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  @@map("teams")
 }
