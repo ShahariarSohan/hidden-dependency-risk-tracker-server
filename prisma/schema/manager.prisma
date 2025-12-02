@@ -1,7 +1,7 @@
 model Manager {
   id            String   @id @default(uuid())
   name          String
-  email     String     @unique
+  email         String     @unique
   user          User     @relation(fields: [email], references: [email])
   assignedTasks Task[]   @relation("AssignedByManager")
   contactNumber String
