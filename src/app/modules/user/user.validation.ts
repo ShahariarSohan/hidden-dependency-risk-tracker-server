@@ -1,10 +1,7 @@
 import { z } from "zod";
 
 export const createManagerZodSchema = z.object({
-  name: z.string({
-    error: "Name is required!",
-  }),
-
+  name: z.string().min(3, "Name must be minimum 3 characters"),
   email: z.email("Invalid email format"),
   password: z
     .string({
@@ -19,12 +16,8 @@ export const createManagerZodSchema = z.object({
     .regex(/^\d{11}$/, "Contact number must be exactly 11 digits"),
 });
 
-
 export const createEmployeeZodSchema = z.object({
-  name: z.string({
-    error: "Name is required!",
-  }),
-
+  name: z.string().min(3, "Name must be minimum 3 characters"),
   email: z.email("Invalid email format"),
 
   contactNumber: z

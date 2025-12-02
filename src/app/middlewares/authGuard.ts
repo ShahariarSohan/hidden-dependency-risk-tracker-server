@@ -31,7 +31,7 @@ const authGuard = (...roles: string[]) => {
       req.user = verifiedUser;
 
       if (roles.length && !roles.includes(verifiedUser.role)) {
-        throw new AppError(httpStatus.FORBIDDEN, "Forbidden!");
+        throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
       }
       next();
     } catch (err) {
