@@ -21,7 +21,17 @@ export type Role = (typeof Role)[keyof typeof Role]
 export const TaskStatus = {
   PENDING: 'PENDING',
   IN_PROGRESS: 'IN_PROGRESS',
+  CANCELLED: 'CANCELLED',
   DONE: 'DONE'
 } as const
 
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
+
+
+export const Status = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  DELETED: 'DELETED'
+} as const
+
+export type Status = (typeof Status)[keyof typeof Status]

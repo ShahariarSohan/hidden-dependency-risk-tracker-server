@@ -40,6 +40,7 @@ export type SystemMinAggregateOutputType = {
   description: string | null
   criticality: number | null
   teamId: string | null
+  status: $Enums.Status | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +51,7 @@ export type SystemMaxAggregateOutputType = {
   description: string | null
   criticality: number | null
   teamId: string | null
+  status: $Enums.Status | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +62,7 @@ export type SystemCountAggregateOutputType = {
   description: number
   criticality: number
   teamId: number
+  status: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -80,6 +83,7 @@ export type SystemMinAggregateInputType = {
   description?: true
   criticality?: true
   teamId?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -90,6 +94,7 @@ export type SystemMaxAggregateInputType = {
   description?: true
   criticality?: true
   teamId?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +105,7 @@ export type SystemCountAggregateInputType = {
   description?: true
   criticality?: true
   teamId?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -197,6 +203,7 @@ export type SystemGroupByOutputType = {
   description: string | null
   criticality: number
   teamId: string | null
+  status: $Enums.Status
   createdAt: Date
   updatedAt: Date
   _count: SystemCountAggregateOutputType | null
@@ -230,6 +237,7 @@ export type SystemWhereInput = {
   description?: Prisma.StringNullableFilter<"System"> | string | null
   criticality?: Prisma.IntFilter<"System"> | number
   teamId?: Prisma.StringNullableFilter<"System"> | string | null
+  status?: Prisma.EnumStatusFilter<"System"> | $Enums.Status
   createdAt?: Prisma.DateTimeFilter<"System"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"System"> | Date | string
   team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
@@ -242,6 +250,7 @@ export type SystemOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   criticality?: Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   team?: Prisma.TeamOrderByWithRelationInput
@@ -258,6 +267,7 @@ export type SystemWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"System"> | string | null
   criticality?: Prisma.IntFilter<"System"> | number
   teamId?: Prisma.StringNullableFilter<"System"> | string | null
+  status?: Prisma.EnumStatusFilter<"System"> | $Enums.Status
   createdAt?: Prisma.DateTimeFilter<"System"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"System"> | Date | string
   team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
@@ -270,6 +280,7 @@ export type SystemOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   criticality?: Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SystemCountOrderByAggregateInput
@@ -288,6 +299,7 @@ export type SystemScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"System"> | string | null
   criticality?: Prisma.IntWithAggregatesFilter<"System"> | number
   teamId?: Prisma.StringNullableWithAggregatesFilter<"System"> | string | null
+  status?: Prisma.EnumStatusWithAggregatesFilter<"System"> | $Enums.Status
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"System"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"System"> | Date | string
 }
@@ -297,6 +309,7 @@ export type SystemCreateInput = {
   name: string
   description?: string | null
   criticality?: number
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
   team?: Prisma.TeamCreateNestedOneWithoutSystemsInput
@@ -309,6 +322,7 @@ export type SystemUncheckedCreateInput = {
   description?: string | null
   criticality?: number
   teamId?: string | null
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutSystemInput
@@ -319,6 +333,7 @@ export type SystemUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   criticality?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   team?: Prisma.TeamUpdateOneWithoutSystemsNestedInput
@@ -331,6 +346,7 @@ export type SystemUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   criticality?: Prisma.IntFieldUpdateOperationsInput | number
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutSystemNestedInput
@@ -342,6 +358,7 @@ export type SystemCreateManyInput = {
   description?: string | null
   criticality?: number
   teamId?: string | null
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -351,6 +368,7 @@ export type SystemUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   criticality?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -361,6 +379,7 @@ export type SystemUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   criticality?: Prisma.IntFieldUpdateOperationsInput | number
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -376,6 +395,7 @@ export type SystemCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   criticality?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -390,6 +410,7 @@ export type SystemMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   criticality?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -400,6 +421,7 @@ export type SystemMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   criticality?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -429,6 +451,10 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type EnumStatusFieldUpdateOperationsInput = {
+  set?: $Enums.Status
 }
 
 export type SystemCreateNestedOneWithoutTasksInput = {
@@ -492,6 +518,7 @@ export type SystemCreateWithoutTasksInput = {
   name: string
   description?: string | null
   criticality?: number
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
   team?: Prisma.TeamCreateNestedOneWithoutSystemsInput
@@ -503,6 +530,7 @@ export type SystemUncheckedCreateWithoutTasksInput = {
   description?: string | null
   criticality?: number
   teamId?: string | null
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -528,6 +556,7 @@ export type SystemUpdateWithoutTasksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   criticality?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   team?: Prisma.TeamUpdateOneWithoutSystemsNestedInput
@@ -539,6 +568,7 @@ export type SystemUncheckedUpdateWithoutTasksInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   criticality?: Prisma.IntFieldUpdateOperationsInput | number
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -548,6 +578,7 @@ export type SystemCreateWithoutTeamInput = {
   name: string
   description?: string | null
   criticality?: number
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskCreateNestedManyWithoutSystemInput
@@ -558,6 +589,7 @@ export type SystemUncheckedCreateWithoutTeamInput = {
   name: string
   description?: string | null
   criticality?: number
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutSystemInput
@@ -598,6 +630,7 @@ export type SystemScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"System"> | string | null
   criticality?: Prisma.IntFilter<"System"> | number
   teamId?: Prisma.StringNullableFilter<"System"> | string | null
+  status?: Prisma.EnumStatusFilter<"System"> | $Enums.Status
   createdAt?: Prisma.DateTimeFilter<"System"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"System"> | Date | string
 }
@@ -607,6 +640,7 @@ export type SystemCreateManyTeamInput = {
   name: string
   description?: string | null
   criticality?: number
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -616,6 +650,7 @@ export type SystemUpdateWithoutTeamInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   criticality?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUpdateManyWithoutSystemNestedInput
@@ -626,6 +661,7 @@ export type SystemUncheckedUpdateWithoutTeamInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   criticality?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutSystemNestedInput
@@ -636,6 +672,7 @@ export type SystemUncheckedUpdateManyWithoutTeamInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   criticality?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -677,6 +714,7 @@ export type SystemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   description?: boolean
   criticality?: boolean
   teamId?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   team?: boolean | Prisma.System$teamArgs<ExtArgs>
@@ -690,6 +728,7 @@ export type SystemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   description?: boolean
   criticality?: boolean
   teamId?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   team?: boolean | Prisma.System$teamArgs<ExtArgs>
@@ -701,6 +740,7 @@ export type SystemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   description?: boolean
   criticality?: boolean
   teamId?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   team?: boolean | Prisma.System$teamArgs<ExtArgs>
@@ -712,11 +752,12 @@ export type SystemSelectScalar = {
   description?: boolean
   criticality?: boolean
   teamId?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SystemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "criticality" | "teamId" | "createdAt" | "updatedAt", ExtArgs["result"]["system"]>
+export type SystemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "criticality" | "teamId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["system"]>
 export type SystemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   team?: boolean | Prisma.System$teamArgs<ExtArgs>
   tasks?: boolean | Prisma.System$tasksArgs<ExtArgs>
@@ -741,6 +782,7 @@ export type $SystemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     description: string | null
     criticality: number
     teamId: string | null
+    status: $Enums.Status
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["system"]>
@@ -1173,6 +1215,7 @@ export interface SystemFieldRefs {
   readonly description: Prisma.FieldRef<"System", 'String'>
   readonly criticality: Prisma.FieldRef<"System", 'Int'>
   readonly teamId: Prisma.FieldRef<"System", 'String'>
+  readonly status: Prisma.FieldRef<"System", 'Status'>
   readonly createdAt: Prisma.FieldRef<"System", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"System", 'DateTime'>
 }

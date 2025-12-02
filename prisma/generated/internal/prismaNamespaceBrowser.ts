@@ -81,6 +81,7 @@ export const AdminScalarFieldEnum = {
   email: 'email',
   name: 'name',
   contactNumber: 'contactNumber',
+  isDeleted: 'isDeleted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -94,6 +95,7 @@ export const EmployeeScalarFieldEnum = {
   email: 'email',
   teamId: 'teamId',
   contactNumber: 'contactNumber',
+  isDeleted: 'isDeleted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -106,6 +108,7 @@ export const ManagerScalarFieldEnum = {
   name: 'name',
   email: 'email',
   contactNumber: 'contactNumber',
+  isDeleted: 'isDeleted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -119,6 +122,7 @@ export const SystemScalarFieldEnum = {
   description: 'description',
   criticality: 'criticality',
   teamId: 'teamId',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -147,6 +151,7 @@ export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof Task
 export const TeamScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -159,6 +164,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   role: 'role',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
