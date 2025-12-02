@@ -10,7 +10,7 @@ const createTeam = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Specialties created successfully!",
+    message: "team created successfully!",
     data: result,
   });
 });
