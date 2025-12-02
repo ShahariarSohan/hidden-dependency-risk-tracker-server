@@ -28,6 +28,7 @@ export type ManagerMinAggregateOutputType = {
   id: string | null
   name: string | null
   email: string | null
+  contactNumber: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -36,6 +37,7 @@ export type ManagerMaxAggregateOutputType = {
   id: string | null
   name: string | null
   email: string | null
+  contactNumber: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +46,7 @@ export type ManagerCountAggregateOutputType = {
   id: number
   name: number
   email: number
+  contactNumber: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -54,6 +57,7 @@ export type ManagerMinAggregateInputType = {
   id?: true
   name?: true
   email?: true
+  contactNumber?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -62,6 +66,7 @@ export type ManagerMaxAggregateInputType = {
   id?: true
   name?: true
   email?: true
+  contactNumber?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -70,6 +75,7 @@ export type ManagerCountAggregateInputType = {
   id?: true
   name?: true
   email?: true
+  contactNumber?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -151,6 +157,7 @@ export type ManagerGroupByOutputType = {
   id: string
   name: string
   email: string
+  contactNumber: string
   createdAt: Date
   updatedAt: Date
   _count: ManagerCountAggregateOutputType | null
@@ -180,6 +187,7 @@ export type ManagerWhereInput = {
   id?: Prisma.StringFilter<"Manager"> | string
   name?: Prisma.StringFilter<"Manager"> | string
   email?: Prisma.StringFilter<"Manager"> | string
+  contactNumber?: Prisma.StringFilter<"Manager"> | string
   createdAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -190,6 +198,7 @@ export type ManagerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -203,6 +212,7 @@ export type ManagerWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ManagerWhereInput[]
   NOT?: Prisma.ManagerWhereInput | Prisma.ManagerWhereInput[]
   name?: Prisma.StringFilter<"Manager"> | string
+  contactNumber?: Prisma.StringFilter<"Manager"> | string
   createdAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -213,6 +223,7 @@ export type ManagerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ManagerCountOrderByAggregateInput
@@ -227,6 +238,7 @@ export type ManagerScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   name?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   email?: Prisma.StringWithAggregatesFilter<"Manager"> | string
+  contactNumber?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Manager"> | Date | string
 }
@@ -234,6 +246,7 @@ export type ManagerScalarWhereWithAggregatesInput = {
 export type ManagerCreateInput = {
   id?: string
   name: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutManagerInput
@@ -244,6 +257,7 @@ export type ManagerUncheckedCreateInput = {
   id?: string
   name: string
   email: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedByManagerInput
@@ -252,6 +266,7 @@ export type ManagerUncheckedCreateInput = {
 export type ManagerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutManagerNestedInput
@@ -262,6 +277,7 @@ export type ManagerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedByManagerNestedInput
@@ -271,6 +287,7 @@ export type ManagerCreateManyInput = {
   id?: string
   name: string
   email: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -278,6 +295,7 @@ export type ManagerCreateManyInput = {
 export type ManagerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -286,6 +304,7 @@ export type ManagerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -294,6 +313,7 @@ export type ManagerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -302,6 +322,7 @@ export type ManagerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -310,6 +331,7 @@ export type ManagerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -370,6 +392,7 @@ export type ManagerUncheckedUpdateOneWithoutUserNestedInput = {
 export type ManagerCreateWithoutAssignedTasksInput = {
   id?: string
   name: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutManagerInput
@@ -379,6 +402,7 @@ export type ManagerUncheckedCreateWithoutAssignedTasksInput = {
   id?: string
   name: string
   email: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -402,6 +426,7 @@ export type ManagerUpdateToOneWithWhereWithoutAssignedTasksInput = {
 export type ManagerUpdateWithoutAssignedTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutManagerNestedInput
@@ -411,6 +436,7 @@ export type ManagerUncheckedUpdateWithoutAssignedTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -418,6 +444,7 @@ export type ManagerUncheckedUpdateWithoutAssignedTasksInput = {
 export type ManagerCreateWithoutUserInput = {
   id?: string
   name: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedByManagerInput
@@ -426,6 +453,7 @@ export type ManagerCreateWithoutUserInput = {
 export type ManagerUncheckedCreateWithoutUserInput = {
   id?: string
   name: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedByManagerInput
@@ -450,6 +478,7 @@ export type ManagerUpdateToOneWithWhereWithoutUserInput = {
 export type ManagerUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedByManagerNestedInput
@@ -458,6 +487,7 @@ export type ManagerUpdateWithoutUserInput = {
 export type ManagerUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedByManagerNestedInput
@@ -498,6 +528,7 @@ export type ManagerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   name?: boolean
   email?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -509,6 +540,7 @@ export type ManagerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   name?: boolean
   email?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -518,6 +550,7 @@ export type ManagerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   name?: boolean
   email?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -527,11 +560,12 @@ export type ManagerSelectScalar = {
   id?: boolean
   name?: boolean
   email?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ManagerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "createdAt" | "updatedAt", ExtArgs["result"]["manager"]>
+export type ManagerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "contactNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["manager"]>
 export type ManagerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.Manager$assignedTasksArgs<ExtArgs>
@@ -554,6 +588,7 @@ export type $ManagerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     name: string
     email: string
+    contactNumber: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["manager"]>
@@ -984,6 +1019,7 @@ export interface ManagerFieldRefs {
   readonly id: Prisma.FieldRef<"Manager", 'String'>
   readonly name: Prisma.FieldRef<"Manager", 'String'>
   readonly email: Prisma.FieldRef<"Manager", 'String'>
+  readonly contactNumber: Prisma.FieldRef<"Manager", 'String'>
   readonly createdAt: Prisma.FieldRef<"Manager", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Manager", 'DateTime'>
 }

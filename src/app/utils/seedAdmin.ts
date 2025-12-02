@@ -40,6 +40,7 @@ const seedAdmin = async () => {
         data: {
           name: envVariables.ADMIN_NAME,
           email: envVariables.ADMIN_EMAIL,
+          contactNumber:envVariables.ADMIN_CONTACT_NUMBER
         },
       });
     });

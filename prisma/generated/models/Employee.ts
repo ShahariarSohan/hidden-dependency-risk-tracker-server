@@ -29,6 +29,7 @@ export type EmployeeMinAggregateOutputType = {
   name: string | null
   email: string | null
   teamId: string | null
+  contactNumber: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +39,7 @@ export type EmployeeMaxAggregateOutputType = {
   name: string | null
   email: string | null
   teamId: string | null
+  contactNumber: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,6 +49,7 @@ export type EmployeeCountAggregateOutputType = {
   name: number
   email: number
   teamId: number
+  contactNumber: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,6 +61,7 @@ export type EmployeeMinAggregateInputType = {
   name?: true
   email?: true
   teamId?: true
+  contactNumber?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -67,6 +71,7 @@ export type EmployeeMaxAggregateInputType = {
   name?: true
   email?: true
   teamId?: true
+  contactNumber?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -76,6 +81,7 @@ export type EmployeeCountAggregateInputType = {
   name?: true
   email?: true
   teamId?: true
+  contactNumber?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -158,6 +164,7 @@ export type EmployeeGroupByOutputType = {
   name: string
   email: string
   teamId: string | null
+  contactNumber: string
   createdAt: Date
   updatedAt: Date
   _count: EmployeeCountAggregateOutputType | null
@@ -188,6 +195,7 @@ export type EmployeeWhereInput = {
   name?: Prisma.StringFilter<"Employee"> | string
   email?: Prisma.StringFilter<"Employee"> | string
   teamId?: Prisma.StringNullableFilter<"Employee"> | string | null
+  contactNumber?: Prisma.StringFilter<"Employee"> | string
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -200,6 +208,7 @@ export type EmployeeOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -215,6 +224,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.EmployeeWhereInput | Prisma.EmployeeWhereInput[]
   name?: Prisma.StringFilter<"Employee"> | string
   teamId?: Prisma.StringNullableFilter<"Employee"> | string | null
+  contactNumber?: Prisma.StringFilter<"Employee"> | string
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -227,6 +237,7 @@ export type EmployeeOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.EmployeeCountOrderByAggregateInput
@@ -242,6 +253,7 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   email?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   teamId?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  contactNumber?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
 }
@@ -249,6 +261,7 @@ export type EmployeeScalarWhereWithAggregatesInput = {
 export type EmployeeCreateInput = {
   id?: string
   name: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutEmployeeInput
@@ -261,6 +274,7 @@ export type EmployeeUncheckedCreateInput = {
   name: string
   email: string
   teamId?: string | null
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutEmployeeInput
@@ -269,6 +283,7 @@ export type EmployeeUncheckedCreateInput = {
 export type EmployeeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
@@ -281,6 +296,7 @@ export type EmployeeUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -291,6 +307,7 @@ export type EmployeeCreateManyInput = {
   name: string
   email: string
   teamId?: string | null
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -298,6 +315,7 @@ export type EmployeeCreateManyInput = {
 export type EmployeeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -307,6 +325,7 @@ export type EmployeeUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -316,6 +335,7 @@ export type EmployeeCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -325,6 +345,7 @@ export type EmployeeMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -334,6 +355,7 @@ export type EmployeeMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -453,6 +475,7 @@ export type EmployeeUncheckedUpdateOneWithoutUserNestedInput = {
 export type EmployeeCreateWithoutTasksInput = {
   id?: string
   name: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutEmployeeInput
@@ -464,6 +487,7 @@ export type EmployeeUncheckedCreateWithoutTasksInput = {
   name: string
   email: string
   teamId?: string | null
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -487,6 +511,7 @@ export type EmployeeUpdateToOneWithWhereWithoutTasksInput = {
 export type EmployeeUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
@@ -498,6 +523,7 @@ export type EmployeeUncheckedUpdateWithoutTasksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -505,6 +531,7 @@ export type EmployeeUncheckedUpdateWithoutTasksInput = {
 export type EmployeeCreateWithoutTeamInput = {
   id?: string
   name: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutEmployeeInput
@@ -515,6 +542,7 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   id?: string
   name: string
   email: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutEmployeeInput
@@ -554,6 +582,7 @@ export type EmployeeScalarWhereInput = {
   name?: Prisma.StringFilter<"Employee"> | string
   email?: Prisma.StringFilter<"Employee"> | string
   teamId?: Prisma.StringNullableFilter<"Employee"> | string | null
+  contactNumber?: Prisma.StringFilter<"Employee"> | string
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
 }
@@ -561,6 +590,7 @@ export type EmployeeScalarWhereInput = {
 export type EmployeeCreateWithoutUserInput = {
   id?: string
   name: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   team?: Prisma.TeamCreateNestedOneWithoutEmployeesInput
@@ -571,6 +601,7 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   id?: string
   name: string
   teamId?: string | null
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutEmployeeInput
@@ -595,6 +626,7 @@ export type EmployeeUpdateToOneWithWhereWithoutUserInput = {
 export type EmployeeUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   team?: Prisma.TeamUpdateOneWithoutEmployeesNestedInput
@@ -605,6 +637,7 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -614,6 +647,7 @@ export type EmployeeCreateManyTeamInput = {
   id?: string
   name: string
   email: string
+  contactNumber: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -621,6 +655,7 @@ export type EmployeeCreateManyTeamInput = {
 export type EmployeeUpdateWithoutTeamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
@@ -631,6 +666,7 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -640,6 +676,7 @@ export type EmployeeUncheckedUpdateManyWithoutTeamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -680,6 +717,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name?: boolean
   email?: boolean
   teamId?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -693,6 +731,7 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   name?: boolean
   email?: boolean
   teamId?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -704,6 +743,7 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   name?: boolean
   email?: boolean
   teamId?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -715,11 +755,12 @@ export type EmployeeSelectScalar = {
   name?: boolean
   email?: boolean
   teamId?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "teamId" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "teamId" | "contactNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   team?: boolean | Prisma.Employee$teamArgs<ExtArgs>
@@ -747,6 +788,7 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     name: string
     email: string
     teamId: string | null
+    contactNumber: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["employee"]>
@@ -1179,6 +1221,7 @@ export interface EmployeeFieldRefs {
   readonly name: Prisma.FieldRef<"Employee", 'String'>
   readonly email: Prisma.FieldRef<"Employee", 'String'>
   readonly teamId: Prisma.FieldRef<"Employee", 'String'>
+  readonly contactNumber: Prisma.FieldRef<"Employee", 'String'>
   readonly createdAt: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Employee", 'DateTime'>
 }

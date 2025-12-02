@@ -3,6 +3,7 @@ model Admin {
   email     String     @unique
   user          User     @relation(fields: [email], references: [email])
   name          String
+  contactNumber String
   assignedTasks Task[]   @relation("AssignedByAdmin")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

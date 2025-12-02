@@ -80,6 +80,7 @@ export const AdminScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
+  contactNumber: 'contactNumber',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -92,6 +93,7 @@ export const EmployeeScalarFieldEnum = {
   name: 'name',
   email: 'email',
   teamId: 'teamId',
+  contactNumber: 'contactNumber',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -103,6 +105,7 @@ export const ManagerScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  contactNumber: 'contactNumber',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
