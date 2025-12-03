@@ -31,8 +31,17 @@ const getAllTeam = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
-
+const softDeleteTeam = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await teamService.softDeleteTeam(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Team soft deleted successfully",
+    data: result,
+  });
+});
 export const teamController = {
   createTeam,
-  getAllTeam
+  getAllTeam,softDeleteTeam
 }

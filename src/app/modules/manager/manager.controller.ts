@@ -21,7 +21,18 @@ const getAllManager = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+const softDeleteManager = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await managerService.softDeleteManager(id);
 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Manager soft deleted successfully",
+    data: result,
+  });
+});
 export const managerController = {
-    getAllManager
-}
+  getAllManager,
+  softDeleteManager,
+};

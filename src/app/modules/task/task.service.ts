@@ -5,7 +5,7 @@ import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
 import { UserRole } from "../../interfaces/userRole";
 import { IAuthUser } from "../../interfaces/user.interface";
-import { Prisma } from "../../../../prisma/generated/client";
+import { Prisma, TaskStatus } from "../../../../prisma/generated/client";
 import { taskSearchAbleFields } from "./task.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
@@ -107,7 +107,30 @@ const getAllTask = async (params: any, options: IPaginationOptions) => {
     data: result,
   };
 };
+const softDeleteTask = async (taskId: string) => {
+  const task = await prisma.task.findUnique({
+    where: { id: taskId },
+  });
+
+  if (!task) {
+    throw new AppError(httpStatus.NOT_FOUND, "Task not found");
+  }
+
+  if (task.status === "DONE") {
+    throw new AppError(httpStatus.BAD_REQUEST, "Task is already completed");
+  }
+  
+  const updated = await prisma.task.update({
+    where: { id: taskId },
+    data: {
+      status: TaskStatus.CANCELLED,
+    },
+  });
+
+  return updated;
+};
 export const taskService = {
   createTask,
-  getAllTask
+  getAllTask,
+  softDeleteTask
 };

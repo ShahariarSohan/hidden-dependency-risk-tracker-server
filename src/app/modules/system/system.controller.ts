@@ -32,8 +32,19 @@ const getAllSystem = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+const softDeleteSystem = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await systemService.softDeleteSystem(id);
 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "System soft deleted successfully",
+    data: result,
+  });
+});
 export const systemController = {
   createSystem,
-  getAllSystem
+  getAllSystem,
+  softDeleteSystem,
 };

@@ -16,4 +16,9 @@ router.post(
 );
 
 router.get("/", authGuard(UserRole.ADMIN), systemController.getAllSystem);
+router.delete(
+  "/soft-delete/:id",
+  authGuard(UserRole.ADMIN),
+  systemController.softDeleteSystem
+);
 export const systemRoutes = router;

@@ -1,9 +1,13 @@
+import  httpStatus  from 'http-status-codes';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Prisma } from "../../../../prisma/generated/client";
+import { Employee, Prisma } from "../../../../prisma/generated/client";
 import { prisma } from "../../config/prisma";
 import { IPaginationOptions } from "../../interfaces/pagination";
+import { ActiveStatus } from "../../interfaces/userRole";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { employeeSearchAbleFields } from "./employee.constant";
+import AppError from '../../errorHelpers/AppError';
+import { TaskStatus } from '../../interfaces/taskStatus';
 
 
 const getAllEmployee = async (params: any, options: IPaginationOptions) => {
@@ -63,6 +67,47 @@ const getAllEmployee = async (params: any, options: IPaginationOptions) => {
     data: result,
   };
 };
+const softDeleteEmployee = async (id: string): Promise<Employee> => {
+   const employee = await prisma.employee.findUnique({ where: { id } });
+   if (!employee) {
+     throw new AppError(httpStatus.NOT_FOUND, "Employee not found");
+   }
+  const hasActiveTasks = await prisma.task.findFirst({
+    where: {
+      employeeId: id,
+      status: {
+        in: [TaskStatus.IN_PROGRESS,TaskStatus.PENDING],
+      },
+    },
+  });
+  if (hasActiveTasks) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Employee has unfinished tasks. Reassign or complete them first."
+    );
+  }
+  return prisma.$transaction(async (tx) => {
+    const employee = await tx.employee.update({
+      where: { id },
+      data: {
+        isDeleted: true,
+      },
+    });
+
+    await tx.user.update({
+      where: {
+        email: employee.email,
+      },
+      data: {
+        status: ActiveStatus.INACTIVE,
+      },
+    });
+
+    return employee;
+  });
+};
+
 export const employeeService = {
-    getAllEmployee
+  getAllEmployee,
+  softDeleteEmployee
 }

@@ -16,4 +16,9 @@ router.post(
   taskController.createTask
 );
 router.get("/", authGuard(UserRole.ADMIN), taskController.getAllTask);
+router.delete(
+  "/soft-delete/:id",
+  authGuard(UserRole.ADMIN),
+  taskController.softDeleteTask
+);
 export const taskRoutes = router;

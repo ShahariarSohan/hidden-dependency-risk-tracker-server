@@ -13,5 +13,10 @@ router.post(
   validateRequest(createTeamZodSchema),
   teamController.createTeam
 );
-router.get("/", authGuard(UserRole.ADMIN),teamController.getAllTeam);
+router.get("/", authGuard(UserRole.ADMIN), teamController.getAllTeam);
+router.delete(
+  "/soft-delete/:id",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  teamController.softDeleteTeam
+);
 export const teamRoutes = router;

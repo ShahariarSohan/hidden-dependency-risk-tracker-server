@@ -3,10 +3,11 @@ import httpStatus from "http-status";
 import { Request } from "express";
 import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
-import { Prisma } from "../../../../prisma/generated/client";
+import { Prisma, System } from "../../../../prisma/generated/client";
 import { systemSearchAbleFields } from "./system.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
+import { TaskStatus } from "../../interfaces/taskStatus";
 
 const createSystem = async (req: Request) => {
      const isTeamExist = await prisma.team.findFirst({
@@ -83,8 +84,45 @@ const getAllSystem = async (params: any, options: IPaginationOptions) => {
     data: result,
   };
 };
+const softDeleteSystem = async (id: string): Promise<System> => {
+  const system = await prisma.system.findUnique({ where: { id } });
+  if (!system) {
+    throw new AppError(httpStatus.NOT_FOUND, "System not found");
+  }
 
+  // Check for active tasks on the system (PENDING or IN_PROGRESS)
+  const activeTask = await prisma.task.findFirst({
+    where: {
+      systemId: id,
+      status: { in: [TaskStatus.IN_PROGRESS,TaskStatus.PENDING] },
+    },
+  });
+
+  if (activeTask) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "System has active tasks. Reassign or complete them first."
+    );
+  }
+
+  // Option: prevent soft-delete if system is still assigned to a team
+  if (system.teamId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "System is assigned to a team. Unassign or reassign the system before deletion."
+    );
+  }
+
+  // Soft-delete
+  return prisma.system.update({
+    where: { id },
+    data: {
+      status: "INACTIVE",
+    },
+  });
+};
 export const systemService = {
   createSystem,
-  getAllSystem
+  getAllSystem,
+  softDeleteSystem,
 };

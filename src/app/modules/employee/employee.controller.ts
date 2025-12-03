@@ -21,6 +21,16 @@ const getAllEmployee = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+const softDeleteEmployee = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await employeeService.softDeleteEmployee(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Employee soft deleted successfully",
+    data: result,
+  });
+});
 export const employeeController = {
-    getAllEmployee
+    getAllEmployee,softDeleteEmployee
 }

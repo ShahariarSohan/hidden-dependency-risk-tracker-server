@@ -34,7 +34,7 @@ router.get(
   userController.getMyProfile
 );
 router.patch(
-  "/:id/status",
+  "/status/:id",
   authGuard( UserRole.ADMIN),
   validateRequest(updateUserStatusZodSchema),
   userController.changeProfileStatus

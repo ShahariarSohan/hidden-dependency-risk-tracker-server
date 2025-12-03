@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
@@ -35,8 +36,20 @@ const getAllTask = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
-
+const softDeleteTask = catchAsync(
+  async (req: Request , res: Response) => {
+    const { id } = req.params;
+    const result = await taskService.softDeleteTask(id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Task soft deleted successfully",
+      data: result,
+    });
+  }
+);
 export const taskController = {
   createTask,
-  getAllTask
+  getAllTask,
+  softDeleteTask
 };

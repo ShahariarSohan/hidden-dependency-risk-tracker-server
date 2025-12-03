@@ -3,7 +3,7 @@ import  httpStatus  from 'http-status';
 import { Request } from "express";
 import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
-import { Prisma } from '../../../../prisma/generated/client';
+import { Prisma, Team } from '../../../../prisma/generated/client';
 import { teamSearchAbleFields } from './team.constant';
 import { paginationHelper } from '../../shared/paginationHelper';
 import { IPaginationOptions } from '../../interfaces/pagination';
@@ -73,7 +73,58 @@ const getAllTeam = async (params: any, options: IPaginationOptions) => {
     data: result,
   };
 };
+// services/team.service.ts
+
+
+const softDeleteTeam = async (id: string): Promise<Team> => {
+  const team = await prisma.team.findUnique({ where: { id } });
+  if (!team) {
+    throw new AppError(httpStatus.NOT_FOUND, "Team not found");
+  }
+
+  // Check active employees in team (not soft-deleted)
+  const activeEmployee = await prisma.employee.findFirst({
+    where: {
+      teamId: id,
+      isDeleted: false, // or status: ACTIVE depending on your flags
+    },
+  });
+
+  if (activeEmployee) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Team has active employees. Remove or deactivate them first."
+    );
+  }
+
+  // Check systems owned by team (optionally require systems to be inactive or moved)
+  const ownedSystem = await prisma.system.findFirst({
+    where: {
+      teamId: id,
+      // ignore archived/inactive? If you require all systems detached, check teamId only
+    },
+  });
+
+  if (ownedSystem) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Team owns systems. Reassign or archive systems before deleting the team."
+    );
+  }
+
+  // Soft-delete team
+  return prisma.team.update({
+    where: { id },
+    data: {
+      status: "INACTIVE",
+    },
+  });
+};
+
+
+
 export const teamService = {
   createTeam,
-  getAllTeam
+  getAllTeam,
+  softDeleteTeam
 }
