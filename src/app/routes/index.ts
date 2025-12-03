@@ -4,6 +4,7 @@ import { userRoutes } from "../modules/user/user.route";
 import { authRoutes } from "../modules/auth/auth.route";
 import { teamRoutes } from "../modules/team/team.route";
 import { systemRoutes } from "../modules/system/system.route";
+import { taskRoutes } from "../modules/task/task.route";
 
 
 export const router = Router();
@@ -30,7 +31,7 @@ const moduleRoutes: IModuleRoutes[] = [
   },
   {
     path: "/task",
-    route: systemRoutes,
+    route: taskRoutes,
   },
 ];
  

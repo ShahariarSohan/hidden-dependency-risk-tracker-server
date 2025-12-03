@@ -4,7 +4,7 @@ export const createTaskZodSchema = z
   .object({
     title: z
       .string()
-      .min(5, "Title must be at least 2 characters")
+      .min(5, "Title must be at least 5 characters")
       .max(200, "Title cannot exceed 200 characters"),
 
     description: z
@@ -36,4 +36,4 @@ export const createTaskZodSchema = z
     systemId: z
       .string()
   })
-  .strict();
+  

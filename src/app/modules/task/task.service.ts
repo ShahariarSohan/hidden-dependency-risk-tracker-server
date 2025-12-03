@@ -2,8 +2,13 @@ import httpStatus from "http-status";
 import { Request } from "express";
 import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
+import { UserRole } from "../../interfaces/userRole";
+import { IAuthUser } from "../../interfaces/user.interface";
 
-const createTask = async (req: Request) => {
+
+const createTask = async (req: Request  & { user?: IAuthUser }) => {
+  const {email,role} = req.user as IAuthUser
+  
   const isEmployeeExist = await prisma.employee.findFirst({
     where: {
       id:req.body.employeeId
@@ -21,17 +26,31 @@ const createTask = async (req: Request) => {
     throw new AppError(httpStatus.BAD_REQUEST, "System does't exist");
   }
   
-    const assignedById = req.body.assignedByAdminId || req.body.assignedByManagerId
-     const isUserExist = await prisma.user.findFirst({
-       where: {
-         id: assignedById,
-       },
-     });
-     if (!isUserExist) {
-       throw new AppError(httpStatus.BAD_REQUEST, "User does't exist");
-     }
+    
+    let assignedByAdminId: string | null = null;
+    let assignedByManagerId: string | null = null;
+
+    if (role === UserRole.ADMIN) {
+      const admin = await prisma.admin.findUnique({ where: { email } });
+      if (!admin) {
+        throw new AppError(httpStatus.FORBIDDEN, "Admin not found");
+      }
+      assignedByAdminId = admin.id;
+    }
+
+    if (role === UserRole.MANAGER) {
+      const manager = await prisma.manager.findUnique({
+        where: { email},
+      });
+      if (!manager) {
+        throw new AppError(httpStatus.FORBIDDEN, "Manager not found");
+      }
+      assignedByManagerId = manager.id;
+    }
+
+
    const result = await prisma.task.create({
-     data: req.body,
+     data: {...req.body,assignedByAdminId,assignedByManagerId},
    });
 
   return result;
