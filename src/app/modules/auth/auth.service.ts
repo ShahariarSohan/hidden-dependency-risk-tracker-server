@@ -1,4 +1,5 @@
-import  httpStatus  from 'http-status';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import httpStatus from "http-status";
 import bcrypt from "bcrypt";
 import { prisma } from "../../config/prisma";
 import { jwtHelpers } from "../../utils/jwtHelpers";
@@ -13,8 +14,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
       status: ActiveStatus.ACTIVE,
     },
   });
-    if (!userData) {
-      throw new AppError(httpStatus.NOT_FOUND, "User doesn't exist");
+  if (!userData) {
+    throw new AppError(httpStatus.NOT_FOUND, "User doesn't exist");
   }
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,
@@ -22,7 +23,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
   );
 
   if (!isCorrectPassword) {
-    throw new AppError(httpStatus.BAD_REQUEST,"Password incorrect!");
+    throw new AppError(httpStatus.BAD_REQUEST, "Password incorrect!");
   }
   const accessToken = jwtHelpers.generateToken(
     {
@@ -47,6 +48,62 @@ const loginUser = async (payload: { email: string; password: string }) => {
     refreshToken,
   };
 };
+const getMe = async (user: any) => {
+  const accessToken = user.accessToken;
+  const decodedData = jwtHelpers.verifyToken(
+    accessToken,
+    envVariables.ACCESS_TOKEN_SECRET as Secret
+  );
+
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: decodedData.email,
+      status: ActiveStatus.ACTIVE,
+    },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      admin: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          contactNumber: true,
+          isDeleted: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      manager: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          contactNumber: true,
+        },
+      },
+      employee: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          contactNumber: true,
+          isDeleted: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+    },
+  });
+
+  return userData;
+};
+
 export const authService = {
-    loginUser
-}
+  loginUser,
+  getMe,
+};

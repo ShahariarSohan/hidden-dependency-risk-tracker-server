@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import  httpStatus  from 'http-status';
 import catchAsync from '../../shared/catchAsync';
 import { authService } from './auth.service';
@@ -44,7 +45,21 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     },
   });
 });
+const getMe = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const user = req.cookies;
 
+    const result = await authService.getMe(user);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User retrieved successfully",
+      data: result,
+    });
+  }
+);
 export const authController = {
-    loginUser
+  loginUser,
+  getMe
 }

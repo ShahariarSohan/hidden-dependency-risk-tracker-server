@@ -1,3 +1,5 @@
+import { UserRole } from "./userRole";
+
 export interface IEmployee {
   id?: string;
   password: string;
@@ -18,3 +20,10 @@ export interface IManager {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+
+
+export interface IAuthUser  {
+  email: string;
+  role: UserRole;
+} 

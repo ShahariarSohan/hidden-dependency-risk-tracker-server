@@ -5,13 +5,13 @@ import AppError from "../../errorHelpers/AppError";
 
 const createTeam = async (req: Request) => {
  
-    const isNameExist = await prisma.team.findFirst({
+    const isTeamExist = await prisma.team.findFirst({
         where: {
           name:req.body.name
       }
     })
-    if (isNameExist) {
-        throw new AppError(httpStatus.BAD_REQUEST,"Name already exist")
+    if (isTeamExist) {
+        throw new AppError(httpStatus.BAD_REQUEST,"Team already exist")
     }
  
 

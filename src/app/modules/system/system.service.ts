@@ -22,7 +22,7 @@ const createSystem = async (req: Request) => {
     },
   });
   if (isSystemExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "This team is managing another system");
+    throw new AppError(httpStatus.BAD_REQUEST, "One system must be handle by unique team");
   }
 
   const result = await prisma.system.create({

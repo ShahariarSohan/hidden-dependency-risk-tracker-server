@@ -28,6 +28,10 @@ const moduleRoutes: IModuleRoutes[] = [
     path: "/system",
     route: systemRoutes,
   },
+  {
+    path: "/task",
+    route: systemRoutes,
+  },
 ];
  
 

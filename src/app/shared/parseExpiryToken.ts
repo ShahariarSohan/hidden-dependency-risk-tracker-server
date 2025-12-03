@@ -1,7 +1,7 @@
 // utils/tokenExpiry.ts
-export function parseExpiryToken(expiry: string, defaultMs: number): number {
+export const parseExpiryToken=(expiry: string, defaultMs: number): number=> {
   
-  if (!expiry || expiry.length < 2) return defaultMs=0;
+  if (!expiry || expiry.length < 2) return (defaultMs = 1000 * 60 * 60);
 
   const value = parseInt(expiry.slice(0, -1));
   const unit = expiry.slice(-1);
