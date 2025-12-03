@@ -47,7 +47,10 @@ const updateMyProfile = catchAsync(
   async (req: Request & { user?: IAuthUser }, res: Response) => {
     const user = req.user;
 
-    const result = await userService.updateMyProfile(user as IAuthUser, req.body);
+    const result = await userService.updateMyProfile(
+      user as IAuthUser,
+      req.body
+    );
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -57,17 +60,6 @@ const updateMyProfile = catchAsync(
     });
   }
 );
-const changeProfileStatus = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await userService.changeProfileStatus(id, req.body);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Users profile status changed!",
-    data: result,
-  });
-});
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, userFilterableFields);
   const options = pick(req.query, paginationTermArray);
@@ -82,11 +74,36 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+const getUserById = catchAsync(async (req, res) => {
+  const result = await userService.getUserById(req.params.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User fetched successfully",
+    data: result,
+  });
+});
+const updateUserStatus = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const result = await userService.updateUserStatus(id, status);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User status updated successfully",
+    data: result,
+  });
+});
+
 export const userController = {
   createEmployee,
   createManager,
   getMyProfile,
   updateMyProfile,
-  changeProfileStatus,
-  getAllUser
+  updateUserStatus,
+  getAllUser,
+  getUserById,
 };

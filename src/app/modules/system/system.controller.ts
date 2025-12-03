@@ -43,8 +43,34 @@ const softDeleteSystem = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getSystemById = catchAsync(async (req, res) => {
+  const result = await systemService.getSystemById(req.params.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "System fetched successfully",
+    data: result,
+  });
+});
+const updateSystemStatus = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const result = await systemService.updateSystemStatus(id, status);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "System status updated successfully",
+    data: result,
+  });
+});
+
 export const systemController = {
   createSystem,
   getAllSystem,
   softDeleteSystem,
+  getSystemById,
+  updateSystemStatus,
 };

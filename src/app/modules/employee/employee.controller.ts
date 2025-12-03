@@ -1,4 +1,4 @@
-import  httpStatus  from 'http-status';
+import httpStatus from "http-status";
 import { Request, Response } from "express";
 import pick from "../../shared/pick";
 import { userFilterableFields } from "../user/user.constant";
@@ -31,6 +31,19 @@ const softDeleteEmployee = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getEmployeeById = catchAsync(async (req, res) => {
+  const result = await employeeService.getEmployeeById(req.params.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Employee fetched successfully",
+    data: result,
+  });
+});
+
 export const employeeController = {
-    getAllEmployee,softDeleteEmployee
-}
+  getAllEmployee,
+  softDeleteEmployee,
+  getEmployeeById,
+};

@@ -1,24 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import  httpStatus  from 'http-status';
+import httpStatus from "http-status";
 import { Request } from "express";
 import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
-import { Prisma, Team } from '../../../../prisma/generated/client';
-import { teamSearchAbleFields } from './team.constant';
-import { paginationHelper } from '../../shared/paginationHelper';
-import { IPaginationOptions } from '../../interfaces/pagination';
+import { Prisma, Team } from "../../../../prisma/generated/client";
+import { teamSearchAbleFields } from "./team.constant";
+import { paginationHelper } from "../../shared/paginationHelper";
+import { IPaginationOptions } from "../../interfaces/pagination";
+import { ActiveStatus } from "../../interfaces/userRole";
 
 const createTeam = async (req: Request) => {
- 
-    const isTeamExist = await prisma.team.findFirst({
-        where: {
-          name:req.body.name
-      }
-    })
-    if (isTeamExist) {
-        throw new AppError(httpStatus.BAD_REQUEST,"Team already exist")
-    }
- 
+  const isTeamExist = await prisma.team.findFirst({
+    where: {
+      name: req.body.name,
+    },
+  });
+  if (isTeamExist) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Team already exist");
+  }
 
   const result = await prisma.team.create({
     data: req.body,
@@ -75,7 +74,6 @@ const getAllTeam = async (params: any, options: IPaginationOptions) => {
 };
 // services/team.service.ts
 
-
 const softDeleteTeam = async (id: string): Promise<Team> => {
   const team = await prisma.team.findUnique({ where: { id } });
   if (!team) {
@@ -121,10 +119,29 @@ const softDeleteTeam = async (id: string): Promise<Team> => {
   });
 };
 
-
+const getTeamById = async (id: string) => {
+  return prisma.team.findFirstOrThrow({
+    where: {
+      id,
+      status: ActiveStatus.ACTIVE,
+    },
+    include: {
+      employees: true,
+      systems: true,
+    },
+  });
+};
+const updateTeamStatus = async (id: string, status: ActiveStatus) => {
+  return prisma.team.update({
+    where: { id },
+    data: { status },
+  });
+};
 
 export const teamService = {
   createTeam,
   getAllTeam,
-  softDeleteTeam
-}
+  softDeleteTeam,
+  getTeamById,
+  updateTeamStatus,
+};

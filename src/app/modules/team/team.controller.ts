@@ -41,7 +41,31 @@ const softDeleteTeam = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getTeamById = catchAsync(async (req, res) => {
+  const result = await teamService.getTeamById(req.params.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Team fetched successfully",
+    data: result,
+  });
+});
+const updateTeamStatus = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const result = await teamService.updateTeamStatus(id, status);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Team status updated successfully",
+    data: result,
+  });
+});
+
 export const teamController = {
   createTeam,
-  getAllTeam,softDeleteTeam
+  getAllTeam,softDeleteTeam,getTeamById,updateTeamStatus
 }

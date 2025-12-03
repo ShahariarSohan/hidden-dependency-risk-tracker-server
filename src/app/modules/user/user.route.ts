@@ -5,10 +5,11 @@ import {
   createEmployeeZodSchema,
   createManagerZodSchema,
   updateMyProfileZodSchema,
-  updateUserStatusZodSchema,
+  
 } from "./user.validation";
 import { UserRole } from "../../interfaces/userRole";
 import authGuard from "../../middlewares/authGuard";
+import { updateStatusZodSchema } from "../../zod/status.schema";
 
 const router = Router();
 router.get(
@@ -16,6 +17,8 @@ router.get(
   authGuard( UserRole.ADMIN),
   userController.getAllUser
 );
+router.get("/:id", authGuard(UserRole.ADMIN), userController.getUserById);
+
 router.post(
   "/employee",
   authGuard(UserRole.ADMIN),
@@ -35,9 +38,9 @@ router.get(
 );
 router.patch(
   "/status/:id",
-  authGuard( UserRole.ADMIN),
-  validateRequest(updateUserStatusZodSchema),
-  userController.changeProfileStatus
+  authGuard(UserRole.ADMIN),
+  validateRequest(updateStatusZodSchema),
+  userController.updateUserStatus
 );
 
 router.patch(

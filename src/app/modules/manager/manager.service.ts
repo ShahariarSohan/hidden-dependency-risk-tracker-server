@@ -7,6 +7,7 @@ import { IPaginationOptions } from "../../interfaces/pagination";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { managerSearchAbleFields } from "./manager.constant";
 import { TaskStatus } from '../../interfaces/taskStatus';
+import { ActiveStatus } from '../../interfaces/userRole';
 
 
 const getAllManager = async (params: any, options: IPaginationOptions) => {
@@ -100,9 +101,23 @@ const softDeleteManager = async (id: string): Promise<Manager> => {
   });
 };
 
+const getManagerById = async (id: string) => {
+  return prisma.manager.findFirstOrThrow({
+    where: {
+      id,
+      isDeleted: false,
+      user: {
+        status: ActiveStatus.ACTIVE,
+      },
+    },
+    include: {
+      assignedTasks: true,
+    },
+  });
+};
 
 
 export const managerService = {
   getAllManager,
-  softDeleteManager,
+  softDeleteManager,getManagerById
 };

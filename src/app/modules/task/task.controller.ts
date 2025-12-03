@@ -8,11 +8,9 @@ import { taskService } from "./task.service";
 import pick from "../../shared/pick";
 import { taskFilterableFields } from "./task.constant";
 import { paginationTermArray } from "../../shared/paginationConstant";
-
-
+import { IAuthUser } from "../../interfaces/user.interface";
 
 const createTask = catchAsync(async (req: Request, res: Response) => {
-  
   const result = await taskService.createTask(req);
 
   sendResponse(res, {
@@ -36,20 +34,59 @@ const getAllTask = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
-const softDeleteTask = catchAsync(
-  async (req: Request , res: Response) => {
-    const { id } = req.params;
-    const result = await taskService.softDeleteTask(id);
+const softDeleteTask = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await taskService.softDeleteTask(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Task soft deleted successfully",
+    data: result,
+  });
+});
+const getTaskById = catchAsync(async (req, res) => {
+  const result = await taskService.getTaskById(req.params.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Task fetched successfully",
+    data: result,
+  });
+});
+const updateTaskStatus = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const result = await taskService.updateTaskStatus(id, status);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Task status updated successfully",
+    data: result,
+  });
+});
+const getMyAssignedTasks = catchAsync(
+  async (req: Request & { user?: IAuthUser }, res) => {
+    const authUser = req.user as IAuthUser;
+
+    const result = await taskService.getMyAssignedTasks(authUser);
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Task soft deleted successfully",
+      message: "My assigned tasks fetched successfully",
       data: result,
     });
   }
 );
+
 export const taskController = {
   createTask,
   getAllTask,
-  softDeleteTask
+  softDeleteTask,
+  getTaskById,
+  updateTaskStatus,
+  getMyAssignedTasks,
 };

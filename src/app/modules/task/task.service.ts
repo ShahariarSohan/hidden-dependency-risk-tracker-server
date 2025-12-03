@@ -3,20 +3,19 @@ import httpStatus from "http-status";
 import { Request } from "express";
 import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
-import { UserRole } from "../../interfaces/userRole";
+import { ActiveStatus, UserRole } from "../../interfaces/userRole";
 import { IAuthUser } from "../../interfaces/user.interface";
 import { Prisma, TaskStatus } from "../../../../prisma/generated/client";
 import { taskSearchAbleFields } from "./task.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
 
+const createTask = async (req: Request & { user?: IAuthUser }) => {
+  const { email, role } = req.user as IAuthUser;
 
-const createTask = async (req: Request  & { user?: IAuthUser }) => {
-  const {email,role} = req.user as IAuthUser
-  
   const isEmployeeExist = await prisma.employee.findFirst({
     where: {
-      id:req.body.employeeId
+      id: req.body.employeeId,
     },
   });
   if (!isEmployeeExist) {
@@ -24,39 +23,37 @@ const createTask = async (req: Request  & { user?: IAuthUser }) => {
   }
   const isSystemExist = await prisma.system.findFirst({
     where: {
-      id:req.body.systemId
+      id: req.body.systemId,
     },
   });
   if (!isSystemExist) {
     throw new AppError(httpStatus.BAD_REQUEST, "System does't exist");
   }
-  
-    
-    let assignedByAdminId: string | null = null;
-    let assignedByManagerId: string | null = null;
 
-    if (role === UserRole.ADMIN) {
-      const admin = await prisma.admin.findUnique({ where: { email } });
-      if (!admin) {
-        throw new AppError(httpStatus.FORBIDDEN, "Admin not found");
-      }
-      assignedByAdminId = admin.id;
+  let assignedByAdminId: string | null = null;
+  let assignedByManagerId: string | null = null;
+
+  if (role === UserRole.ADMIN) {
+    const admin = await prisma.admin.findUnique({ where: { email } });
+    if (!admin) {
+      throw new AppError(httpStatus.FORBIDDEN, "Admin not found");
     }
+    assignedByAdminId = admin.id;
+  }
 
-    if (role === UserRole.MANAGER) {
-      const manager = await prisma.manager.findUnique({
-        where: { email},
-      });
-      if (!manager) {
-        throw new AppError(httpStatus.FORBIDDEN, "Manager not found");
-      }
-      assignedByManagerId = manager.id;
+  if (role === UserRole.MANAGER) {
+    const manager = await prisma.manager.findUnique({
+      where: { email },
+    });
+    if (!manager) {
+      throw new AppError(httpStatus.FORBIDDEN, "Manager not found");
     }
+    assignedByManagerId = manager.id;
+  }
 
-
-   const result = await prisma.task.create({
-     data: {...req.body,assignedByAdminId,assignedByManagerId},
-   });
+  const result = await prisma.task.create({
+    data: { ...req.body, assignedByAdminId, assignedByManagerId },
+  });
 
   return result;
 };
@@ -119,7 +116,7 @@ const softDeleteTask = async (taskId: string) => {
   if (task.status === "DONE") {
     throw new AppError(httpStatus.BAD_REQUEST, "Task is already completed");
   }
-  
+
   const updated = await prisma.task.update({
     where: { id: taskId },
     data: {
@@ -129,8 +126,112 @@ const softDeleteTask = async (taskId: string) => {
 
   return updated;
 };
+const getTaskById = async (id: string) => {
+  return prisma.task.findFirstOrThrow({
+    where: {
+      id,
+      status: {
+        not: TaskStatus.CANCELLED,
+      },
+    },
+    include: {
+      employee: true,
+      assignedByAdmin: true,
+      assignedByManager: true,
+      system: true,
+    },
+  });
+};
+const updateTaskStatus = async (id: string, status: TaskStatus) => {
+  const task = await prisma.task.findUniqueOrThrow({
+    where: { id },
+  });
+
+  // Optional guard (recommended)
+  if (task.status === TaskStatus.DONE) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Completed task cannot be modified"
+    );
+  }
+
+  return prisma.task.update({
+    where: { id },
+    data: {
+      status,
+      completedAt: status === TaskStatus.DONE ? new Date() : task.completedAt,
+    },
+  });
+};
+const getMyAssignedTasks = async (authUser: IAuthUser) => {
+  // fetch base user
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: authUser.email,
+      status: ActiveStatus.ACTIVE,
+    },
+  });
+
+  // ADMIN CASE
+  if (user.role === UserRole.ADMIN) {
+    const admin = await prisma.admin.findUniqueOrThrow({
+      where: {
+        email: authUser.email,
+        isDeleted: false,
+      },
+    });
+
+    return prisma.task.findMany({
+      where: {
+        assignedByAdminId: admin.id,
+        status: {
+          not: TaskStatus.CANCELLED,
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        employee: true,
+        system: true,
+      },
+    });
+  }
+
+  // MANAGER CASE
+  if (user.role === UserRole.MANAGER) {
+    const manager = await prisma.manager.findUniqueOrThrow({
+      where: {
+        email: authUser.email,
+        isDeleted: false,
+      },
+    });
+
+    return prisma.task.findMany({
+      where: {
+        assignedByManagerId: manager.id,
+        status: {
+          not: TaskStatus.CANCELLED,
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        employee: true,
+        system: true,
+      },
+    });
+  }
+
+  throw new AppError(httpStatus.FORBIDDEN, "Unauthorized role");
+};
+
 export const taskService = {
   createTask,
   getAllTask,
-  softDeleteTask
+  softDeleteTask,
+  getTaskById,
+  updateTaskStatus,
+  getMyAssignedTasks,
 };

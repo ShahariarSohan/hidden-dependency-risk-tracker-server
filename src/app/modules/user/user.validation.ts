@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ActiveStatus } from "../../interfaces/userRole";
+
 
 export const createManagerZodSchema = z.object({
   name: z.string().min(3, "Name must be minimum 3 characters"),
@@ -34,11 +34,7 @@ export const createEmployeeZodSchema = z.object({
     .regex(/\d/, "Password must contain at least one number"),
   teamId: z.string().optional(), // matches your Prisma model
 });
-export const updateUserStatusZodSchema = z.object({
-  
-    status: z.enum([ActiveStatus.ACTIVE, ActiveStatus.INACTIVE,ActiveStatus.DELETED]),
- 
-});
+
 export const updateMyProfileZodSchema = z.object({
   name: z.string().min(3, "Name must be minimum 3 characters").optional(),
   contactNumber: z

@@ -8,27 +8,28 @@ import { systemSearchAbleFields } from "./system.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { TaskStatus } from "../../interfaces/taskStatus";
+import { ActiveStatus } from "../../interfaces/userRole";
 
 const createSystem = async (req: Request) => {
-     const isTeamExist = await prisma.team.findFirst({
-       where: {
-         id: req.body.teamId,
-       },
-     });
-     if (!isTeamExist) {
-       throw new AppError(
-         httpStatus.BAD_REQUEST,
-         "Team does't exist"
-       );
-     }
+  const isTeamExist = await prisma.team.findFirst({
+    where: {
+      id: req.body.teamId,
+    },
+  });
+  if (!isTeamExist) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Team does't exist");
+  }
   const isSystemExist = await prisma.system.findFirst({
-      where: {
-        name:req.body.name,
-        teamId:req.body.teamId
+    where: {
+      name: req.body.name,
+      teamId: req.body.teamId,
     },
   });
   if (isSystemExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "One system must be handle by unique team");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "One system must be handle by unique team"
+    );
   }
 
   const result = await prisma.system.create({
@@ -94,7 +95,7 @@ const softDeleteSystem = async (id: string): Promise<System> => {
   const activeTask = await prisma.task.findFirst({
     where: {
       systemId: id,
-      status: { in: [TaskStatus.IN_PROGRESS,TaskStatus.PENDING] },
+      status: { in: [TaskStatus.IN_PROGRESS, TaskStatus.PENDING] },
     },
   });
 
@@ -121,8 +122,29 @@ const softDeleteSystem = async (id: string): Promise<System> => {
     },
   });
 };
+const getSystemById = async (id: string) => {
+  return prisma.system.findFirstOrThrow({
+    where: {
+      id,
+      status: ActiveStatus.ACTIVE,
+    },
+    include: {
+      team: true,
+      tasks: true,
+    },
+  });
+};
+const updateSystemStatus = async (id: string, status: ActiveStatus) => {
+  return prisma.system.update({
+    where: { id },
+    data: { status },
+  });
+};
+
 export const systemService = {
   createSystem,
   getAllSystem,
   softDeleteSystem,
+  getSystemById,
+  updateSystemStatus,
 };

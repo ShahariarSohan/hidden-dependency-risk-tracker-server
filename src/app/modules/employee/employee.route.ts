@@ -5,9 +5,15 @@ import { employeeController } from "./employee.controller";
 
 const router = Router();
 router.get("/", authGuard(UserRole.ADMIN), employeeController.getAllEmployee);
+router.get(
+  "/:id",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  employeeController.getEmployeeById
+);
 router.delete(
-  "/:id/soft-delete",
+  "/soft-delete/:id",
   authGuard( UserRole.ADMIN),
   employeeController.softDeleteEmployee
 );
+
 export const employeeRoutes = router;

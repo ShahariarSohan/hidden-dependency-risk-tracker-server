@@ -5,20 +5,38 @@ import { UserRole } from "../../interfaces/userRole";
 import { taskController } from "./task.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { createTaskZodSchema } from "./task.validation";
+import { updateTaskStatusZodSchema } from "../../zod/status.schema";
 
 
 const router = Router();
-
+router.get("/", authGuard(UserRole.ADMIN), taskController.getAllTask);
+router.get(
+  "/:id",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
+  taskController.getTaskById
+);
 router.post(
   "/",
   authGuard(UserRole.ADMIN,UserRole.MANAGER),
   validateRequest(createTaskZodSchema),
   taskController.createTask
 );
-router.get("/", authGuard(UserRole.ADMIN), taskController.getAllTask);
+router.get(
+  "/my-assigned-tasks",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  taskController.getMyAssignedTasks
+);
+
 router.delete(
   "/soft-delete/:id",
   authGuard(UserRole.ADMIN),
   taskController.softDeleteTask
 );
+router.patch(
+  "/status/:id",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  validateRequest(updateTaskStatusZodSchema),
+  taskController.updateTaskStatus
+);
+
 export const taskRoutes = router;

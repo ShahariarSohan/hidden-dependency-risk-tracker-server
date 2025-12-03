@@ -246,28 +246,13 @@ const updateMyProfile = async (user: IAuthUser, updateData: Partial<User>) => {
 
   return { ...profileInfo };
 };
-const changeProfileStatus = async (
-  id: string,
-  status: { status: ActiveStatus }
-) => {
-  const userInfo = await prisma.user.findUnique({
-    where: {
-      id,
-    },
+const updateUserStatus = async (id: string, status: ActiveStatus) => {
+  return prisma.user.update({
+    where: { id },
+    data: { status },
   });
-  if (!userInfo) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
-
-  const updateUserStatus = await prisma.user.update({
-    where: {
-      id,
-    },
-    data: status,
-  });
-
-  return updateUserStatus;
 };
+
 const getAllUser = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
@@ -336,11 +321,21 @@ const getAllUser = async (params: any, options: IPaginationOptions) => {
     data: result,
   };
 };
+const getUserById = async (id: string) => {
+  return prisma.user.findFirstOrThrow({
+    where: {
+      id,
+      status: ActiveStatus.ACTIVE,
+    },
+  });
+};
+
 export const userService = {
   createEmployee,
   createManager,
   getMyProfile,
   updateMyProfile,
-  changeProfileStatus,
+  updateUserStatus,
   getAllUser,
+  getUserById
 };

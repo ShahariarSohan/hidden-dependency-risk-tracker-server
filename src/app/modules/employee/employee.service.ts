@@ -106,8 +106,24 @@ const softDeleteEmployee = async (id: string): Promise<Employee> => {
     return employee;
   });
 };
+const getEmployeeById = async (id: string) => {
+  return prisma.employee.findFirstOrThrow({
+    where: {
+      id,
+      isDeleted: false,
+      user: {
+        status: ActiveStatus.ACTIVE,
+      },
+    },
+    include: {
+      team: true,
+      tasks: true,
+    },
+  });
+};
 
 export const employeeService = {
   getAllEmployee,
-  softDeleteEmployee
-}
+  softDeleteEmployee,
+  getEmployeeById,
+};
