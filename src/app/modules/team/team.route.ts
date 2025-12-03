@@ -13,4 +13,5 @@ router.post(
   validateRequest(createTeamZodSchema),
   teamController.createTeam
 );
+router.get("/", authGuard(UserRole.ADMIN),teamController.getAllTeam);
 export const teamRoutes = router;

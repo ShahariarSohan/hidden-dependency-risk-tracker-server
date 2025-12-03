@@ -5,6 +5,7 @@ import { authRoutes } from "../modules/auth/auth.route";
 import { teamRoutes } from "../modules/team/team.route";
 import { systemRoutes } from "../modules/system/system.route";
 import { taskRoutes } from "../modules/task/task.route";
+import { employeeRoutes } from "../modules/employee/employee.route";
 
 
 export const router = Router();
@@ -15,6 +16,14 @@ interface IModuleRoutes{
 const moduleRoutes: IModuleRoutes[] = [
   {
     path: "/user",
+    route: userRoutes,
+  },
+  {
+    path: "/employee",
+    route: employeeRoutes,
+  },
+  {
+    path: "/manager",
     route: userRoutes,
   },
   {

@@ -15,4 +15,5 @@ router.post(
   validateRequest(createTaskZodSchema),
   taskController.createTask
 );
+router.get("/", authGuard(UserRole.ADMIN), taskController.getAllTask);
 export const taskRoutes = router;

@@ -1,9 +1,12 @@
-
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status-codes";
 import bcrypt from "bcrypt";
-import { Employee, Manager, Prisma, User } from "../../../../prisma/generated/client";
+import {
+  Employee,
+  Manager,
+  Prisma,
+  User,
+} from "../../../../prisma/generated/client";
 import { prisma } from "../../config/prisma";
 import { envVariables } from "../../config/env";
 import {
@@ -172,7 +175,7 @@ const getMyProfile = async (user: IAuthUser) => {
         name: true,
         email: true,
         contactNumber: true,
-        isDeleted:true,
+        isDeleted: true,
         tasks: {
           select: {
             id: true,
@@ -181,8 +184,20 @@ const getMyProfile = async (user: IAuthUser) => {
             status: true,
             priority: true,
             employeeId: true,
-            assignedByAdmin: true,
-            assignedByManager:true,
+            assignedByAdmin: {
+              select: {
+                email: true,
+                name: true,
+                contactNumber: true,
+              },
+            },
+            assignedByManager: {
+              select: {
+                email: true,
+                name: true,
+                contactNumber: true,
+              },
+            },
             systemId: true,
             completedAt: true,
             createdAt: true,
@@ -196,15 +211,13 @@ const getMyProfile = async (user: IAuthUser) => {
   return { userInfo, profileInfo };
 };
 
-const updateMyProfile = async (user: IAuthUser, updateData:Partial<User>) => {
+const updateMyProfile = async (user: IAuthUser, updateData: Partial<User>) => {
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
       email: user?.email,
       status: ActiveStatus.ACTIVE,
     },
   });
-
- 
 
   let profileInfo;
 
@@ -229,18 +242,21 @@ const updateMyProfile = async (user: IAuthUser, updateData:Partial<User>) => {
       },
       data: updateData,
     });
-  } 
+  }
 
   return { ...profileInfo };
 };
-const changeProfileStatus = async (id: string,status: {status: ActiveStatus}) => {
-  const userInfo=await prisma.user.findUnique({
+const changeProfileStatus = async (
+  id: string,
+  status: { status: ActiveStatus }
+) => {
+  const userInfo = await prisma.user.findUnique({
     where: {
       id,
     },
   });
   if (!userInfo) {
-    throw new AppError(httpStatus.NOT_FOUND,"User not found")
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
 
   const updateUserStatus = await prisma.user.update({
@@ -326,5 +342,5 @@ export const userService = {
   getMyProfile,
   updateMyProfile,
   changeProfileStatus,
-  getAllUser
+  getAllUser,
 };

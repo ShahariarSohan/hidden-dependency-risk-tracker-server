@@ -14,4 +14,6 @@ router.post(
   validateRequest(createSystemZodSchema),
   systemController.createSystem
 );
+
+router.get("/", authGuard(UserRole.ADMIN), systemController.getAllSystem);
 export const systemRoutes = router;
