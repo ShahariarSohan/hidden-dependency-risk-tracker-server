@@ -6,6 +6,7 @@ import { paginationTermArray } from "../../shared/paginationConstant";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { employeeService } from "./employee.service";
+import AppError from "../../errorHelpers/AppError";
 
 const getAllEmployee = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, userFilterableFields);
@@ -41,9 +42,27 @@ const getEmployeeById = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const addEmployeeToTeam = catchAsync(async (req: Request, res: Response) => {
+  const { employeeId } = req.params;
+  const { teamId } = req.body;
+
+  if (!teamId) {
+    throw new AppError(httpStatus.BAD_REQUEST, "teamId is required");
+  }
+
+  const result = await employeeService.addEmployeeToTeam(employeeId, teamId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Employee added to team successfully",
+    data: result,
+  });
+});
 
 export const employeeController = {
   getAllEmployee,
   softDeleteEmployee,
   getEmployeeById,
+  addEmployeeToTeam,
 };

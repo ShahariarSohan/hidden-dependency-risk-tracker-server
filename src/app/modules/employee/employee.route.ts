@@ -2,6 +2,8 @@ import { Router } from "express";
 import authGuard from "../../middlewares/authGuard";
 import { UserRole } from "../../interfaces/userRole";
 import { employeeController } from "./employee.controller";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { addEmployeeToTeamZodSchema } from "./employee.validation";
 
 const router = Router();
 router.get("/", authGuard(UserRole.ADMIN), employeeController.getAllEmployee);
@@ -10,6 +12,13 @@ router.get(
   authGuard(UserRole.ADMIN, UserRole.MANAGER),
   employeeController.getEmployeeById
 );
+router.patch(
+  "/add-to-team/:employeeId",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  validateRequest(addEmployeeToTeamZodSchema),
+  employeeController.addEmployeeToTeam
+);
+
 router.delete(
   "/soft-delete/:id",
   authGuard( UserRole.ADMIN),

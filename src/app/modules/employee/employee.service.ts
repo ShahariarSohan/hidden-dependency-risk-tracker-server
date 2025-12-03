@@ -121,9 +121,35 @@ const getEmployeeById = async (id: string) => {
     },
   });
 };
+const addEmployeeToTeam = async (employeeId: string, teamId: string) => {
+  // Check if employee exists and not deleted
+  const employee = await prisma.employee.findFirst({
+    where: { id: employeeId, isDeleted: false },
+  });
+  if (!employee) {
+    throw new AppError(httpStatus.NOT_FOUND, "Employee not found or inactive");
+  }
+
+  // Check if team exists and is active
+  const team = await prisma.team.findFirst({
+    where: { id: teamId, status: ActiveStatus.ACTIVE },
+  });
+  if (!team) {
+    throw new AppError(httpStatus.NOT_FOUND, "Team not found or inactive");
+  }
+
+  // Assign employee to team
+  const updatedEmployee = await prisma.employee.update({
+    where: { id: employeeId },
+    data: { teamId },
+  });
+
+  return updatedEmployee;
+};
 
 export const employeeService = {
   getAllEmployee,
   softDeleteEmployee,
   getEmployeeById,
+  addEmployeeToTeam,
 };
