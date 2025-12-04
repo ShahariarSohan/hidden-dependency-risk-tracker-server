@@ -62,7 +62,7 @@ const getSystemRisk = async (systemId: string) => {
     criticality: system.criticality,
     activeTasks: activeTasks.length,
     riskScore,
-    riskLevel: riskScore > 30 ? "HIGH" : riskScore > 15 ? "MEDIUM" : "LOW",
+    riskLevel: riskScore > 40 ? "HIGH" : riskScore > 20 ? "MEDIUM" : "LOW",
   };
 };
 
@@ -114,7 +114,7 @@ const getTeamRisk = async (teamId: string) => {
     totalEmployees: team.employees.length,
     teamRiskScore,
     teamRiskLevel:
-      teamRiskScore > 30 ? "HIGH" : teamRiskScore > 15 ? "MEDIUM" : "LOW",
+      teamRiskScore > 50 ? "HIGH" : teamRiskScore > 25 ? "MEDIUM" : "LOW",
     employeeRisks,
   };
 };

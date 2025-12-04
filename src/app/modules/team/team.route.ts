@@ -10,7 +10,7 @@ const router = Router();
 
 router.post(
   "/",
-  authGuard(UserRole.ADMIN),
+  authGuard(UserRole.ADMIN,UserRole.MANAGER),
   validateRequest(createTeamZodSchema),
   teamController.createTeam
 );

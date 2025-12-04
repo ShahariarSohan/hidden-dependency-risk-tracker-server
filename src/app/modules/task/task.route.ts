@@ -29,7 +29,7 @@ router.get(
 );
 router.delete(
   "/soft-delete/:id",
-  authGuard(UserRole.ADMIN),
+  authGuard(UserRole.ADMIN,UserRole.MANAGER),
   taskController.softDeleteTask
 );
 router.patch(
