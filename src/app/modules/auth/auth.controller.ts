@@ -46,10 +46,10 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getMe = catchAsync(
-  async (req: Request & { user?: any }, res: Response) => {
-    const user = req.cookies;
+  async (req: Request, res: Response) => {
+    const decodedUser = req.cookies;
 
-    const result = await authService.getMe(user);
+    const result = await authService.getMe(decodedUser);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

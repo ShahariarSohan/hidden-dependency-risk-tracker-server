@@ -42,7 +42,13 @@ const getAllSystem = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
 
-  const andConditions: Prisma.SystemWhereInput[] = [];
+  const andConditions: Prisma.SystemWhereInput[] = [
+    {
+      status: {
+        not: ActiveStatus.DELETED,
+      },
+    },
+  ];
 
   if (searchTerm) {
     andConditions.push({

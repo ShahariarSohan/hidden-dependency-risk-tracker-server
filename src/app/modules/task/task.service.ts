@@ -62,7 +62,14 @@ const getAllTask = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
 
-  const andConditions: Prisma.TaskWhereInput[] = [];
+  const andConditions: Prisma.TaskWhereInput[] = [
+    {
+      status: {
+        not: TaskStatus.CANCELLED,
+      },
+    },
+  ];
+
 
   if (searchTerm) {
     andConditions.push({
@@ -200,7 +207,7 @@ const getMyAssignedTasks = async (authUser: IAuthUser) => {
   }
 
   // MANAGER CASE
-  if (user.role === UserRole.MANAGER) {
+ else if (user.role === UserRole.MANAGER) {
     const manager = await prisma.manager.findUniqueOrThrow({
       where: {
         email: authUser.email,
@@ -224,8 +231,32 @@ const getMyAssignedTasks = async (authUser: IAuthUser) => {
       },
     });
   }
+    //EMPLOYEE CASE
+ else if (user.role === UserRole.EMPLOYEE) {
+    const employee = await prisma.employee.findUniqueOrThrow({
+      where: {
+        email: authUser.email,
+        isDeleted: false,
+      },
+    });
 
-  throw new AppError(httpStatus.FORBIDDEN, "Unauthorized role");
+    return prisma.task.findMany({
+      where: {
+        employeeId: employee.id,
+        status: {
+          not: TaskStatus.CANCELLED,
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        employee: true,
+        system: true,
+      },
+    });
+  }
+
 };
 
 export const taskService = {

@@ -14,7 +14,11 @@ const getAllManager = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
 
-  const andConditions: Prisma.ManagerWhereInput[] = [];
+  const andConditions: Prisma.ManagerWhereInput[] = [
+    {
+      isDeleted: false
+    },
+  ];
 
   if (searchTerm) {
     andConditions.push({

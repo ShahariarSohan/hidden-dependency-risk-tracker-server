@@ -23,7 +23,7 @@ router.post(
 );
 router.get(
   "/my-assigned-tasks",
-  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  authGuard(UserRole.ADMIN, UserRole.MANAGER,UserRole.EMPLOYEE),
   taskController.getMyAssignedTasks
 );
 

@@ -29,7 +29,13 @@ const getAllTeam = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
 
-  const andConditions: Prisma.TeamWhereInput[] = [];
+  const andConditions: Prisma.TeamWhereInput[] = [
+    {
+      status: {
+        not: ActiveStatus.DELETED,
+      },
+    },
+  ];
 
   if (searchTerm) {
     andConditions.push({

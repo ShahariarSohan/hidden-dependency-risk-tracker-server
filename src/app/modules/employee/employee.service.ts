@@ -14,7 +14,11 @@ const getAllEmployee = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
 
-  const andConditions: Prisma.EmployeeWhereInput[] = [];
+  const andConditions: Prisma.EmployeeWhereInput[] = [
+    {
+      isDeleted: false,
+    },
+  ];
 
   if (searchTerm) {
     andConditions.push({

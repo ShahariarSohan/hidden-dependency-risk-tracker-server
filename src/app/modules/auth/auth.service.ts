@@ -7,6 +7,7 @@ import { envVariables } from "../../config/env";
 import { Secret } from "jsonwebtoken";
 import { ActiveStatus } from "../../interfaces/userRole";
 import AppError from "../../errorHelpers/AppError";
+
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUnique({
     where: {
@@ -48,8 +49,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
     refreshToken,
   };
 };
-const getMe = async (user: any) => {
-  const accessToken = user.accessToken;
+const getMe = async (decodedUser: any) => {
+  const accessToken = decodedUser.accessToken;
   const decodedData = jwtHelpers.verifyToken(
     accessToken,
     envVariables.ACCESS_TOKEN_SECRET as Secret
