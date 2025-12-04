@@ -114,7 +114,7 @@ const softDeleteTeam = async (id: string): Promise<Team> => {
   return prisma.team.update({
     where: { id },
     data: {
-      status: "INACTIVE",
+      status: ActiveStatus.DELETED,
     },
   });
 };
@@ -131,7 +131,10 @@ const getTeamById = async (id: string) => {
     },
   });
 };
-const updateTeamStatus = async (id: string, status: ActiveStatus) => {
+const updateTeamStatus = async (
+  id: string,
+  status: ActiveStatus.ACTIVE | ActiveStatus.INACTIVE
+) => {
   return prisma.team.update({
     where: { id },
     data: { status },

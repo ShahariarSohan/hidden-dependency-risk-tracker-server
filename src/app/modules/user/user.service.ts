@@ -92,7 +92,7 @@ const createManager = async (managerData: IManager): Promise<Manager> => {
   return result;
 };
 const getMyProfile = async (user: IAuthUser) => {
-  const userInfo = await prisma.user.findUniqueOrThrow({
+  const userInfo = await prisma.user.findUnique({
     where: {
       email: user?.email,
       status: ActiveStatus.ACTIVE,
@@ -104,7 +104,9 @@ const getMyProfile = async (user: IAuthUser) => {
       status: true,
     },
   });
-
+ if (!userInfo) {
+   throw new AppError(httpStatus.BAD_REQUEST, "User not found");
+ }
   let profileInfo;
 
   if (userInfo.role === UserRole.ADMIN) {
@@ -212,13 +214,15 @@ const getMyProfile = async (user: IAuthUser) => {
 };
 
 const updateMyProfile = async (user: IAuthUser, updateData: Partial<User>) => {
-  const userInfo = await prisma.user.findUniqueOrThrow({
+  const userInfo = await prisma.user.findUnique({
     where: {
       email: user?.email,
       status: ActiveStatus.ACTIVE,
     },
   });
-
+  if (!userInfo) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User not found");
+  }
   let profileInfo;
 
   if (userInfo.role === UserRole.ADMIN) {
@@ -246,7 +250,7 @@ const updateMyProfile = async (user: IAuthUser, updateData: Partial<User>) => {
 
   return { ...profileInfo };
 };
-const updateUserStatus = async (id: string, status: ActiveStatus) => {
+const updateUserStatus = async (id: string, status: ActiveStatus.ACTIVE|ActiveStatus.INACTIVE) => {
   return prisma.user.update({
     where: { id },
     data: { status },
@@ -337,5 +341,5 @@ export const userService = {
   updateMyProfile,
   updateUserStatus,
   getAllUser,
-  getUserById
+  getUserById,
 };

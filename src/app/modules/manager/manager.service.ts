@@ -94,7 +94,7 @@ const softDeleteManager = async (id: string): Promise<Manager> => {
     // Manager.user relation: manager.id === user.id (per your schema)
     await tx.user.update({
       where: { id: manager.id },
-      data: { status: "INACTIVE" }, // ActiveStatus.INACTIVE
+      data: { status:ActiveStatus.DELETED }, 
     });
 
     return updated;

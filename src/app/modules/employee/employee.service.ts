@@ -99,7 +99,7 @@ const softDeleteEmployee = async (id: string): Promise<Employee> => {
         email: employee.email,
       },
       data: {
-        status: ActiveStatus.INACTIVE,
+        status: ActiveStatus.DELETED,
       },
     });
 

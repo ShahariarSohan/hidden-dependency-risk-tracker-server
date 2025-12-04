@@ -17,8 +17,11 @@ router.get(
   authGuard( UserRole.ADMIN),
   userController.getAllUser
 );
-router.get("/:id", authGuard(UserRole.ADMIN), userController.getUserById);
-
+router.get(
+  "/me",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
+  userController.getMyProfile
+);
 router.post(
   "/employee",
   authGuard(UserRole.ADMIN),
@@ -31,11 +34,14 @@ router.post(
   validateRequest(createManagerZodSchema),
   userController.createManager
 );
-router.get(
-  "/me",
+router.patch(
+  "/update-my-profile",
   authGuard(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
-  userController.getMyProfile
+  validateRequest(updateMyProfileZodSchema),
+  userController.updateMyProfile
 );
+router.get("/:id", authGuard(UserRole.ADMIN), userController.getUserById);
+
 router.patch(
   "/status/:id",
   authGuard(UserRole.ADMIN),
@@ -43,11 +49,4 @@ router.patch(
   userController.updateUserStatus
 );
 
-router.patch(
-  "/update-my-profile",
-  authGuard( UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
-  validateRequest(updateMyProfileZodSchema),
-  userController.updateMyProfile
-
-);
 export const userRoutes = router;

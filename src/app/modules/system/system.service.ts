@@ -118,7 +118,7 @@ const softDeleteSystem = async (id: string): Promise<System> => {
   return prisma.system.update({
     where: { id },
     data: {
-      status: "INACTIVE",
+      status: ActiveStatus.DELETED,
     },
   });
 };
@@ -134,7 +134,10 @@ const getSystemById = async (id: string) => {
     },
   });
 };
-const updateSystemStatus = async (id: string, status: ActiveStatus) => {
+const updateSystemStatus = async (
+  id: string,
+  status: ActiveStatus.ACTIVE | ActiveStatus.INACTIVE
+) => {
   return prisma.system.update({
     where: { id },
     data: { status },

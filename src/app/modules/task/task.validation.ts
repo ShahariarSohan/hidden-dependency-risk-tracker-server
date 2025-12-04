@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TaskStatus } from "../../interfaces/taskStatus";
 
 export const createTaskZodSchema = z
   .object({
@@ -37,3 +38,6 @@ export const createTaskZodSchema = z
       .string()
   })
   
+export const updateTaskStatusZodSchema = z.object({
+  status: z.enum([TaskStatus.PENDING, TaskStatus.IN_PROGRESS, TaskStatus.DONE]),
+});

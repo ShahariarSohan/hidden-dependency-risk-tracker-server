@@ -4,8 +4,8 @@ import { UserRole } from "../../interfaces/userRole";
 
 import { taskController } from "./task.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createTaskZodSchema } from "./task.validation";
-import { updateTaskStatusZodSchema } from "../../zod/status.schema";
+import { createTaskZodSchema, updateTaskStatusZodSchema } from "./task.validation";
+
 
 
 const router = Router();
