@@ -29,10 +29,10 @@ In many organizations:
 
 ## 🧠 Risk Calculation Logic
 
-`Task Risk = Task Priority × System Criticality`
-`Employee Risk = Sum of all active task risks`
-`Team Risk = Sum of employee risks within the team`
-`System Risk = Sum of active task risks linked to the system`
+- `Task Risk = Task Priority × System Criticality`
+- `Employee Risk = Sum of all active task risks`
+- `Team Risk = Sum of employee risks within the team`
+- `System Risk = Sum of active task risks linked to the system`
 
 ✅ Only `PENDING` and `IN_PROGRESS` tasks contribute to risk  
 ❌ `DONE` and `CANCELLED` tasks do not contribute
@@ -51,6 +51,7 @@ In many organizations:
 
 ## 📁 Project Structure
 
+```
 src/
 ┣ modules/
 ┃ ┣ auth/
@@ -68,7 +69,7 @@ src/
 ┣ config/
 ┗ app.ts
 ┗ server.ts
-
+```
 ---
 
 ## 🔐 Authentication & Roles
@@ -100,8 +101,8 @@ src/
 
 ### Login
 
-`POST /api/v1/auth/login` --->Everyone
-`GET /api/v1/auth/me` --->Logged in user
+- `POST /api/v1/auth/login` --->Everyone
+- `GET /api/v1/auth/me` --->Logged in user
 
 ---
 
@@ -180,18 +181,18 @@ Supports pagination, filtering, searching, and sorting
 
 ### Employee Risk
 
-`GET /api/v1/riskAnalysis/employee`  --->Admin
-`GET /api/v1/riskAnalysis/employee/:employeeId`  --->Admin
+- `GET /api/v1/riskAnalysis/employee`  --->Admin
+- `GET /api/v1/riskAnalysis/employee/:employeeId`  --->Admin
 
 ### Team Risk
 
-`GET /api/v1/riskAnalysis/team` --->Admin
-`GET /api/v1/riskAnalysis/team/:teamId`  --->Admin
+- `GET /api/v1/riskAnalysis/team` --->Admin
+- `GET /api/v1/riskAnalysis/team/:teamId`  --->Admin
 
 ### System Risk
 
-`GET /api/v1/riskAnalysis/system` --->Admin
-`GET /api/v1/riskAnalysis/system/:systemId`  --->Admin
+- `GET /api/v1/riskAnalysis/system` --->Admin
+- `GET /api/v1/riskAnalysis/system/:systemId`  --->Admin
 
 ---
 
