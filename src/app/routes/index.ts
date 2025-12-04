@@ -6,6 +6,7 @@ import { teamRoutes } from "../modules/team/team.route";
 import { systemRoutes } from "../modules/system/system.route";
 import { taskRoutes } from "../modules/task/task.route";
 import { employeeRoutes } from "../modules/employee/employee.route";
+import { riskAnalysisRoutes } from "../modules/riskAnalysis/riskAnalysis.route";
 
 
 export const router = Router();
@@ -41,6 +42,10 @@ const moduleRoutes: IModuleRoutes[] = [
   {
     path: "/task",
     route: taskRoutes,
+  },
+  {
+    path: "/riskAnalysis",
+    route: riskAnalysisRoutes,
   },
 ];
  
