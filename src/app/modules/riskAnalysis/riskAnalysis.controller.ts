@@ -3,6 +3,9 @@ import { Request, Response } from "express";
 import sendResponse from "../../shared/sendResponse";
 import { riskAnalysisService } from "./riskAnalysis.service";
 import catchAsync from "../../shared/catchAsync";
+import { riskFilterableFields } from "./riskAnalysis.constant";
+import { paginationTermArray } from "../../shared/paginationConstant";
+import pick from "../../shared/pick";
 
 const getEmployeeRisk = catchAsync(async (req: Request, res: Response) => {
   const { employeeId } = req.params;
@@ -15,16 +18,21 @@ const getEmployeeRisk = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-const getAllEmployeeRisk = catchAsync(async (req: Request, res: Response) => {
-  const result = await riskAnalysisService.getAllEmployeeRisk();
+const getAllEmployeeRisk = catchAsync(async (req, res) => {
+  const filters = pick(req.query, riskFilterableFields);
+  const options = pick(req.query, paginationTermArray);
+
+  const result = await riskAnalysisService.getAllEmployeeRisk(filters, options);
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Employees risks fetched successfully",
-    data: result,
+    message: "Employee risk analysis fetched successfully",
+    meta: result.meta,
+    data: result.data,
   });
 });
+
 
 const getSystemRisk = catchAsync(async (req: Request, res: Response) => {
   const { systemId } = req.params;
@@ -38,16 +46,22 @@ const getSystemRisk = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllSystemRisk = catchAsync(async (req: Request, res: Response) => {
-  const result = await riskAnalysisService.getAllSystemRisk();
+
+const getAllSystemRisk = catchAsync(async (req, res) => {
+  const filters = pick(req.query, riskFilterableFields);
+  const options = pick(req.query, paginationTermArray);
+
+  const result = await riskAnalysisService.getAllSystemRisk(filters, options);
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Systems risks fetched successfully",
-    data: result,
+    message: "System risk analysis fetched successfully",
+    meta: result.meta,
+    data: result.data,
   });
 });
+
 const getTeamRisk = catchAsync(async (req: Request, res: Response) => {
   const { teamId } = req.params;
   const result = await riskAnalysisService.getTeamRisk(teamId);
@@ -59,14 +73,18 @@ const getTeamRisk = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-const getAllTeamRisk = catchAsync(async (req: Request, res: Response) => {
-  const result = await riskAnalysisService.getAllTeamRisk();
+const getAllTeamRisk = catchAsync(async (req, res) => {
+  const filters = pick(req.query, riskFilterableFields);
+  const options = pick(req.query, paginationTermArray);
+
+  const result = await riskAnalysisService.getAllTeamRisk(filters, options);
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Teams risks fetched successfully",
-    data: result,
+    message: "Team risk analysis fetched successfully",
+    meta: result.meta,
+    data: result.data,
   });
 });
 const getRiskDashboard = catchAsync(async (_req: Request, res: Response) => {
