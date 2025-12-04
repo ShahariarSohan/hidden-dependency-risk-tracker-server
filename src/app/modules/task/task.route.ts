@@ -10,11 +10,7 @@ import { createTaskZodSchema, updateTaskStatusZodSchema } from "./task.validatio
 
 const router = Router();
 router.get("/", authGuard(UserRole.ADMIN), taskController.getAllTask);
-router.get(
-  "/:id",
-  authGuard(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
-  taskController.getTaskById
-);
+
 router.post(
   "/",
   authGuard(UserRole.ADMIN,UserRole.MANAGER),
@@ -26,7 +22,11 @@ router.get(
   authGuard(UserRole.ADMIN, UserRole.MANAGER,UserRole.EMPLOYEE),
   taskController.getMyAssignedTasks
 );
-
+router.get(
+  "/:id",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
+  taskController.getTaskById
+);
 router.delete(
   "/soft-delete/:id",
   authGuard(UserRole.ADMIN),

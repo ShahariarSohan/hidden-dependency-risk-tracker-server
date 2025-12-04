@@ -1,0 +1,77 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import httpStatus from "http-status";
+import catchAsync from "../../shared/catchAsync";
+import sendResponse from "../../shared/sendResponse";
+import { taskService } from "./task.service";
+import pick from "../../shared/pick";
+import { taskFilterableFields } from "./task.constant";
+import { paginationTermArray } from "../../shared/paginationConstant";
+const createTask = catchAsync(async (req, res) => {
+    const result = await taskService.createTask(req);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Task created successfully!",
+        data: result,
+    });
+});
+const getAllTask = catchAsync(async (req, res) => {
+    const filters = pick(req.query, taskFilterableFields);
+    const options = pick(req.query, paginationTermArray);
+    const result = await taskService.getAllTask(filters, options);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Tasks data fetched!",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+const softDeleteTask = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await taskService.softDeleteTask(id);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Task soft deleted successfully",
+        data: result,
+    });
+});
+const getTaskById = catchAsync(async (req, res) => {
+    const result = await taskService.getTaskById(req.params.id);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Task fetched successfully",
+        data: result,
+    });
+});
+const updateTaskStatus = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    const result = await taskService.updateTaskStatus(id, status);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Task status updated successfully",
+        data: result,
+    });
+});
+const getMyAssignedTasks = catchAsync(async (req, res) => {
+    const authUser = req.user;
+    const result = await taskService.getMyAssignedTasks(authUser);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "My assigned tasks fetched successfully",
+        data: result,
+    });
+});
+export const taskController = {
+    createTask,
+    getAllTask,
+    softDeleteTask,
+    getTaskById,
+    updateTaskStatus,
+    getMyAssignedTasks,
+};

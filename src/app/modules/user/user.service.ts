@@ -332,13 +332,15 @@ const getAllUser = async (params: any, options: IPaginationOptions) => {
   };
 };
 const getUserById = async (id: string) => {
-  return prisma.user.findFirstOrThrow({
+  return prisma.user.findUniqueOrThrow({
     where: {
       id,
       status: ActiveStatus.ACTIVE,
     },
   });
+  
 };
+
 
 export const userService = {
   createEmployee,

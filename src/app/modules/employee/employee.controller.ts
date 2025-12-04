@@ -1,15 +1,16 @@
 import httpStatus from "http-status";
 import { Request, Response } from "express";
 import pick from "../../shared/pick";
-import { userFilterableFields } from "../user/user.constant";
+
 import { paginationTermArray } from "../../shared/paginationConstant";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { employeeService } from "./employee.service";
 import AppError from "../../errorHelpers/AppError";
+import { employeeFilterableFields } from "./employee.constant";
 
 const getAllEmployee = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, userFilterableFields);
+  const filters = pick(req.query, employeeFilterableFields);
   const options = pick(req.query, paginationTermArray);
 
   const result = await employeeService.getAllEmployee(filters, options);
@@ -17,7 +18,7 @@ const getAllEmployee = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Users data fetched!",
+    message: "Employees data fetched!",
     meta: result.meta,
     data: result.data,
   });

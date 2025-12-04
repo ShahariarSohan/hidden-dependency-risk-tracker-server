@@ -149,11 +149,56 @@ const updateSystemStatus = async (
     data: { status },
   });
 };
+const addSystemToTeam = async (systemId: string, teamId: string) => {
+  // 1. Check if system exists and not deleted
+  const system = await prisma.system.findFirst({
+    where: {
+      id: systemId,
+      status: ActiveStatus.ACTIVE,
+    },
+  });
 
+  if (!system) {
+    throw new AppError(httpStatus.NOT_FOUND, "System not found or inactive");
+  }
+
+  // 2. Check if team exists and is active
+  const team = await prisma.team.findFirst({
+    where: {
+      id: teamId,
+      status: ActiveStatus.ACTIVE,
+    },
+  });
+
+  if (!team) {
+    throw new AppError(httpStatus.NOT_FOUND, "Team not found or inactive");
+  }
+
+  // 3. Prevent re-assigning to same team (optional but professional)
+  if (system.teamId === teamId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "System is already assigned to this team"
+    );
+  }
+
+  // 4. Assign system to team
+  const updatedSystem = await prisma.system.update({
+    where: {
+      id: systemId,
+    },
+    data: {
+      teamId,
+    },
+  });
+
+  return updatedSystem;
+};
 export const systemService = {
   createSystem,
   getAllSystem,
   softDeleteSystem,
   getSystemById,
   updateSystemStatus,
+  addSystemToTeam,
 };

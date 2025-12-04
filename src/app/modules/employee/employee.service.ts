@@ -72,42 +72,52 @@ const getAllEmployee = async (params: any, options: IPaginationOptions) => {
   };
 };
 const softDeleteEmployee = async (id: string): Promise<Employee> => {
-   const employee = await prisma.employee.findUnique({ where: { id } });
-   if (!employee) {
-     throw new AppError(httpStatus.NOT_FOUND, "Employee not found");
-   }
+  const employee = await prisma.employee.findUnique({
+    where: { id },
+  });
+
+  if (!employee) {
+    throw new AppError(httpStatus.NOT_FOUND, "Employee not found");
+  }
+
+  // ✅ Check team membership
+  if (employee.teamId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Employee is still assigned to a team. Remove from team before deleting."
+    );
+  }
+
+  // ✅ Check active tasks
   const hasActiveTasks = await prisma.task.findFirst({
     where: {
       employeeId: id,
       status: {
-        in: [TaskStatus.IN_PROGRESS,TaskStatus.PENDING],
+        in: [TaskStatus.IN_PROGRESS, TaskStatus.PENDING],
       },
     },
   });
+
   if (hasActiveTasks) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       "Employee has unfinished tasks. Reassign or complete them first."
     );
   }
+
+  // ✅ Atomic operation
   return prisma.$transaction(async (tx) => {
-    const employee = await tx.employee.update({
+    const deletedEmployee = await tx.employee.update({
       where: { id },
-      data: {
-        isDeleted: true,
-      },
+      data: { isDeleted: true },
     });
 
     await tx.user.update({
-      where: {
-        email: employee.email,
-      },
-      data: {
-        status: ActiveStatus.DELETED,
-      },
+      where: { email: deletedEmployee.email },
+      data: { status: ActiveStatus.DELETED },
     });
 
-    return employee;
+    return deletedEmployee;
   });
 };
 const getEmployeeById = async (id: string) => {
@@ -131,7 +141,13 @@ const addEmployeeToTeam = async (employeeId: string, teamId: string) => {
     where: { id: employeeId, isDeleted: false },
   });
   if (!employee) {
-    throw new AppError(httpStatus.NOT_FOUND, "Employee not found or inactive");
+    throw new AppError(httpStatus.NOT_FOUND, "Employee not found ");
+  }
+  const isEmployeeActive = await prisma.user.findFirst({
+    where:{email:employee.email,status:ActiveStatus.ACTIVE}
+  })
+  if (!isEmployeeActive) {
+    throw new AppError(httpStatus.NOT_FOUND, "Employee is  inactive");
   }
 
   // Check if team exists and is active
@@ -141,7 +157,12 @@ const addEmployeeToTeam = async (employeeId: string, teamId: string) => {
   if (!team) {
     throw new AppError(httpStatus.NOT_FOUND, "Team not found or inactive");
   }
-
+   if (employee.teamId === teamId) {
+     throw new AppError(
+       httpStatus.BAD_REQUEST,
+       "employee is already assigned to this team"
+     );
+   }
   // Assign employee to team
   const updatedEmployee = await prisma.employee.update({
     where: { id: employeeId },

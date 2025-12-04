@@ -61,7 +61,6 @@ const getAllManager = async (params: any, options: IPaginationOptions) => {
     data: result,
   };
 };
-// services/manager.service.ts
 
 
 const softDeleteManager = async (id: string): Promise<Manager> => {
@@ -88,7 +87,7 @@ const softDeleteManager = async (id: string): Promise<Manager> => {
 
   // 3. perform soft-delete transaction: mark manager deleted + deactivate related user
   return prisma.$transaction(async (tx) => {
-    const updated = await tx.manager.update({
+    const deletedManager = await tx.manager.update({
       where: { id },
       data: {
         isDeleted: true,
@@ -97,11 +96,11 @@ const softDeleteManager = async (id: string): Promise<Manager> => {
 
     // Manager.user relation: manager.id === user.id (per your schema)
     await tx.user.update({
-      where: { id: manager.id },
+      where: { email:deletedManager.email },
       data: { status:ActiveStatus.DELETED }, 
     });
 
-    return updated;
+    return deletedManager;
   });
 };
 

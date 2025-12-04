@@ -465,7 +465,7 @@ const getRiskDashboard = async () => {
 
   const highRiskEmployees = employeeRisks.filter((e) => e.riskLevel === "HIGH");
   const highRiskSystems = systemRisks.filter((s) => s.riskLevel === "HIGH");
-  const highRiskTeams = systemRisks.filter((t) => t.riskLevel === "HIGH");
+  const highRiskTeams = teamRisks.filter((t) => t.riskLevel === "HIGH");
 
   return {
     summary: {
@@ -487,7 +487,7 @@ const getRiskDashboard = async () => {
     tables: {
       highRiskEmployees,
       highRiskSystems,
-      teamRisks,
+      highRiskTeams,
     },
   };
 };

@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { riskAnalysisController } from "./riskAnalysis.controller";
+import { UserRole } from "../../interfaces/userRole";
+import authGuard from "../../middlewares/authGuard";
+const router = Router();
+router.get("/", authGuard(UserRole.ADMIN, UserRole.MANAGER), riskAnalysisController.getRiskDashboard);
+router.get("/employee", authGuard(UserRole.ADMIN, UserRole.MANAGER), riskAnalysisController.getAllEmployeeRisk);
+router.get("/employee/:employeeId", authGuard(UserRole.ADMIN, UserRole.MANAGER), riskAnalysisController.getEmployeeRisk);
+router.get("/system", authGuard(UserRole.ADMIN, UserRole.MANAGER), riskAnalysisController.getAllSystemRisk);
+router.get("/system/:systemId", authGuard(UserRole.ADMIN, UserRole.MANAGER), riskAnalysisController.getSystemRisk);
+router.get("/team", authGuard(UserRole.ADMIN, UserRole.MANAGER), riskAnalysisController.getAllTeamRisk);
+router.get("/team/:teamId", authGuard(UserRole.ADMIN, UserRole.MANAGER), riskAnalysisController.getTeamRisk);
+export const riskAnalysisRoutes = router;

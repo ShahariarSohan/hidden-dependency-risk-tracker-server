@@ -34,17 +34,22 @@ const globalErrorHandler = (
   if (err instanceof Prisma.PrismaClientValidationError) {
     statusCode = httpStatus.BAD_REQUEST;
     message = "Validation Error";
-    error = err.message;
+    error = err;
   } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === "P2002") {
       statusCode = httpStatus.CONFLICT;
       message = "Duplicate Key error";
       error = err.meta;
     }
+    if (err.code === "P2025") {
+      statusCode = httpStatus.NOT_FOUND;
+      message = "Requested resource not found";
+      error = err;
+    }
   } else if (err instanceof AppError) {
     statusCode = err.statusCode;
-      message = err.message;
-      error = err;
+    message = err.message;
+    error = err;
   }
 
   // Sanitize error before sending response
