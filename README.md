@@ -56,7 +56,6 @@ src/
 ┣ modules/
 ┃ ┣ auth/
 ┃ ┣ user/
-┃ ┣ admin/
 ┃ ┣ manager/
 ┃ ┣ employee/
 ┃ ┣ team/
