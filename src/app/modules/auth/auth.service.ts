@@ -9,15 +9,12 @@ import { ActiveStatus } from "../../interfaces/userRole";
 import AppError from "../../errorHelpers/AppError";
 
 const loginUser = async (payload: { email: string; password: string }) => {
-  const userData = await prisma.user.findUnique({
+  const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
       status: ActiveStatus.ACTIVE,
     },
   });
-  if (!userData) {
-    throw new AppError(httpStatus.NOT_FOUND, "User doesn't exist");
-  }
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,
     userData.password
