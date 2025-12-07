@@ -16,7 +16,8 @@ const getAllManager = async (params: any, options: IPaginationOptions) => {
 
   const andConditions: Prisma.ManagerWhereInput[] = [
     {
-      isDeleted: false
+      isDeleted: false,
+      status: ActiveStatus.ACTIVE,
     },
   ];
 
@@ -91,6 +92,7 @@ const softDeleteManager = async (id: string): Promise<Manager> => {
       where: { id },
       data: {
         isDeleted: true,
+        status:ActiveStatus.DELETED
       },
     });
 

@@ -453,10 +453,6 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type EnumStatusFieldUpdateOperationsInput = {
-  set?: $Enums.Status
-}
-
 export type SystemCreateNestedOneWithoutTasksInput = {
   create?: Prisma.XOR<Prisma.SystemCreateWithoutTasksInput, Prisma.SystemUncheckedCreateWithoutTasksInput>
   connectOrCreate?: Prisma.SystemCreateOrConnectWithoutTasksInput

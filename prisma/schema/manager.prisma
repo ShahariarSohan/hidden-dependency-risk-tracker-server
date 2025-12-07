@@ -5,6 +5,7 @@ model Manager {
   user          User     @relation(fields: [email], references: [email])
   assignedTasks Task[]   @relation("AssignedByManager")
   contactNumber String
+  status    Status     @default(ACTIVE)
   isDeleted     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

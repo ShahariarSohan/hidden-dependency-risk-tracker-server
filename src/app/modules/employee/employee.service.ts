@@ -17,6 +17,7 @@ const getAllEmployee = async (params: any, options: IPaginationOptions) => {
   const andConditions: Prisma.EmployeeWhereInput[] = [
     {
       isDeleted: false,
+      status:ActiveStatus.ACTIVE
     },
   ];
 
@@ -109,7 +110,7 @@ const softDeleteEmployee = async (id: string): Promise<Employee> => {
   return prisma.$transaction(async (tx) => {
     const deletedEmployee = await tx.employee.update({
       where: { id },
-      data: { isDeleted: true },
+      data: { isDeleted: true,status:ActiveStatus.DELETED },
     });
 
     await tx.user.update({

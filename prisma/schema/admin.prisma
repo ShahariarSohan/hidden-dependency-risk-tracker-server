@@ -4,6 +4,7 @@ model Admin {
   user          User     @relation(fields: [email], references: [email])
   name          String
   contactNumber String
+  status    Status     @default(ACTIVE)
   assignedTasks Task[]   @relation("AssignedByAdmin")
   isDeleted     Boolean  @default(false)
   createdAt     DateTime @default(now())

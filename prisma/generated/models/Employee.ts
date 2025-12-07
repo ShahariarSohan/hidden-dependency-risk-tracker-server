@@ -30,6 +30,7 @@ export type EmployeeMinAggregateOutputType = {
   email: string | null
   teamId: string | null
   contactNumber: string | null
+  status: $Enums.Status | null
   isDeleted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -41,6 +42,7 @@ export type EmployeeMaxAggregateOutputType = {
   email: string | null
   teamId: string | null
   contactNumber: string | null
+  status: $Enums.Status | null
   isDeleted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -52,6 +54,7 @@ export type EmployeeCountAggregateOutputType = {
   email: number
   teamId: number
   contactNumber: number
+  status: number
   isDeleted: number
   createdAt: number
   updatedAt: number
@@ -65,6 +68,7 @@ export type EmployeeMinAggregateInputType = {
   email?: true
   teamId?: true
   contactNumber?: true
+  status?: true
   isDeleted?: true
   createdAt?: true
   updatedAt?: true
@@ -76,6 +80,7 @@ export type EmployeeMaxAggregateInputType = {
   email?: true
   teamId?: true
   contactNumber?: true
+  status?: true
   isDeleted?: true
   createdAt?: true
   updatedAt?: true
@@ -87,6 +92,7 @@ export type EmployeeCountAggregateInputType = {
   email?: true
   teamId?: true
   contactNumber?: true
+  status?: true
   isDeleted?: true
   createdAt?: true
   updatedAt?: true
@@ -171,6 +177,7 @@ export type EmployeeGroupByOutputType = {
   email: string
   teamId: string | null
   contactNumber: string
+  status: $Enums.Status
   isDeleted: boolean
   createdAt: Date
   updatedAt: Date
@@ -203,6 +210,7 @@ export type EmployeeWhereInput = {
   email?: Prisma.StringFilter<"Employee"> | string
   teamId?: Prisma.StringNullableFilter<"Employee"> | string | null
   contactNumber?: Prisma.StringFilter<"Employee"> | string
+  status?: Prisma.EnumStatusFilter<"Employee"> | $Enums.Status
   isDeleted?: Prisma.BoolFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -217,6 +225,7 @@ export type EmployeeOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -234,6 +243,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Employee"> | string
   teamId?: Prisma.StringNullableFilter<"Employee"> | string | null
   contactNumber?: Prisma.StringFilter<"Employee"> | string
+  status?: Prisma.EnumStatusFilter<"Employee"> | $Enums.Status
   isDeleted?: Prisma.BoolFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -248,6 +258,7 @@ export type EmployeeOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -265,6 +276,7 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   teamId?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   contactNumber?: Prisma.StringWithAggregatesFilter<"Employee"> | string
+  status?: Prisma.EnumStatusWithAggregatesFilter<"Employee"> | $Enums.Status
   isDeleted?: Prisma.BoolWithAggregatesFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
@@ -274,6 +286,7 @@ export type EmployeeCreateInput = {
   id?: string
   name: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -288,6 +301,7 @@ export type EmployeeUncheckedCreateInput = {
   email: string
   teamId?: string | null
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -298,6 +312,7 @@ export type EmployeeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -312,6 +327,7 @@ export type EmployeeUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -324,6 +340,7 @@ export type EmployeeCreateManyInput = {
   email: string
   teamId?: string | null
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -333,6 +350,7 @@ export type EmployeeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -344,6 +362,7 @@ export type EmployeeUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -355,6 +374,7 @@ export type EmployeeCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -366,6 +386,7 @@ export type EmployeeMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -377,6 +398,7 @@ export type EmployeeMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -498,6 +520,7 @@ export type EmployeeCreateWithoutTasksInput = {
   id?: string
   name: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -511,6 +534,7 @@ export type EmployeeUncheckedCreateWithoutTasksInput = {
   email: string
   teamId?: string | null
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -536,6 +560,7 @@ export type EmployeeUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -549,6 +574,7 @@ export type EmployeeUncheckedUpdateWithoutTasksInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -558,6 +584,7 @@ export type EmployeeCreateWithoutTeamInput = {
   id?: string
   name: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -570,6 +597,7 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   name: string
   email: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -611,6 +639,7 @@ export type EmployeeScalarWhereInput = {
   email?: Prisma.StringFilter<"Employee"> | string
   teamId?: Prisma.StringNullableFilter<"Employee"> | string | null
   contactNumber?: Prisma.StringFilter<"Employee"> | string
+  status?: Prisma.EnumStatusFilter<"Employee"> | $Enums.Status
   isDeleted?: Prisma.BoolFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -620,6 +649,7 @@ export type EmployeeCreateWithoutUserInput = {
   id?: string
   name: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -632,6 +662,7 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   name: string
   teamId?: string | null
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -658,6 +689,7 @@ export type EmployeeUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -670,6 +702,7 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -681,6 +714,7 @@ export type EmployeeCreateManyTeamInput = {
   name: string
   email: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -690,6 +724,7 @@ export type EmployeeUpdateWithoutTeamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -702,6 +737,7 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -713,6 +749,7 @@ export type EmployeeUncheckedUpdateManyWithoutTeamInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -755,6 +792,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   email?: boolean
   teamId?: boolean
   contactNumber?: boolean
+  status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -770,6 +808,7 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   email?: boolean
   teamId?: boolean
   contactNumber?: boolean
+  status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -783,6 +822,7 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   email?: boolean
   teamId?: boolean
   contactNumber?: boolean
+  status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -796,12 +836,13 @@ export type EmployeeSelectScalar = {
   email?: boolean
   teamId?: boolean
   contactNumber?: boolean
+  status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "teamId" | "contactNumber" | "isDeleted" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "teamId" | "contactNumber" | "status" | "isDeleted" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   team?: boolean | Prisma.Employee$teamArgs<ExtArgs>
@@ -830,6 +871,7 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     email: string
     teamId: string | null
     contactNumber: string
+    status: $Enums.Status
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date
@@ -1264,6 +1306,7 @@ export interface EmployeeFieldRefs {
   readonly email: Prisma.FieldRef<"Employee", 'String'>
   readonly teamId: Prisma.FieldRef<"Employee", 'String'>
   readonly contactNumber: Prisma.FieldRef<"Employee", 'String'>
+  readonly status: Prisma.FieldRef<"Employee", 'Status'>
   readonly isDeleted: Prisma.FieldRef<"Employee", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Employee", 'DateTime'>

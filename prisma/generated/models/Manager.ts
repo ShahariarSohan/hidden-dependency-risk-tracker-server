@@ -29,6 +29,7 @@ export type ManagerMinAggregateOutputType = {
   name: string | null
   email: string | null
   contactNumber: string | null
+  status: $Enums.Status | null
   isDeleted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -39,6 +40,7 @@ export type ManagerMaxAggregateOutputType = {
   name: string | null
   email: string | null
   contactNumber: string | null
+  status: $Enums.Status | null
   isDeleted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -49,6 +51,7 @@ export type ManagerCountAggregateOutputType = {
   name: number
   email: number
   contactNumber: number
+  status: number
   isDeleted: number
   createdAt: number
   updatedAt: number
@@ -61,6 +64,7 @@ export type ManagerMinAggregateInputType = {
   name?: true
   email?: true
   contactNumber?: true
+  status?: true
   isDeleted?: true
   createdAt?: true
   updatedAt?: true
@@ -71,6 +75,7 @@ export type ManagerMaxAggregateInputType = {
   name?: true
   email?: true
   contactNumber?: true
+  status?: true
   isDeleted?: true
   createdAt?: true
   updatedAt?: true
@@ -81,6 +86,7 @@ export type ManagerCountAggregateInputType = {
   name?: true
   email?: true
   contactNumber?: true
+  status?: true
   isDeleted?: true
   createdAt?: true
   updatedAt?: true
@@ -164,6 +170,7 @@ export type ManagerGroupByOutputType = {
   name: string
   email: string
   contactNumber: string
+  status: $Enums.Status
   isDeleted: boolean
   createdAt: Date
   updatedAt: Date
@@ -195,6 +202,7 @@ export type ManagerWhereInput = {
   name?: Prisma.StringFilter<"Manager"> | string
   email?: Prisma.StringFilter<"Manager"> | string
   contactNumber?: Prisma.StringFilter<"Manager"> | string
+  status?: Prisma.EnumStatusFilter<"Manager"> | $Enums.Status
   isDeleted?: Prisma.BoolFilter<"Manager"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
@@ -207,6 +215,7 @@ export type ManagerOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -222,6 +231,7 @@ export type ManagerWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ManagerWhereInput | Prisma.ManagerWhereInput[]
   name?: Prisma.StringFilter<"Manager"> | string
   contactNumber?: Prisma.StringFilter<"Manager"> | string
+  status?: Prisma.EnumStatusFilter<"Manager"> | $Enums.Status
   isDeleted?: Prisma.BoolFilter<"Manager"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
@@ -234,6 +244,7 @@ export type ManagerOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -250,6 +261,7 @@ export type ManagerScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   email?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   contactNumber?: Prisma.StringWithAggregatesFilter<"Manager"> | string
+  status?: Prisma.EnumStatusWithAggregatesFilter<"Manager"> | $Enums.Status
   isDeleted?: Prisma.BoolWithAggregatesFilter<"Manager"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Manager"> | Date | string
@@ -259,6 +271,7 @@ export type ManagerCreateInput = {
   id?: string
   name: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -271,6 +284,7 @@ export type ManagerUncheckedCreateInput = {
   name: string
   email: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -281,6 +295,7 @@ export type ManagerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -293,6 +308,7 @@ export type ManagerUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -304,6 +320,7 @@ export type ManagerCreateManyInput = {
   name: string
   email: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -313,6 +330,7 @@ export type ManagerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -323,6 +341,7 @@ export type ManagerUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -333,6 +352,7 @@ export type ManagerCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -343,6 +363,7 @@ export type ManagerMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -353,6 +374,7 @@ export type ManagerMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -415,6 +437,7 @@ export type ManagerCreateWithoutAssignedTasksInput = {
   id?: string
   name: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -426,6 +449,7 @@ export type ManagerUncheckedCreateWithoutAssignedTasksInput = {
   name: string
   email: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -451,6 +475,7 @@ export type ManagerUpdateWithoutAssignedTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -462,6 +487,7 @@ export type ManagerUncheckedUpdateWithoutAssignedTasksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -471,6 +497,7 @@ export type ManagerCreateWithoutUserInput = {
   id?: string
   name: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -481,6 +508,7 @@ export type ManagerUncheckedCreateWithoutUserInput = {
   id?: string
   name: string
   contactNumber: string
+  status?: $Enums.Status
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -507,6 +535,7 @@ export type ManagerUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -517,6 +546,7 @@ export type ManagerUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -559,6 +589,7 @@ export type ManagerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   email?: boolean
   contactNumber?: boolean
+  status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -572,6 +603,7 @@ export type ManagerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   email?: boolean
   contactNumber?: boolean
+  status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -583,6 +615,7 @@ export type ManagerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   email?: boolean
   contactNumber?: boolean
+  status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -594,12 +627,13 @@ export type ManagerSelectScalar = {
   name?: boolean
   email?: boolean
   contactNumber?: boolean
+  status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ManagerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "contactNumber" | "isDeleted" | "createdAt" | "updatedAt", ExtArgs["result"]["manager"]>
+export type ManagerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "contactNumber" | "status" | "isDeleted" | "createdAt" | "updatedAt", ExtArgs["result"]["manager"]>
 export type ManagerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.Manager$assignedTasksArgs<ExtArgs>
@@ -623,6 +657,7 @@ export type $ManagerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     name: string
     email: string
     contactNumber: string
+    status: $Enums.Status
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date
@@ -1055,6 +1090,7 @@ export interface ManagerFieldRefs {
   readonly name: Prisma.FieldRef<"Manager", 'String'>
   readonly email: Prisma.FieldRef<"Manager", 'String'>
   readonly contactNumber: Prisma.FieldRef<"Manager", 'String'>
+  readonly status: Prisma.FieldRef<"Manager", 'Status'>
   readonly isDeleted: Prisma.FieldRef<"Manager", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Manager", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Manager", 'DateTime'>
