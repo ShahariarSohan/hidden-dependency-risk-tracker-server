@@ -16,7 +16,7 @@ const getAllEmployee = async (params: any, options: IPaginationOptions) => {
   const andConditions: Prisma.EmployeeWhereInput[] = [
     {
       isDeleted: false,
-      status: ActiveStatus.ACTIVE,
+      status: {not:ActiveStatus.DELETED},
     },
   ];
 
@@ -175,6 +175,14 @@ const updateEmployeeStatus = async (
   employeeId: string,
   status: ActiveStatus
 ) => {
+
+  const employee = await prisma.employee.findUnique({
+    where: { id:employeeId },
+  });
+
+  if (!employee) {
+    throw new AppError(httpStatus.NOT_FOUND, "Employee not found");
+  }
   return prisma.$transaction(async (tx) => {
     // 1. Update EMPLOYEE
     const updatedEmployee = await tx.employee.update({

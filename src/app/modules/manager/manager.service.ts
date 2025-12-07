@@ -1,4 +1,4 @@
-import  httpStatus  from 'http-status-codes';
+import httpStatus from "http-status-codes";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Manager, Prisma } from "../../../../prisma/generated/client";
 import { prisma } from "../../config/prisma";
@@ -6,9 +6,8 @@ import AppError from "../../errorHelpers/AppError";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { managerSearchAbleFields } from "./manager.constant";
-import { TaskStatus } from '../../interfaces/taskStatus';
-import { ActiveStatus } from '../../interfaces/userRole';
-
+import { TaskStatus } from "../../interfaces/taskStatus";
+import { ActiveStatus } from "../../interfaces/userRole";
 
 const getAllManager = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
@@ -17,7 +16,7 @@ const getAllManager = async (params: any, options: IPaginationOptions) => {
   const andConditions: Prisma.ManagerWhereInput[] = [
     {
       isDeleted: false,
-      status: ActiveStatus.ACTIVE,
+      status: { not: ActiveStatus.DELETED },
     },
   ];
 
@@ -63,7 +62,6 @@ const getAllManager = async (params: any, options: IPaginationOptions) => {
   };
 };
 
-
 const softDeleteManager = async (id: string): Promise<Manager> => {
   // 1. check manager exists
   const manager = await prisma.manager.findUnique({ where: { id } });
@@ -75,7 +73,7 @@ const softDeleteManager = async (id: string): Promise<Manager> => {
   const hasAssignedActiveTasks = await prisma.task.findFirst({
     where: {
       assignedByManagerId: id,
-      status: { in: [TaskStatus.IN_PROGRESS,TaskStatus.PENDING] }, // TaskStatus enum strings
+      status: { in: [TaskStatus.IN_PROGRESS, TaskStatus.PENDING] }, // TaskStatus enum strings
     },
   });
 
@@ -92,14 +90,14 @@ const softDeleteManager = async (id: string): Promise<Manager> => {
       where: { id },
       data: {
         isDeleted: true,
-        status:ActiveStatus.DELETED
+        status: ActiveStatus.DELETED,
       },
     });
 
     // Manager.user relation: manager.id === user.id (per your schema)
     await tx.user.update({
-      where: { email:deletedManager.email },
-      data: { status:ActiveStatus.DELETED }, 
+      where: { email: deletedManager.email },
+      data: { status: ActiveStatus.DELETED },
     });
 
     return deletedManager;
@@ -120,10 +118,14 @@ const getManagerById = async (id: string) => {
     },
   });
 };
- const updateManagerStatus = async (
+const updateManagerStatus = async (
   managerId: string,
-  status: ActiveStatus.ACTIVE|ActiveStatus.INACTIVE
+  status: ActiveStatus.ACTIVE | ActiveStatus.INACTIVE
 ) => {
+  const manager = await prisma.manager.findUnique({ where: { id: managerId } });
+  if (!manager) {
+    throw new AppError(httpStatus.NOT_FOUND, "Manager not found");
+  }
   return prisma.$transaction(async (tx) => {
     // 1. Update MANAGER
     const updatedManager = await tx.manager.update({
@@ -141,8 +143,9 @@ const getManagerById = async (id: string) => {
   });
 };
 
-
 export const managerService = {
   getAllManager,
-  softDeleteManager,getManagerById,updateManagerStatus
+  softDeleteManager,
+  getManagerById,
+  updateManagerStatus,
 };

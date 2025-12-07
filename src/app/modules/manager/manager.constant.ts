@@ -7,5 +7,6 @@ export const managerSearchAbleFields: string[] = [
 export const managerFilterableFields: string[] = [
   "name",
   "email",
+  "contactNumber",
   "searchTerm",
 ];
