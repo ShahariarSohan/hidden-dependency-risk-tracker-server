@@ -8,6 +8,7 @@ import sendResponse from "../../shared/sendResponse";
 import { employeeService } from "./employee.service";
 import AppError from "../../errorHelpers/AppError";
 import { employeeFilterableFields } from "./employee.constant";
+import { ActiveStatus } from "../../interfaces/userRole";
 
 const getAllEmployee = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, employeeFilterableFields);
@@ -60,10 +61,23 @@ const addEmployeeToTeam = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const updateEmployeeStatus = catchAsync(async (req, res) => {
+  const { employeeId } = req.params;
+  const { status } = req.body as { status: ActiveStatus.ACTIVE|ActiveStatus.INACTIVE };
 
+  const updatedEmployee = await employeeService.updateEmployeeStatus(employeeId, status);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Employee status updated successfully",
+    data: updatedEmployee,
+  });
+});
 export const employeeController = {
   getAllEmployee,
   softDeleteEmployee,
   getEmployeeById,
   addEmployeeToTeam,
+  updateEmployeeStatus
 };

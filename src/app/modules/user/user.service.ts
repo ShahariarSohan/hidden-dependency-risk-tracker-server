@@ -20,6 +20,88 @@ import { userSearchAbleFields } from "./user.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
 
+const getAllUser = async (params: any, options: IPaginationOptions) => {
+  const { page, limit, skip } = paginationHelper.calculatePagination(options);
+  const { searchTerm, ...filterData } = params;
+
+  const andConditions: Prisma.UserWhereInput[] = [
+    {
+      status: {
+        not: ActiveStatus.DELETED,
+      },
+    },
+  ];
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: userSearchAbleFields.map((field) => ({
+        [field]: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: {
+          equals: (filterData as any)[key],
+        },
+      })),
+    });
+  }
+
+  const whereConditions: Prisma.UserWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const result = await prisma.user.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? {
+            [options.sortBy]: options.sortOrder,
+          }
+        : {
+            createdAt: "desc",
+          },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      admin: true,
+      manager: true,
+      employee: true,
+    },
+  });
+
+  const total = await prisma.user.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+const getUserById = async (id: string) => {
+  return prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+      status: ActiveStatus.ACTIVE,
+    },
+  });
+};
 const createEmployee = async (employeeData: IEmployee): Promise<Employee> => {
   const existingUser = await prisma.user.findUnique({
     where: { email: employeeData.email },
@@ -56,6 +138,7 @@ const createEmployee = async (employeeData: IEmployee): Promise<Employee> => {
 
   return result;
 };
+
 const createManager = async (managerData: IManager): Promise<Manager> => {
   const existingUser = await prisma.user.findUnique({
     where: { email: managerData.email },
@@ -213,6 +296,33 @@ const getMyProfile = async (user: IAuthUser) => {
   return { userInfo, profileInfo };
 };
 
+export const updateUserStatus = async (
+  userId: string,
+  status: ActiveStatus
+) => {
+  return prisma.$transaction(async (tx) => {
+    // 1. Update USER first
+    const updatedUser = await tx.user.update({
+      where: { id: userId },
+      data: { status },
+    });
+
+    // 2. If employee exists → sync status
+    await tx.employee.updateMany({
+      where: { email: updatedUser.email },
+      data: { status },
+    });
+
+    // 3. If manager exists → sync status
+    await tx.manager.updateMany({
+      where: { email: updatedUser.email },
+      data: { status },
+    });
+
+    return updatedUser;
+  });
+};
+
 const updateMyProfile = async (user: IAuthUser, updateData: Partial<User>) => {
   const userInfo = await prisma.user.findUnique({
     where: {
@@ -250,96 +360,9 @@ const updateMyProfile = async (user: IAuthUser, updateData: Partial<User>) => {
 
   return { ...profileInfo };
 };
-const updateUserStatus = async (id: string, status: ActiveStatus.ACTIVE|ActiveStatus.INACTIVE) => {
-  return prisma.user.update({
-    where: { id },
-    data: { status },
-  });
-};
 
-const getAllUser = async (params: any, options: IPaginationOptions) => {
-  const { page, limit, skip } = paginationHelper.calculatePagination(options);
-  const { searchTerm, ...filterData } = params;
 
-  const andConditions: Prisma.UserWhereInput[] = [
-    {
-      status: {
-        not: ActiveStatus.DELETED,
-      },
-    },
-  ];
 
-  if (searchTerm) {
-    andConditions.push({
-      OR: userSearchAbleFields.map((field) => ({
-        [field]: {
-          contains: searchTerm,
-          mode: "insensitive",
-        },
-      })),
-    });
-  }
-
-  if (Object.keys(filterData).length > 0) {
-    andConditions.push({
-      AND: Object.keys(filterData).map((key) => ({
-        [key]: {
-          equals: (filterData as any)[key],
-        },
-      })),
-    });
-  }
-
-  const whereConditions: Prisma.UserWhereInput =
-    andConditions.length > 0 ? { AND: andConditions } : {};
-
-  const result = await prisma.user.findMany({
-    where: whereConditions,
-    skip,
-    take: limit,
-    orderBy:
-      options.sortBy && options.sortOrder
-        ? {
-            [options.sortBy]: options.sortOrder,
-          }
-        : {
-            createdAt: "desc",
-          },
-    select: {
-      id: true,
-      email: true,
-      role: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      admin: true,
-      manager: true,
-      employee: true,
-    },
-  });
-
-  const total = await prisma.user.count({
-    where: whereConditions,
-  });
-
-  return {
-    meta: {
-      page,
-      limit,
-      total,
-    },
-    data: result,
-  };
-};
-const getUserById = async (id: string) => {
-  return prisma.user.findUniqueOrThrow({
-    where: {
-      id,
-      status: ActiveStatus.ACTIVE,
-    },
-  });
-  
-};
 
 
 export const userService = {

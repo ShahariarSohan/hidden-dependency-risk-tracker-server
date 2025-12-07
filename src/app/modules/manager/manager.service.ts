@@ -120,9 +120,29 @@ const getManagerById = async (id: string) => {
     },
   });
 };
+ const updateManagerStatus = async (
+  managerId: string,
+  status: ActiveStatus.ACTIVE|ActiveStatus.INACTIVE
+) => {
+  return prisma.$transaction(async (tx) => {
+    // 1. Update MANAGER
+    const updatedManager = await tx.manager.update({
+      where: { id: managerId },
+      data: { status },
+    });
+
+    // 2. Sync USER status
+    await tx.user.updateMany({
+      where: { email: updatedManager.email },
+      data: { status },
+    });
+
+    return updatedManager;
+  });
+};
 
 
 export const managerService = {
   getAllManager,
-  softDeleteManager,getManagerById
+  softDeleteManager,getManagerById,updateManagerStatus
 };

@@ -1,4 +1,4 @@
-import  httpStatus  from 'http-status-codes';
+import httpStatus from "http-status-codes";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Employee, Prisma } from "../../../../prisma/generated/client";
 import { prisma } from "../../config/prisma";
@@ -6,9 +6,8 @@ import { IPaginationOptions } from "../../interfaces/pagination";
 import { ActiveStatus } from "../../interfaces/userRole";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { employeeSearchAbleFields } from "./employee.constant";
-import AppError from '../../errorHelpers/AppError';
-import { TaskStatus } from '../../interfaces/taskStatus';
-
+import AppError from "../../errorHelpers/AppError";
+import { TaskStatus } from "../../interfaces/taskStatus";
 
 const getAllEmployee = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
@@ -17,7 +16,7 @@ const getAllEmployee = async (params: any, options: IPaginationOptions) => {
   const andConditions: Prisma.EmployeeWhereInput[] = [
     {
       isDeleted: false,
-      status:ActiveStatus.ACTIVE
+      status: ActiveStatus.ACTIVE,
     },
   ];
 
@@ -110,7 +109,7 @@ const softDeleteEmployee = async (id: string): Promise<Employee> => {
   return prisma.$transaction(async (tx) => {
     const deletedEmployee = await tx.employee.update({
       where: { id },
-      data: { isDeleted: true,status:ActiveStatus.DELETED },
+      data: { isDeleted: true, status: ActiveStatus.DELETED },
     });
 
     await tx.user.update({
@@ -145,8 +144,8 @@ const addEmployeeToTeam = async (employeeId: string, teamId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, "Employee not found ");
   }
   const isEmployeeActive = await prisma.user.findFirst({
-    where:{email:employee.email,status:ActiveStatus.ACTIVE}
-  })
+    where: { email: employee.email, status: ActiveStatus.ACTIVE },
+  });
   if (!isEmployeeActive) {
     throw new AppError(httpStatus.NOT_FOUND, "Employee is  inactive");
   }
@@ -158,12 +157,12 @@ const addEmployeeToTeam = async (employeeId: string, teamId: string) => {
   if (!team) {
     throw new AppError(httpStatus.NOT_FOUND, "Team not found or inactive");
   }
-   if (employee.teamId === teamId) {
-     throw new AppError(
-       httpStatus.BAD_REQUEST,
-       "employee is already assigned to this team"
-     );
-   }
+  if (employee.teamId === teamId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "employee is already assigned to this team"
+    );
+  }
   // Assign employee to team
   const updatedEmployee = await prisma.employee.update({
     where: { id: employeeId },
@@ -172,10 +171,31 @@ const addEmployeeToTeam = async (employeeId: string, teamId: string) => {
 
   return updatedEmployee;
 };
+const updateEmployeeStatus = async (
+  employeeId: string,
+  status: ActiveStatus
+) => {
+  return prisma.$transaction(async (tx) => {
+    // 1. Update EMPLOYEE
+    const updatedEmployee = await tx.employee.update({
+      where: { id: employeeId },
+      data: { status },
+    });
+
+    // 2. Sync USER status based on employee email
+    await tx.user.updateMany({
+      where: { email: updatedEmployee.email },
+      data: { status },
+    });
+
+    return updatedEmployee;
+  });
+};
 
 export const employeeService = {
   getAllEmployee,
   softDeleteEmployee,
   getEmployeeById,
   addEmployeeToTeam,
+  updateEmployeeStatus,
 };

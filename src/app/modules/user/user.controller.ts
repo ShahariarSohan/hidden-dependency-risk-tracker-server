@@ -7,6 +7,7 @@ import { IAuthUser } from "../../interfaces/user.interface";
 import pick from "../../shared/pick";
 import { userFilterableFields } from "./user.constant";
 import { paginationTermArray } from "../../shared/paginationConstant";
+import { ActiveStatus } from "../../interfaces/userRole";
 
 const createEmployee = catchAsync(async (req: Request, res: Response) => {
   const employeeData = req.body;
@@ -86,7 +87,7 @@ const getUserById = catchAsync(async (req, res) => {
 });
 const updateUserStatus = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { status } = req.body as {status:ActiveStatus.ACTIVE|ActiveStatus.INACTIVE}
 
   const result = await userService.updateUserStatus(id, status);
 

@@ -6,6 +6,7 @@ import { paginationTermArray } from "../../shared/paginationConstant";
 import sendResponse from '../../shared/sendResponse';
 import pick from '../../shared/pick';
 import { managerService } from './manager.service';
+import { ActiveStatus } from '../../interfaces/userRole';
 
 const getAllManager = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, managerFilterableFields);
@@ -32,7 +33,21 @@ const softDeleteManager = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const updateManagerStatus = catchAsync(async (req, res) => {
+  const { managerId } = req.params;
+  const { status } = req.body as { status: ActiveStatus.ACTIVE|ActiveStatus.INACTIVE };
+
+  const updatedManager = await managerService.updateManagerStatus(managerId, status);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Manager status updated successfully",
+    data: updatedManager,
+  });
+});
 export const managerController = {
   getAllManager,
   softDeleteManager,
+  updateManagerStatus,
 };
