@@ -83,6 +83,7 @@ const getAllSystem = async (params: any, options: IPaginationOptions) => {
         ? { [options.sortBy]: options.sortOrder }
         : { createdAt: "desc" },
     include: {
+      team: true,
       tasks: true,
     },
   });
@@ -152,7 +153,10 @@ const updateSystemStatus = async (
     data: { status },
   });
 };
-const addSystemToTeam = async (systemId: string, teamId: string) => {
+const updateSystem = async (
+  systemId: string,
+  payload: { name: string; descriptions: string; teamId?: string }
+) => {
   // 1. Check if system exists and not deleted
   const system = await prisma.system.findFirst({
     where: {
@@ -166,45 +170,37 @@ const addSystemToTeam = async (systemId: string, teamId: string) => {
   }
 
   // 2. Check if team exists and is active
-  const team = await prisma.team.findFirst({
-    where: {
-      id: teamId,
-      status: ActiveStatus.ACTIVE,
-    },
-  });
+  if (payload.teamId) {
+    const team = await prisma.team.findFirst({
+      where: {
+        id: payload.teamId,
+        status: ActiveStatus.ACTIVE,
+      },
+    });
 
-  if (!team) {
-    throw new AppError(httpStatus.NOT_FOUND, "Team not found or inactive");
+    if (!team) {
+      throw new AppError(httpStatus.NOT_FOUND, "Team not found or inactive");
+    }
+     if (system.teamId === payload.teamId) {
+       throw new AppError(
+         httpStatus.BAD_REQUEST,
+         "System is already assigned to this team"
+       );
+     }
   }
 
   // 3. Prevent re-assigning to same team (optional but professional)
-  if (system.teamId === teamId) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "System is already assigned to this team"
-    );
-  }
+ 
 
   // 4. Assign system to team
   const updatedSystem = await prisma.system.update({
     where: {
       id: systemId,
     },
-    data: {
-      teamId,
-    },
+    data: payload,
   });
 
   return updatedSystem;
-};
-const updateSystem = async (id: string, systemPayload: Partial<System>) => {
-  const existing = await prisma.system.findUnique({ where: { id } });
-  if (!existing) throw new AppError(httpStatus.BAD_REQUEST, "System not found");
-
-  return prisma.system.update({
-    where: { id },
-    data: systemPayload,
-  });
 };
 
 export const systemService = {
@@ -213,6 +209,5 @@ export const systemService = {
   softDeleteSystem,
   getSystemById,
   updateSystemStatus,
-  addSystemToTeam,
   updateSystem,
 };

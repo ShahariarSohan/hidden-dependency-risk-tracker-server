@@ -24,8 +24,9 @@ const getEmployeeRisk = async (employeeId: string) => {
   });
 
   let riskScore = 0;
+ 
   tasks.forEach((task) => {
-    riskScore += task.priority * task.system.criticality;
+    riskScore +=Number(task.priority )* Number(task.system.criticality);
   });
 
   return {
@@ -53,8 +54,8 @@ const getSystemRisk = async (systemId: string) => {
   );
 
   const riskScore =
-    activeTasks.reduce((sum, task) => sum + task.priority, 0) *
-    system.criticality;
+    activeTasks.reduce((sum, task) => sum + Number(task.priority), 0) *
+    Number(system.criticality);
 
   return {
     systemId: system.id,
@@ -95,7 +96,7 @@ const getTeamRisk = async (teamId: string) => {
         task.status === TaskStatus.PENDING ||
         task.status === TaskStatus.IN_PROGRESS
       ) {
-        employeeRisk += task.priority * task.system.criticality;
+        employeeRisk += Number(task.priority) * Number(task.system.criticality);
       }
     });
 
@@ -168,7 +169,7 @@ const getAllEmployeeRisk = async (
   /* ------------------ risk calculation ------------------ */
   let data = employees.map((employee) => {
     const riskScore = employee.tasks.reduce(
-      (sum, task) => sum + task.priority * task.system.criticality,
+      (sum, task) => sum + Number(task.priority) * Number(task.system.criticality),
       0
     );
 
@@ -243,7 +244,7 @@ const getAllSystemRisk = async (
 
   let data = systems.map((system) => {
     const riskScore = system.tasks.reduce(
-      (sum, task) => sum + task.priority * system.criticality,
+      (sum, task) => sum + Number(task.priority) * Number(system.criticality),
       0
     );
 
@@ -323,7 +324,7 @@ const getAllTeamRisk = async (
   let data = teams.map((team) => {
     const riskScore = team.employees
       .flatMap((m) => m.tasks)
-      .reduce((sum, task) => sum + task.priority * task.system.criticality, 0);
+      .reduce((sum, task) => sum + Number(task.priority) * Number(task.system.criticality), 0);
 
     const riskLevelCalculated =
       riskScore > 50 ? "HIGH" : riskScore > 25 ? "MEDIUM" : "LOW";
@@ -374,7 +375,7 @@ const getAllEmployeeRiskForDashboard = async () => {
   return employees
     .map((employee) => {
       const riskScore = employee.tasks.reduce(
-        (sum, task) => sum + task.priority * task.system.criticality,
+        (sum, task) => sum + Number(task.priority) * Number(task.system.criticality),
         0
       );
 
@@ -402,7 +403,7 @@ const getAllSystemRiskForDashboard = async () => {
   return systems
     .map((system) => {
       const riskScore = system.tasks.reduce(
-        (sum, task) => sum + task.priority * system.criticality,
+        (sum, task) => sum + Number(task.priority) * Number(system.criticality),
         0
       );
 
@@ -438,7 +439,7 @@ const getAllTeamRiskForDashboard = async () => {
       const riskScore = team.employees
         .flatMap((employee) => employee.tasks)
         .reduce(
-          (sum, task) => sum + task.priority * task.system.criticality,
+          (sum, task) => sum + Number(task.priority) * Number(task.system.criticality),
           0
         );
 

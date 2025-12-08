@@ -67,11 +67,9 @@ const updateSystemStatus = catchAsync(async (req, res) => {
   });
 });
 const updateSystem = catchAsync(async (req, res) => {
-  const { id } = req.params;
   
-
-  const result = await systemService.updateSystemStatus(id, req.body);
-
+  const { id } = req.params;
+  const result = await systemService.updateSystem(id, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

@@ -15,7 +15,6 @@ export const createSystemZodSchema = z.object({
       .min(1, "Criticality must be between 1 and 5")
       .max(5, "Criticality must be between 1 and 5")
       .optional(),
-    teamId: z.string().optional(),
 });
 export const updateSystemSchema = z.object({
   name: z.string().min(5, "System name must be at least 5 characters").optional(),
@@ -23,4 +22,5 @@ export const updateSystemSchema = z.object({
     .string()
     .min(10, "Description cannot be less than 10 characters")
     .optional(),
+  teamId: z.string().optional(),
 });
