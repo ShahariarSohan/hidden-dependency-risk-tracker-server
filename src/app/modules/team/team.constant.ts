@@ -1,3 +1,3 @@
 export const teamSearchAbleFields: string[] = ["name"];
 
-export const teamFilterableFields: string[] = ["name", "status", "searchTerm"];
+export const teamFilterableFields: string[] = ["status", "searchTerm"];

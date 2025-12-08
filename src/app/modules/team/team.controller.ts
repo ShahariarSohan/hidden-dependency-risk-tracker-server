@@ -68,7 +68,7 @@ const updateTeamName = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  const result = await teamService.updateTeamStatus(id, name);
+  const result = await teamService.updateTeamName(id, name);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

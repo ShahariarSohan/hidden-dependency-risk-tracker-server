@@ -2,16 +2,17 @@ import { Router } from "express";
 import authGuard from "../../middlewares/authGuard";
 import { UserRole } from "../../interfaces/userRole";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createTeamZodSchema } from "./team.validation";
+
 import { teamController } from "./team.controller";
 import { updateStatusZodSchema } from "../../zod/status.schema";
+import { teamZodSchema } from "./team.validation";
 
 const router = Router();
 
 router.post(
   "/",
   authGuard(UserRole.ADMIN,UserRole.MANAGER),
-  validateRequest(createTeamZodSchema),
+  validateRequest(teamZodSchema),
   teamController.createTeam
 );
 router.get(
@@ -35,7 +36,7 @@ router.patch(
 router.patch(
   "/name/:id",
   authGuard(UserRole.ADMIN, UserRole.MANAGER),
-  validateRequest(createTeamZodSchema),
+  validateRequest(teamZodSchema),
   teamController.updateTeamName
 );
 

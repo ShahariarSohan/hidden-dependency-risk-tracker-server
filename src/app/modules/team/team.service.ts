@@ -69,7 +69,17 @@ const getAllTeam = async (params: any, options: IPaginationOptions) => {
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : { createdAt: "desc" },
+
+    include: {
+      employees: {
+        include: {
+          tasks: true, // include if needed (optional)
+        },
+      },
+      systems: true,
+    },
   });
+
 
   const total = await prisma.team.count({ where: whereConditions });
 
@@ -150,6 +160,9 @@ const updateTeamName =
   async (id: string, name: string)=> {
     const existing = await prisma.team.findUnique({ where: { id } });
     if (!existing) throw new AppError(httpStatus.BAD_REQUEST,"Team not found");
+    const isNameAlreadyExist = await prisma.team.findUnique({ where: { name } });
+    if (isNameAlreadyExist)
+      throw new AppError(httpStatus.BAD_REQUEST, "Team name already exist");
 
     return prisma.team.update({
       where: { id },

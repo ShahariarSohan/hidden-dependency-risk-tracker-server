@@ -82,6 +82,9 @@ const getAllSystem = async (params: any, options: IPaginationOptions) => {
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : { createdAt: "desc" },
+    include: {
+      tasks: true,
+    },
   });
 
   const total = await prisma.system.count({ where: whereConditions });
@@ -194,16 +197,15 @@ const addSystemToTeam = async (systemId: string, teamId: string) => {
 
   return updatedSystem;
 };
-const updateSystem = 
-  async (id: string, systemPayload:Partial<System>)=> {
-    const existing = await prisma.system.findUnique({ where: { id } });
-    if (!existing) throw new AppError(httpStatus.BAD_REQUEST,"System not found");
+const updateSystem = async (id: string, systemPayload: Partial<System>) => {
+  const existing = await prisma.system.findUnique({ where: { id } });
+  if (!existing) throw new AppError(httpStatus.BAD_REQUEST, "System not found");
 
-    return prisma.system.update({
-      where: { id },
-      data: systemPayload,
-    });
-  }
+  return prisma.system.update({
+    where: { id },
+    data: systemPayload,
+  });
+};
 
 export const systemService = {
   createSystem,
@@ -212,5 +214,5 @@ export const systemService = {
   getSystemById,
   updateSystemStatus,
   addSystemToTeam,
-  updateSystem
+  updateSystem,
 };
