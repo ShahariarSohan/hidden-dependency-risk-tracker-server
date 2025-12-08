@@ -146,6 +146,16 @@ const updateTeamStatus = async (
     data: { status },
   });
 };
+const updateTeamName =
+  async (id: string, name: string)=> {
+    const existing = await prisma.team.findUnique({ where: { id } });
+    if (!existing) throw new AppError(httpStatus.BAD_REQUEST,"Team not found");
+
+    return prisma.team.update({
+      where: { id },
+      data: { name },
+    });
+  }
 
 export const teamService = {
   createTeam,
@@ -153,4 +163,5 @@ export const teamService = {
   softDeleteTeam,
   getTeamById,
   updateTeamStatus,
+  updateTeamName
 };

@@ -194,6 +194,17 @@ const addSystemToTeam = async (systemId: string, teamId: string) => {
 
   return updatedSystem;
 };
+const updateSystem = 
+  async (id: string, systemPayload:Partial<System>)=> {
+    const existing = await prisma.system.findUnique({ where: { id } });
+    if (!existing) throw new AppError(httpStatus.BAD_REQUEST,"System not found");
+
+    return prisma.system.update({
+      where: { id },
+      data: systemPayload,
+    });
+  }
+
 export const systemService = {
   createSystem,
   getAllSystem,
@@ -201,4 +212,5 @@ export const systemService = {
   getSystemById,
   updateSystemStatus,
   addSystemToTeam,
+  updateSystem
 };

@@ -2,7 +2,7 @@ import { Router } from "express";
 import authGuard from "../../middlewares/authGuard";
 import { UserRole } from "../../interfaces/userRole";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createSystemZodSchema } from "./system.validation";
+import { createSystemZodSchema, updateSystemSchema } from "./system.validation";
 import { systemController } from "./system.controller";
 import { updateStatusZodSchema } from "../../zod/status.schema";
 
@@ -21,7 +21,12 @@ router.get(
   authGuard(UserRole.ADMIN),
   systemController.getSystemById
 );
-
+router.patch(
+  "/:id",
+  authGuard(UserRole.ADMIN),
+  validateRequest(updateSystemSchema),
+  systemController.updateSystem
+);
 router.delete(
   "/soft-delete/:id",
   authGuard(UserRole.ADMIN),
@@ -33,5 +38,6 @@ router.patch(
   validateRequest(updateStatusZodSchema),
   systemController.updateSystemStatus
 );
+
 
 export const systemRoutes = router;

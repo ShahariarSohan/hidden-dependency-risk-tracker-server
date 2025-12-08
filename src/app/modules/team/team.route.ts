@@ -32,5 +32,11 @@ router.patch(
   validateRequest(updateStatusZodSchema),
   teamController.updateTeamStatus
 );
+router.patch(
+  "/name/:id",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  validateRequest(createTeamZodSchema),
+  teamController.updateTeamName
+);
 
 export const teamRoutes = router;

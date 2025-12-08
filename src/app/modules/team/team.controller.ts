@@ -1,11 +1,11 @@
-import  httpStatus  from 'http-status';
+import httpStatus from "http-status";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { teamService } from "./team.service";
-import { Request, Response } from 'express';
-import { teamFilterableFields } from './team.constant';
-import { paginationTermArray } from '../../shared/paginationConstant';
-import pick from '../../shared/pick';
+import { Request, Response } from "express";
+import { teamFilterableFields } from "./team.constant";
+import { paginationTermArray } from "../../shared/paginationConstant";
+import pick from "../../shared/pick";
 
 const createTeam = catchAsync(async (req: Request, res: Response) => {
   const result = await teamService.createTeam(req);
@@ -64,8 +64,25 @@ const updateTeamStatus = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const updateTeamName = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  const result = await teamService.updateTeamStatus(id, name);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Team name updated successfully",
+    data: result,
+  });
+});
 
 export const teamController = {
   createTeam,
-  getAllTeam,softDeleteTeam,getTeamById,updateTeamStatus
-}
+  getAllTeam,
+  softDeleteTeam,
+  getTeamById,
+  updateTeamStatus,
+  updateTeamName,
+};
