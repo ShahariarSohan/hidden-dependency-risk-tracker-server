@@ -41,7 +41,11 @@ const createSystem = async (req: Request) => {
 const getAllSystem = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
-
+ 
+  if (filterData.criticality) {
+  filterData.criticality = Number(filterData.criticality);
+  }
+  
   const andConditions: Prisma.SystemWhereInput[] = [
     {
       status: {
