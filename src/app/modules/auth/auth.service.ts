@@ -16,7 +16,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
     },
   });
   if (!userData) {
-    throw new AppError(httpStatus.NOT_FOUND,"User not found")
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,
@@ -85,6 +85,7 @@ const getMe = async (decodedUser: any) => {
           name: true,
           email: true,
           contactNumber: true,
+          teamId: true,
         },
       },
       employee: {

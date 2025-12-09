@@ -8,6 +8,7 @@ import { paginationHelper } from "../../shared/paginationHelper";
 import { managerSearchAbleFields } from "./manager.constant";
 import { TaskStatus } from "../../interfaces/taskStatus";
 import { ActiveStatus } from "../../interfaces/userRole";
+import { IAuthUser } from "../../interfaces/user.interface";
 
 const getAllManager = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
@@ -183,11 +184,78 @@ const addManagerToTeam = async (managerId: string, teamId: string) => {
 
   return updatedManager;
 };
+const getManagerTeamOverview = async (user: IAuthUser) => {
+   const userInfo = await prisma.user.findUnique({
+     where: {
+       email: user?.email,
+       status: ActiveStatus.ACTIVE,
+     },
+   });
+   if (!userInfo) {
+     throw new AppError(httpStatus.BAD_REQUEST, "User not found");
+   }
+    const manager = await prisma.manager.findUniqueOrThrow({
+      where: { email: userInfo.email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        contactNumber: true,
+        teamId: true,
+      },
+    });
 
+   if (!manager.teamId) {
+      return {
+        manager,
+        team: null,
+        employees: [],
+        systems: [],
+      };
+    }
+
+    const team = await prisma.team.findUniqueOrThrow({
+      where: { id: manager.teamId },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        employees: {
+          where: { isDeleted: false, status: ActiveStatus.ACTIVE },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            contactNumber: true,
+          },
+        },
+        systems: {
+          where: { status: ActiveStatus.ACTIVE },
+          select: {
+            id: true,
+            name: true,
+            criticality: true,
+          },
+        },
+      },
+    });
+
+    return {
+      manager,
+      team: {
+        id: team.id,
+        name: team.name,
+        status: team.status,
+      },
+      employees: team.employees,
+      systems: team.systems,
+    };
+  }
 export const managerService = {
   getAllManager,
   softDeleteManager,
   getManagerById,
   updateManagerStatus,
   addManagerToTeam,
+  getManagerTeamOverview
 };

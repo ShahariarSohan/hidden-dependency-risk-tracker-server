@@ -231,6 +231,7 @@ const getMyProfile = async (user: IAuthUser) => {
         name: true,
         email: true,
         contactNumber: true,
+        teamId:true,
         isDeleted: true,
         createdAt: true,
         updatedAt: true,
@@ -259,6 +260,7 @@ const getMyProfile = async (user: IAuthUser) => {
         id: true,
         name: true,
         email: true,
+        teamId:true,
         contactNumber: true,
         isDeleted: true,
         tasks: {

@@ -26,4 +26,9 @@ router.patch(
   validateRequest(addManagerToTeamZodSchema),
   managerController.addManagerToTeam
 );
+router.get(
+  "/my-team",
+  authGuard(UserRole.MANAGER),
+  managerController.getManagerTeamOverview
+);
 export const managerRoutes = router;

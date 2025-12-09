@@ -1,3 +1,4 @@
+import { IAuthUser } from './../../interfaces/user.interface';
 import  httpStatus  from 'http-status';
 import { Request, Response } from "express";
 import catchAsync from "../../shared/catchAsync";
@@ -67,10 +68,24 @@ const updateManagerStatus = catchAsync(async (req, res) => {
     });
   }
 );
+ const getManagerTeamOverview = catchAsync(
+   async (req: Request & { user?: IAuthUser }, res: Response) => {
+     // you already attach user object from auth middleware
+     const user = req.user;
+     const result = await managerService.getManagerTeamOverview(user as IAuthUser);
+     console.log(result)
+     sendResponse(res, {
+       statusCode: httpStatus.OK,
+       success: true,
+       message: "Manager team overview retrieved successfully",
+       data: result,
+     });
+   })
 
 export const managerController = {
   getAllManager,
   softDeleteManager,
   updateManagerStatus,
   addManagerToTeam,
+  getManagerTeamOverview
 };
