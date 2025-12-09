@@ -73,7 +73,6 @@ const updateManagerStatus = catchAsync(async (req, res) => {
      // you already attach user object from auth middleware
      const user = req.user;
      const result = await managerService.getManagerTeamOverview(user as IAuthUser);
-     console.log(result)
      sendResponse(res, {
        statusCode: httpStatus.OK,
        success: true,
