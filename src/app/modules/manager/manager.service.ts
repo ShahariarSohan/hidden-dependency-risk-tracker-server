@@ -142,10 +142,52 @@ const updateManagerStatus = async (
     return updatedManager;
   });
 };
+const addManagerToTeam = async (managerId: string, teamId: string) => {
+  // Check if manager exists and not deleted
+  const manager = await prisma.manager.findFirst({
+    where: { id: managerId, isDeleted: false },
+  });
+  if (!manager) {
+    throw new AppError(httpStatus.NOT_FOUND, "Manager not found");
+  }
+
+  // Check if manager user is active
+  const isManagerActive = await prisma.user.findFirst({
+    where: { email: manager.email, status: ActiveStatus.ACTIVE },
+  });
+  if (!isManagerActive) {
+    throw new AppError(httpStatus.NOT_FOUND, "Manager is inactive");
+  }
+
+  // Check if team exists and is active
+  const team = await prisma.team.findFirst({
+    where: { id: teamId, status: ActiveStatus.ACTIVE },
+  });
+  if (!team) {
+    throw new AppError(httpStatus.NOT_FOUND, "Team not found or inactive");
+  }
+
+  // Check if manager is already assigned to this team
+  if (manager.teamId === teamId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Manager is already assigned to this team"
+    );
+  }
+
+  // Assign manager to team
+  const updatedManager = await prisma.manager.update({
+    where: { id: managerId },
+    data: { teamId },
+  });
+
+  return updatedManager;
+};
 
 export const managerService = {
   getAllManager,
   softDeleteManager,
   getManagerById,
   updateManagerStatus,
+  addManagerToTeam,
 };

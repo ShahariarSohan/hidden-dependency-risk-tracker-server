@@ -28,6 +28,7 @@ export type ManagerMinAggregateOutputType = {
   id: string | null
   name: string | null
   email: string | null
+  teamId: string | null
   contactNumber: string | null
   status: $Enums.Status | null
   isDeleted: boolean | null
@@ -39,6 +40,7 @@ export type ManagerMaxAggregateOutputType = {
   id: string | null
   name: string | null
   email: string | null
+  teamId: string | null
   contactNumber: string | null
   status: $Enums.Status | null
   isDeleted: boolean | null
@@ -50,6 +52,7 @@ export type ManagerCountAggregateOutputType = {
   id: number
   name: number
   email: number
+  teamId: number
   contactNumber: number
   status: number
   isDeleted: number
@@ -63,6 +66,7 @@ export type ManagerMinAggregateInputType = {
   id?: true
   name?: true
   email?: true
+  teamId?: true
   contactNumber?: true
   status?: true
   isDeleted?: true
@@ -74,6 +78,7 @@ export type ManagerMaxAggregateInputType = {
   id?: true
   name?: true
   email?: true
+  teamId?: true
   contactNumber?: true
   status?: true
   isDeleted?: true
@@ -85,6 +90,7 @@ export type ManagerCountAggregateInputType = {
   id?: true
   name?: true
   email?: true
+  teamId?: true
   contactNumber?: true
   status?: true
   isDeleted?: true
@@ -169,6 +175,7 @@ export type ManagerGroupByOutputType = {
   id: string
   name: string
   email: string
+  teamId: string | null
   contactNumber: string
   status: $Enums.Status
   isDeleted: boolean
@@ -201,12 +208,14 @@ export type ManagerWhereInput = {
   id?: Prisma.StringFilter<"Manager"> | string
   name?: Prisma.StringFilter<"Manager"> | string
   email?: Prisma.StringFilter<"Manager"> | string
+  teamId?: Prisma.StringNullableFilter<"Manager"> | string | null
   contactNumber?: Prisma.StringFilter<"Manager"> | string
   status?: Prisma.EnumStatusFilter<"Manager"> | $Enums.Status
   isDeleted?: Prisma.BoolFilter<"Manager"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   assignedTasks?: Prisma.TaskListRelationFilter
 }
 
@@ -214,18 +223,21 @@ export type ManagerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  team?: Prisma.TeamOrderByWithRelationInput
   assignedTasks?: Prisma.TaskOrderByRelationAggregateInput
 }
 
 export type ManagerWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  teamId?: string
   AND?: Prisma.ManagerWhereInput | Prisma.ManagerWhereInput[]
   OR?: Prisma.ManagerWhereInput[]
   NOT?: Prisma.ManagerWhereInput | Prisma.ManagerWhereInput[]
@@ -236,13 +248,15 @@ export type ManagerWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Manager"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   assignedTasks?: Prisma.TaskListRelationFilter
-}, "id" | "email">
+}, "id" | "email" | "teamId">
 
 export type ManagerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -260,6 +274,7 @@ export type ManagerScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   name?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   email?: Prisma.StringWithAggregatesFilter<"Manager"> | string
+  teamId?: Prisma.StringNullableWithAggregatesFilter<"Manager"> | string | null
   contactNumber?: Prisma.StringWithAggregatesFilter<"Manager"> | string
   status?: Prisma.EnumStatusWithAggregatesFilter<"Manager"> | $Enums.Status
   isDeleted?: Prisma.BoolWithAggregatesFilter<"Manager"> | boolean
@@ -276,6 +291,7 @@ export type ManagerCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutManagerInput
+  team?: Prisma.TeamCreateNestedOneWithoutManagerInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedByManagerInput
 }
 
@@ -283,6 +299,7 @@ export type ManagerUncheckedCreateInput = {
   id?: string
   name: string
   email: string
+  teamId?: string | null
   contactNumber: string
   status?: $Enums.Status
   isDeleted?: boolean
@@ -300,6 +317,7 @@ export type ManagerUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutManagerNestedInput
+  team?: Prisma.TeamUpdateOneWithoutManagerNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedByManagerNestedInput
 }
 
@@ -307,6 +325,7 @@ export type ManagerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -319,6 +338,7 @@ export type ManagerCreateManyInput = {
   id?: string
   name: string
   email: string
+  teamId?: string | null
   contactNumber: string
   status?: $Enums.Status
   isDeleted?: boolean
@@ -340,6 +360,7 @@ export type ManagerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -351,6 +372,7 @@ export type ManagerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  teamId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -362,6 +384,7 @@ export type ManagerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  teamId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -373,6 +396,7 @@ export type ManagerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  teamId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -399,6 +423,38 @@ export type ManagerUpdateOneWithoutAssignedTasksNestedInput = {
   delete?: Prisma.ManagerWhereInput | boolean
   connect?: Prisma.ManagerWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ManagerUpdateToOneWithWhereWithoutAssignedTasksInput, Prisma.ManagerUpdateWithoutAssignedTasksInput>, Prisma.ManagerUncheckedUpdateWithoutAssignedTasksInput>
+}
+
+export type ManagerCreateNestedOneWithoutTeamInput = {
+  create?: Prisma.XOR<Prisma.ManagerCreateWithoutTeamInput, Prisma.ManagerUncheckedCreateWithoutTeamInput>
+  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutTeamInput
+  connect?: Prisma.ManagerWhereUniqueInput
+}
+
+export type ManagerUncheckedCreateNestedOneWithoutTeamInput = {
+  create?: Prisma.XOR<Prisma.ManagerCreateWithoutTeamInput, Prisma.ManagerUncheckedCreateWithoutTeamInput>
+  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutTeamInput
+  connect?: Prisma.ManagerWhereUniqueInput
+}
+
+export type ManagerUpdateOneWithoutTeamNestedInput = {
+  create?: Prisma.XOR<Prisma.ManagerCreateWithoutTeamInput, Prisma.ManagerUncheckedCreateWithoutTeamInput>
+  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutTeamInput
+  upsert?: Prisma.ManagerUpsertWithoutTeamInput
+  disconnect?: Prisma.ManagerWhereInput | boolean
+  delete?: Prisma.ManagerWhereInput | boolean
+  connect?: Prisma.ManagerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ManagerUpdateToOneWithWhereWithoutTeamInput, Prisma.ManagerUpdateWithoutTeamInput>, Prisma.ManagerUncheckedUpdateWithoutTeamInput>
+}
+
+export type ManagerUncheckedUpdateOneWithoutTeamNestedInput = {
+  create?: Prisma.XOR<Prisma.ManagerCreateWithoutTeamInput, Prisma.ManagerUncheckedCreateWithoutTeamInput>
+  connectOrCreate?: Prisma.ManagerCreateOrConnectWithoutTeamInput
+  upsert?: Prisma.ManagerUpsertWithoutTeamInput
+  disconnect?: Prisma.ManagerWhereInput | boolean
+  delete?: Prisma.ManagerWhereInput | boolean
+  connect?: Prisma.ManagerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ManagerUpdateToOneWithWhereWithoutTeamInput, Prisma.ManagerUpdateWithoutTeamInput>, Prisma.ManagerUncheckedUpdateWithoutTeamInput>
 }
 
 export type ManagerCreateNestedOneWithoutUserInput = {
@@ -442,12 +498,14 @@ export type ManagerCreateWithoutAssignedTasksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutManagerInput
+  team?: Prisma.TeamCreateNestedOneWithoutManagerInput
 }
 
 export type ManagerUncheckedCreateWithoutAssignedTasksInput = {
   id?: string
   name: string
   email: string
+  teamId?: string | null
   contactNumber: string
   status?: $Enums.Status
   isDeleted?: boolean
@@ -480,9 +538,74 @@ export type ManagerUpdateWithoutAssignedTasksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutManagerNestedInput
+  team?: Prisma.TeamUpdateOneWithoutManagerNestedInput
 }
 
 export type ManagerUncheckedUpdateWithoutAssignedTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ManagerCreateWithoutTeamInput = {
+  id?: string
+  name: string
+  contactNumber: string
+  status?: $Enums.Status
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutManagerInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedByManagerInput
+}
+
+export type ManagerUncheckedCreateWithoutTeamInput = {
+  id?: string
+  name: string
+  email: string
+  contactNumber: string
+  status?: $Enums.Status
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedByManagerInput
+}
+
+export type ManagerCreateOrConnectWithoutTeamInput = {
+  where: Prisma.ManagerWhereUniqueInput
+  create: Prisma.XOR<Prisma.ManagerCreateWithoutTeamInput, Prisma.ManagerUncheckedCreateWithoutTeamInput>
+}
+
+export type ManagerUpsertWithoutTeamInput = {
+  update: Prisma.XOR<Prisma.ManagerUpdateWithoutTeamInput, Prisma.ManagerUncheckedUpdateWithoutTeamInput>
+  create: Prisma.XOR<Prisma.ManagerCreateWithoutTeamInput, Prisma.ManagerUncheckedCreateWithoutTeamInput>
+  where?: Prisma.ManagerWhereInput
+}
+
+export type ManagerUpdateToOneWithWhereWithoutTeamInput = {
+  where?: Prisma.ManagerWhereInput
+  data: Prisma.XOR<Prisma.ManagerUpdateWithoutTeamInput, Prisma.ManagerUncheckedUpdateWithoutTeamInput>
+}
+
+export type ManagerUpdateWithoutTeamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutManagerNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedByManagerNestedInput
+}
+
+export type ManagerUncheckedUpdateWithoutTeamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -491,6 +614,7 @@ export type ManagerUncheckedUpdateWithoutAssignedTasksInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedByManagerNestedInput
 }
 
 export type ManagerCreateWithoutUserInput = {
@@ -501,12 +625,14 @@ export type ManagerCreateWithoutUserInput = {
   isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  team?: Prisma.TeamCreateNestedOneWithoutManagerInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedByManagerInput
 }
 
 export type ManagerUncheckedCreateWithoutUserInput = {
   id?: string
   name: string
+  teamId?: string | null
   contactNumber: string
   status?: $Enums.Status
   isDeleted?: boolean
@@ -539,12 +665,14 @@ export type ManagerUpdateWithoutUserInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  team?: Prisma.TeamUpdateOneWithoutManagerNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedByManagerNestedInput
 }
 
 export type ManagerUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -588,12 +716,14 @@ export type ManagerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   name?: boolean
   email?: boolean
+  teamId?: boolean
   contactNumber?: boolean
   status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Manager$teamArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.Manager$assignedTasksArgs<ExtArgs>
   _count?: boolean | Prisma.ManagerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["manager"]>
@@ -602,30 +732,35 @@ export type ManagerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   name?: boolean
   email?: boolean
+  teamId?: boolean
   contactNumber?: boolean
   status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Manager$teamArgs<ExtArgs>
 }, ExtArgs["result"]["manager"]>
 
 export type ManagerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   email?: boolean
+  teamId?: boolean
   contactNumber?: boolean
   status?: boolean
   isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Manager$teamArgs<ExtArgs>
 }, ExtArgs["result"]["manager"]>
 
 export type ManagerSelectScalar = {
   id?: boolean
   name?: boolean
   email?: boolean
+  teamId?: boolean
   contactNumber?: boolean
   status?: boolean
   isDeleted?: boolean
@@ -633,29 +768,34 @@ export type ManagerSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ManagerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "contactNumber" | "status" | "isDeleted" | "createdAt" | "updatedAt", ExtArgs["result"]["manager"]>
+export type ManagerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "teamId" | "contactNumber" | "status" | "isDeleted" | "createdAt" | "updatedAt", ExtArgs["result"]["manager"]>
 export type ManagerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Manager$teamArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.Manager$assignedTasksArgs<ExtArgs>
   _count?: boolean | Prisma.ManagerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ManagerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Manager$teamArgs<ExtArgs>
 }
 export type ManagerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Manager$teamArgs<ExtArgs>
 }
 
 export type $ManagerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Manager"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    team: Prisma.$TeamPayload<ExtArgs> | null
     assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     email: string
+    teamId: string | null
     contactNumber: string
     status: $Enums.Status
     isDeleted: boolean
@@ -1056,6 +1196,7 @@ readonly fields: ManagerFieldRefs;
 export interface Prisma__ManagerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  team<T extends Prisma.Manager$teamArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Manager$teamArgs<ExtArgs>>): Prisma.Prisma__TeamClient<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assignedTasks<T extends Prisma.Manager$assignedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Manager$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1089,6 +1230,7 @@ export interface ManagerFieldRefs {
   readonly id: Prisma.FieldRef<"Manager", 'String'>
   readonly name: Prisma.FieldRef<"Manager", 'String'>
   readonly email: Prisma.FieldRef<"Manager", 'String'>
+  readonly teamId: Prisma.FieldRef<"Manager", 'String'>
   readonly contactNumber: Prisma.FieldRef<"Manager", 'String'>
   readonly status: Prisma.FieldRef<"Manager", 'Status'>
   readonly isDeleted: Prisma.FieldRef<"Manager", 'Boolean'>
@@ -1487,6 +1629,25 @@ export type ManagerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Managers to delete.
    */
   limit?: number
+}
+
+/**
+ * Manager.team
+ */
+export type Manager$teamArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Team
+   */
+  select?: Prisma.TeamSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Team
+   */
+  omit?: Prisma.TeamOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamInclude<ExtArgs> | null
+  where?: Prisma.TeamWhereInput
 }
 
 /**

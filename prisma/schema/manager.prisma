@@ -3,6 +3,8 @@ model Manager {
   name          String
   email         String     @unique
   user          User     @relation(fields: [email], references: [email])
+  teamId       String?   @unique
+  team          Team?    @relation(fields: [teamId], references: [id])
   assignedTasks Task[]   @relation("AssignedByManager")
   contactNumber String
   status    Status     @default(ACTIVE)

@@ -7,6 +7,7 @@ import sendResponse from '../../shared/sendResponse';
 import pick from '../../shared/pick';
 import { managerService } from './manager.service';
 import { ActiveStatus } from '../../interfaces/userRole';
+import AppError from '../../errorHelpers/AppError';
 
 const getAllManager = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, managerFilterableFields);
@@ -46,8 +47,30 @@ const updateManagerStatus = catchAsync(async (req, res) => {
     data: updatedManager,
   });
 });
+
+ const addManagerToTeam = catchAsync(
+  async (req: Request, res: Response) => {
+    const { managerId } = req.params;
+    const { teamId } = req.body;
+
+    if (!teamId) {
+      throw new AppError(httpStatus.BAD_REQUEST, "teamId is required");
+    }
+
+    const result = await managerService.addManagerToTeam(managerId, teamId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Manager added to team successfully",
+      data: result,
+    });
+  }
+);
+
 export const managerController = {
   getAllManager,
   softDeleteManager,
   updateManagerStatus,
+  addManagerToTeam,
 };

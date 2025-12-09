@@ -1000,6 +1000,7 @@ export const ManagerScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  teamId: 'teamId',
   contactNumber: 'contactNumber',
   status: 'status',
   isDeleted: 'isDeleted',
