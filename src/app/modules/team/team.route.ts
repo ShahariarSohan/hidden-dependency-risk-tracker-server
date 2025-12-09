@@ -15,13 +15,19 @@ router.post(
   validateRequest(teamZodSchema),
   teamController.createTeam
 );
+router.get("/", authGuard(UserRole.ADMIN), teamController.getAllTeam);
+router.get(
+  "/my-teams",
+  authGuard(UserRole.EMPLOYEE),
+  teamController.getMyTeams
+);
 router.get(
   "/:id",
   authGuard(UserRole.ADMIN, UserRole.MANAGER),
   teamController.getTeamById
 );
 
-router.get("/", authGuard(UserRole.ADMIN), teamController.getAllTeam);
+
 router.delete(
   "/soft-delete/:id",
   authGuard(UserRole.ADMIN, UserRole.MANAGER),

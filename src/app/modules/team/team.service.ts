@@ -7,7 +7,8 @@ import { Prisma, Team } from "../../../../prisma/generated/client";
 import { teamSearchAbleFields } from "./team.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
-import { ActiveStatus } from "../../interfaces/userRole";
+import { ActiveStatus, UserRole } from "../../interfaces/userRole";
+import { IAuthUser } from "../../interfaces/user.interface";
 
 const createTeam = async (req: Request) => {
   const isTeamExist = await prisma.team.findFirst({
@@ -170,11 +171,55 @@ const updateTeamName =
     });
   }
 
+export const getMyTeams = async (authUser: IAuthUser) => {
+    // 1. Fetch base user
+    const user = await prisma.user.findUnique({
+      where: {
+        email: authUser.email,
+        status: ActiveStatus.ACTIVE,
+      },
+    });
+    if (!user) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "User is invalid"
+      );
+    }
+    // 2. Only employees have teams (based on your requirement)
+    if (user.role !== UserRole.EMPLOYEE) {
+      throw new AppError(httpStatus.FORBIDDEN,"Only employees can access their teams.");
+    }
+
+    // 3. Fetch employee
+    const employee = await prisma.employee.findUnique({
+      where: {
+        email: authUser.email,
+        isDeleted: false,
+      },
+    });
+    if (!employee) {
+      throw new AppError(httpStatus.BAD_REQUEST, "User is invalid");
+    }
+    // 4. Return all teams of that employee
+    return prisma.team.findMany({
+      where: {
+        employees: {
+          some: {
+            id: employee.id,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  };
 export const teamService = {
   createTeam,
   getAllTeam,
   softDeleteTeam,
   getTeamById,
   updateTeamStatus,
-  updateTeamName
+  updateTeamName,
+  getMyTeams
 };

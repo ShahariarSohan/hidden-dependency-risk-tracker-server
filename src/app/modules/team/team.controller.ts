@@ -6,6 +6,7 @@ import { Request, Response } from "express";
 import { teamFilterableFields } from "./team.constant";
 import { paginationTermArray } from "../../shared/paginationConstant";
 import pick from "../../shared/pick";
+import { IAuthUser } from "../../interfaces/user.interface";
 
 const createTeam = catchAsync(async (req: Request, res: Response) => {
   const result = await teamService.createTeam(req);
@@ -77,7 +78,20 @@ const updateTeamName = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getMyTeams = catchAsync(
+  async (req: Request & { user?: IAuthUser }, res) => {
+    const authUser = req.user as IAuthUser;
 
+    const result = await teamService.getMyTeams(authUser);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "My teams fetched successfully",
+      data: result,
+    });
+  }
+);
 export const teamController = {
   createTeam,
   getAllTeam,
@@ -85,4 +99,5 @@ export const teamController = {
   getTeamById,
   updateTeamStatus,
   updateTeamName,
+  getMyTeams
 };
