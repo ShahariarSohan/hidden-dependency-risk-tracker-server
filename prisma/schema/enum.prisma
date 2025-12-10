@@ -8,7 +8,7 @@ enum TaskStatus {
   PENDING
   IN_PROGRESS
   CANCELLED
-  DONE
+  COMPLETED
 }
 enum Status {
   ACTIVE

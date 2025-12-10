@@ -39,5 +39,16 @@ export const createTaskZodSchema = z
   })
   
 export const updateTaskStatusZodSchema = z.object({
-  status: z.enum([TaskStatus.PENDING, TaskStatus.IN_PROGRESS, TaskStatus.DONE]),
+  status: z.enum([TaskStatus.PENDING, TaskStatus.IN_PROGRESS, TaskStatus.COMPLETED]),
+});
+
+export const updateTaskZodSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  dueDate: z
+    .string()
+    .optional()
+    .refine((val) => !val || !isNaN(Date.parse(val)), {
+      message: "Invalid date",
+    }),
 });

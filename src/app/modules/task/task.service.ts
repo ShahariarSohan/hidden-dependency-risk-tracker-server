@@ -5,7 +5,7 @@ import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
 import { ActiveStatus, UserRole } from "../../interfaces/userRole";
 import { IAuthUser } from "../../interfaces/user.interface";
-import { Prisma } from "../../../../prisma/generated/client";
+import { Prisma, Task } from "../../../../prisma/generated/client";
 import { taskSearchAbleFields } from "./task.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
@@ -61,7 +61,9 @@ const createTask = async (req: Request & { user?: IAuthUser }) => {
 const getAllTask = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
-
+if (filterData.priority) {
+  filterData.priority = Number(filterData.priority);
+  }
   const andConditions: Prisma.TaskWhereInput[] = [
     {
       status: {
@@ -121,7 +123,7 @@ const softDeleteTask = async (taskId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, "Task not found");
   }
 
-  if (task.status === "DONE") {
+  if (task.status === "COMPLETED") {
     throw new AppError(httpStatus.BAD_REQUEST, "Task is already completed");
   }
 
@@ -150,13 +152,13 @@ const getTaskById = async (id: string) => {
     },
   });
 };
-const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatus.IN_PROGRESS|TaskStatus.DONE) => {
+const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatus.IN_PROGRESS|TaskStatus.COMPLETED) => {
   const task = await prisma.task.findUniqueOrThrow({
     where: { id },
   });
 
   // Optional guard (recommended)
-  if (task.status === TaskStatus.DONE) {
+  if (task.status === TaskStatus.COMPLETED) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       "Completed task cannot be modified"
@@ -167,7 +169,7 @@ const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatu
     where: { id },
     data: {
       status,
-      completedAt: status === TaskStatus.DONE ? new Date() : task.completedAt,
+      completedAt: status === TaskStatus.COMPLETED ? new Date() : task.completedAt,
     },
   });
 };
@@ -259,6 +261,28 @@ const getMyAssignedTasks = async (authUser: IAuthUser) => {
 
 };
 
+ const updateTask = async (taskId: string, data: Partial<Task>) => {
+  // Fetch the task first
+  const task = await prisma.task.findUnique({ where: { id: taskId } });
+  if (!task) throw new AppError(404, "Task not found");
+
+  // Validate dueDate
+  if (data.dueDate && new Date(data.dueDate) < task.createdAt) {
+    throw new AppError(400, "Due date cannot be earlier than task creation date");
+  }
+
+  const updatedTask = await prisma.task.update({
+    where: { id: taskId },
+    data: {
+      title: data.title,
+      description: data.description,
+      dueDate: data.dueDate ? new Date(data.dueDate) : null,
+    },
+  });
+
+  return updatedTask;
+};
+
 export const taskService = {
   createTask,
   getAllTask,
@@ -266,4 +290,5 @@ export const taskService = {
   getTaskById,
   updateTaskStatus,
   getMyAssignedTasks,
+  updateTask
 };

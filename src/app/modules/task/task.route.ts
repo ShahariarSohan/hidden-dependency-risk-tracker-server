@@ -4,7 +4,7 @@ import { UserRole } from "../../interfaces/userRole";
 
 import { taskController } from "./task.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createTaskZodSchema, updateTaskStatusZodSchema } from "./task.validation";
+import { createTaskZodSchema, updateTaskStatusZodSchema, updateTaskZodSchema } from "./task.validation";
 
 
 
@@ -37,6 +37,12 @@ router.patch(
   authGuard(UserRole.ADMIN, UserRole.MANAGER),
   validateRequest(updateTaskStatusZodSchema),
   taskController.updateTaskStatus
+);
+router.patch(
+  "/:taskId",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  validateRequest(updateTaskZodSchema),
+  taskController.updateTask
 );
 
 export const taskRoutes = router;

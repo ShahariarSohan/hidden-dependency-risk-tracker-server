@@ -81,7 +81,21 @@ const getMyAssignedTasks = catchAsync(
     });
   }
 );
+const updateTask = catchAsync(async (req: Request, res: Response) => {
+  const { taskId } = req.params;
 
+  // Validate body
+ 
+
+  const updatedTask = await taskService.updateTask(taskId, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Task updated successfully",
+    data: updatedTask,
+  });
+});
 export const taskController = {
   createTask,
   getAllTask,
@@ -89,4 +103,5 @@ export const taskController = {
   getTaskById,
   updateTaskStatus,
   getMyAssignedTasks,
+  updateTask
 };

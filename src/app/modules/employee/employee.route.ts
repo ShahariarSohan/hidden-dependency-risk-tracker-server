@@ -7,7 +7,7 @@ import { addEmployeeToTeamZodSchema } from "./employee.validation";
 import { updateStatusZodSchema } from "../../zod/status.schema";
 
 const router = Router();
-router.get("/", authGuard(UserRole.ADMIN), employeeController.getAllEmployee);
+router.get("/", authGuard(UserRole.ADMIN,UserRole.MANAGER), employeeController.getAllEmployee);
 router.get(
   "/:id",
   authGuard(UserRole.ADMIN),
