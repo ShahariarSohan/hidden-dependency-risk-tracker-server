@@ -12,7 +12,7 @@ import { employeeRiskSearchableFields, systemRiskSearchableFields, teamRiskSearc
 // ============================
 // SINGLE EMPLOYEE RISK
 // ============================
-const getEmployeeRisk = async (user:IAuthUser) => {
+const getEmployeeOwnRisk = async (user:IAuthUser) => {
   const employee = await prisma.employee.findFirstOrThrow({
     where:{email:user.email}
   })
@@ -82,7 +82,7 @@ const getTeamRisk = async (teamId: string) => {
       employees: {
         include: {
           tasks: {
-            include: { system: true },
+            include: { system: true,employee:true },
           },
         },
       },
@@ -116,6 +116,7 @@ const getTeamRisk = async (teamId: string) => {
 
   return {
     teamId: team.id,
+    team,
     teamName: team.name,
     totalEmployees: team.employees.length,
     teamRiskScore,
@@ -502,7 +503,7 @@ const getRiskDashboard = async () => {
 // EXPORT
 // ============================
 export const riskAnalysisService = {
-  getEmployeeRisk,
+  getEmployeeOwnRisk,
   getSystemRisk,
   getTeamRisk,
   getRiskDashboard,

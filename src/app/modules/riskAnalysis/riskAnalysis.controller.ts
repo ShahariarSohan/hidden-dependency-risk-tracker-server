@@ -8,17 +8,19 @@ import { paginationTermArray } from "../../shared/paginationConstant";
 import pick from "../../shared/pick";
 import { IAuthUser } from "../../interfaces/user.interface";
 
-const getEmployeeRisk = catchAsync( async (req: Request & { user?: IAuthUser }, res) => {
-  const user = req.user as IAuthUser;
-  const result = await riskAnalysisService.getEmployeeRisk(user);
+const getEmployeeOwnRisk = catchAsync(
+  async (req: Request & { user?: IAuthUser }, res) => {
+    const user = req.user as IAuthUser;
+    const result = await riskAnalysisService.getEmployeeOwnRisk(user);
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Employee risk fetched successfully",
-    data: result,
-  });
-});
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Employee risk fetched successfully",
+      data: result,
+    });
+  }
+);
 const getAllEmployeeRisk = catchAsync(async (req, res) => {
   const filters = pick(req.query, riskFilterableFields);
   const options = pick(req.query, paginationTermArray);
@@ -100,7 +102,7 @@ const getRiskDashboard = catchAsync(async (_req: Request, res: Response) => {
 });
 
 export const riskAnalysisController = {
-  getEmployeeRisk,
+  getEmployeeOwnRisk,
   getSystemRisk,
   getTeamRisk,
   getRiskDashboard,
