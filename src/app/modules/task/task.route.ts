@@ -23,6 +23,11 @@ router.get(
   taskController.getMyAssignedTasks
 );
 router.get(
+  "/my-tasks",
+  authGuard(UserRole.ADMIN, UserRole.MANAGER,UserRole.EMPLOYEE),
+  taskController.getAllMyTasksPagination
+);
+router.get(
   "/:id",
   authGuard(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
   taskController.getTaskById

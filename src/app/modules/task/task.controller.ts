@@ -96,6 +96,28 @@ const updateTask = catchAsync(async (req: Request, res: Response) => {
     data: updatedTask,
   });
 });
+export const getAllMyTasksPagination = catchAsync(
+  async (req: Request & { user?: IAuthUser }, res) => {
+    const email = (req.user as IAuthUser).email as string; // from IAuthUser
+
+    const filters = pick(req.query, taskFilterableFields);
+    const paginationOptions = pick(req.query, paginationTermArray);
+
+    const result = await taskService.getAllMyTasksPagination(
+      email,
+      filters,
+      paginationOptions
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "My tasks fetched successfully!",
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+);
 export const taskController = {
   createTask,
   getAllTask,
@@ -103,5 +125,6 @@ export const taskController = {
   getTaskById,
   updateTaskStatus,
   getMyAssignedTasks,
-  updateTask
+  updateTask,
+  getAllMyTasksPagination,
 };

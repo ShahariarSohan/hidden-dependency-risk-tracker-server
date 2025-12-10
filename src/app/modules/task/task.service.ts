@@ -105,6 +105,12 @@ if (filterData.priority) {
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : { createdAt: "desc" },
+    include: {
+      employee: true,
+      system: true,
+      assignedByAdmin: true,
+      assignedByManager: true,
+    },
   });
 
   const total = await prisma.task.count({ where: whereConditions });
@@ -282,6 +288,118 @@ const getMyAssignedTasks = async (authUser: IAuthUser) => {
 
   return updatedTask;
 };
+const getAllMyTasksPagination = async (
+  email: string,
+  params: any,
+  options: IPaginationOptions
+) => {
+  // ---------------------------------------
+  // STEP 1: Identify Admin, Manager, Employee
+  // ---------------------------------------
+  const admin = await prisma.admin.findUnique({ where: { email } });
+  const manager = await prisma.manager.findUnique({ where: { email } });
+  const employee = await prisma.employee.findUnique({ where: { email } });
+
+  let role: "ADMIN" | "MANAGER" | "EMPLOYEE" | null = null;
+  let entityId: string | null = null;
+
+  if (admin) {
+    role = "ADMIN";
+    entityId = admin.id;
+  } else if (manager) {
+    role = "MANAGER";
+    entityId = manager.id;
+  } else if (employee) {
+    role = "EMPLOYEE";
+    entityId = employee.id;
+  } else {
+    throw new Error("User not found in admin/manager/employee tables");
+  }
+
+  // ---------------------------------------
+  // STEP 2: Prepare Pagination
+  // ---------------------------------------
+  const { page, limit, skip } = paginationHelper.calculatePagination(options);
+  const { searchTerm, ...filterData } = params;
+
+  if (filterData.priority) {
+    filterData.priority = Number(filterData.priority);
+  }
+
+  const andConditions: Prisma.TaskWhereInput[] = [
+    {
+      status: {
+        not: TaskStatus.CANCELLED,
+      },
+    },
+  ];
+
+  // ---------------------------------------
+  // STEP 3: Search Filter
+  // ---------------------------------------
+  if (searchTerm) {
+    andConditions.push({
+      OR: taskSearchAbleFields.map((field) => ({
+        [field]: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
+
+  // ---------------------------------------
+  // STEP 4: Dynamic Filters
+  // ---------------------------------------
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: { equals: (filterData as any)[key] },
+      })),
+    });
+  }
+
+  // ---------------------------------------
+  // STEP 5: Role-based Task Restriction
+  // ---------------------------------------
+  if (role === "ADMIN") {
+    andConditions.push({ assignedByAdminId: entityId });
+  } else if (role === "MANAGER") {
+    andConditions.push({ assignedByManagerId: entityId });
+  } else if (role === "EMPLOYEE") {
+    andConditions.push({ employeeId: entityId });
+  }
+
+  const whereConditions: Prisma.TaskWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
+  // ---------------------------------------
+  // STEP 6: Fetch Paginated Data
+  // ---------------------------------------
+  const result = await prisma.task.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
+    include: {
+      employee: true,
+      system: true,
+      assignedByAdmin: true,
+      assignedByManager: true,
+    },
+  });
+
+  const total = await prisma.task.count({ where: whereConditions });
+
+  return {
+    meta: { page, limit, total },
+    data: result,
+  };
+};
+
 
 export const taskService = {
   createTask,
@@ -290,5 +408,6 @@ export const taskService = {
   getTaskById,
   updateTaskStatus,
   getMyAssignedTasks,
-  updateTask
+  updateTask,
+  getAllMyTasksPagination,
 };

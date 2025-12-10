@@ -15,7 +15,7 @@ router.post(
   systemController.createSystem
 );
 
-router.get("/", authGuard(UserRole.ADMIN), systemController.getAllSystem);
+router.get("/", authGuard(UserRole.ADMIN,UserRole.MANAGER), systemController.getAllSystem);
 router.get(
   "/:id",
   authGuard(UserRole.ADMIN),
