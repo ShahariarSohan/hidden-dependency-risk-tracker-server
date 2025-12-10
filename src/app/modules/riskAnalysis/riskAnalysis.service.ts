@@ -2,7 +2,9 @@
 import { Prisma } from "../../../../prisma/generated/client";
 import { prisma } from "../../config/prisma";
 import { IPaginationOptions } from "../../interfaces/pagination";
+import { RiskLevel } from "../../interfaces/riskAnalysis";
 import { TaskStatus } from "../../interfaces/taskStatus";
+import { IAuthUser } from "../../interfaces/user.interface";
 import { ActiveStatus } from "../../interfaces/userRole";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { employeeRiskSearchableFields, systemRiskSearchableFields, teamRiskSearchableFields } from "./riskAnalysis.constant";
@@ -10,16 +12,20 @@ import { employeeRiskSearchableFields, systemRiskSearchableFields, teamRiskSearc
 // ============================
 // SINGLE EMPLOYEE RISK
 // ============================
-const getEmployeeRisk = async (employeeId: string) => {
+const getEmployeeRisk = async (user:IAuthUser) => {
+  const employee = await prisma.employee.findFirstOrThrow({
+    where:{email:user.email}
+  })
   const tasks = await prisma.task.findMany({
     where: {
-      employeeId,
+      employeeId:employee.id,
       status: {
         in: [TaskStatus.PENDING, TaskStatus.IN_PROGRESS],
       },
     },
     include: {
       system: true,
+      employee:true
     },
   });
 
@@ -30,10 +36,9 @@ const getEmployeeRisk = async (employeeId: string) => {
   });
 
   return {
-    employeeId,
     totalActiveTasks: tasks.length,
     riskScore,
-    riskLevel: riskScore > 30 ? "HIGH" : riskScore > 15 ? "MEDIUM" : "LOW",
+    riskLevel: riskScore > 30 ? RiskLevel.HIGH : riskScore > 15 ? RiskLevel.MEDIUM : RiskLevel.LOW,
     tasks,
   };
 };
@@ -63,7 +68,7 @@ const getSystemRisk = async (systemId: string) => {
     criticality: system.criticality,
     activeTasks: activeTasks.length,
     riskScore,
-    riskLevel: riskScore > 40 ? "HIGH" : riskScore > 20 ? "MEDIUM" : "LOW",
+    riskLevel: riskScore > 40 ? RiskLevel.HIGH : riskScore > 20 ? RiskLevel.MEDIUM : RiskLevel.LOW,
   };
 };
 
@@ -115,7 +120,7 @@ const getTeamRisk = async (teamId: string) => {
     totalEmployees: team.employees.length,
     teamRiskScore,
     teamRiskLevel:
-      teamRiskScore > 50 ? "HIGH" : teamRiskScore > 25 ? "MEDIUM" : "LOW",
+      teamRiskScore > 50 ? RiskLevel.HIGH : teamRiskScore > 25 ? RiskLevel.MEDIUM : RiskLevel.LOW,
     employeeRisks,
   };
 };
@@ -157,7 +162,7 @@ const getAllEmployeeRisk = async (
     include: {
       tasks: {
         where: {
-          status: { in: ["PENDING", "IN_PROGRESS"] },
+          status: { in: [TaskStatus.PENDING, TaskStatus.IN_PROGRESS] },
         },
         include: {
           system: true,
@@ -174,7 +179,7 @@ const getAllEmployeeRisk = async (
     );
 
     const riskLevelCalculated =
-      riskScore > 30 ? "HIGH" : riskScore > 15 ? "MEDIUM" : "LOW";
+      riskScore > 30 ? RiskLevel.HIGH : riskScore > 15 ? RiskLevel.MEDIUM : RiskLevel.LOW;
 
     return {
       type: "EMPLOYEE",
@@ -236,7 +241,7 @@ const getAllSystemRisk = async (
     include: {
       tasks: {
         where: {
-          status: { in: ["PENDING", "IN_PROGRESS"] },
+          status: { in: [TaskStatus.PENDING, TaskStatus.IN_PROGRESS] },
         },
       },
     },
@@ -249,7 +254,7 @@ const getAllSystemRisk = async (
     );
 
     const riskLevelCalculated =
-      riskScore > 40 ? "HIGH" : riskScore > 20 ? "MEDIUM" : "LOW";
+      riskScore > 40 ? RiskLevel.HIGH : riskScore > 20 ? RiskLevel.MEDIUM : RiskLevel.LOW;
 
     return {
       type: "SYSTEM",
@@ -310,7 +315,7 @@ const getAllTeamRisk = async (
         include: {
           tasks: {
             where: {
-              status: { in: ["PENDING", "IN_PROGRESS"] },
+              status: { in: [TaskStatus.PENDING, TaskStatus.IN_PROGRESS] },
             },
             include: {
               system: true,
@@ -327,7 +332,7 @@ const getAllTeamRisk = async (
       .reduce((sum, task) => sum + Number(task.priority) * Number(task.system.criticality), 0);
 
     const riskLevelCalculated =
-      riskScore > 50 ? "HIGH" : riskScore > 25 ? "MEDIUM" : "LOW";
+      riskScore > 50 ? RiskLevel.HIGH : riskScore > 25 ? RiskLevel.MEDIUM : RiskLevel.LOW;
 
     return {
       type: "TEAM",
@@ -363,7 +368,7 @@ const getAllEmployeeRiskForDashboard = async () => {
     include: {
       tasks: {
         where: {
-          status: { in: ["PENDING", "IN_PROGRESS"] },
+          status: { in: [TaskStatus.PENDING, TaskStatus.IN_PROGRESS] },
         },
         include: {
           system: true,
@@ -383,7 +388,7 @@ const getAllEmployeeRiskForDashboard = async () => {
         employeeId: employee.id,
         name: employee.name,
         riskScore,
-        riskLevel: riskScore > 30 ? "HIGH" : riskScore > 15 ? "MEDIUM" : "LOW",
+        riskLevel: riskScore > 30 ? RiskLevel.HIGH : riskScore > 15 ? RiskLevel.MEDIUM : RiskLevel.LOW,
       };
     })
     .sort((a, b) => b.riskScore - a.riskScore);
@@ -394,7 +399,7 @@ const getAllSystemRiskForDashboard = async () => {
     include: {
       tasks: {
         where: {
-          status: { in: ["PENDING", "IN_PROGRESS"] },
+          status: { in: [TaskStatus.PENDING, TaskStatus.IN_PROGRESS] },
         },
       },
     },
@@ -411,7 +416,7 @@ const getAllSystemRiskForDashboard = async () => {
         systemId: system.id,
         name: system.name,
         riskScore,
-        riskLevel: riskScore > 40 ? "HIGH" : riskScore > 20 ? "MEDIUM" : "LOW",
+        riskLevel: riskScore > 40 ? RiskLevel.HIGH : riskScore > 20 ? RiskLevel.MEDIUM : RiskLevel.LOW,
       };
     })
     .sort((a, b) => b.riskScore - a.riskScore);
@@ -423,7 +428,7 @@ const getAllTeamRiskForDashboard = async () => {
         include: {
           tasks: {
             where: {
-              status: { in: ["PENDING", "IN_PROGRESS"] },
+              status: { in: [TaskStatus.PENDING, TaskStatus.IN_PROGRESS] },
             },
             include: {
               system: true,
@@ -447,7 +452,7 @@ const getAllTeamRiskForDashboard = async () => {
         teamId: team.id,
         name: team.name,
         riskScore,
-        riskLevel: riskScore > 50 ? "HIGH" : riskScore > 25 ? "MEDIUM" : "LOW",
+        riskLevel: riskScore > 50 ? RiskLevel.HIGH : riskScore > 25 ? RiskLevel.MEDIUM : RiskLevel.LOW,
       };
     })
     .sort((a, b) => b.riskScore - a.riskScore);
@@ -464,9 +469,9 @@ const getRiskDashboard = async () => {
   // DASHBOARD METRICS
   // ========================
 
-  const highRiskEmployees = employeeRisks.filter((e) => e.riskLevel === "HIGH");
-  const highRiskSystems = systemRisks.filter((s) => s.riskLevel === "HIGH");
-  const highRiskTeams = teamRisks.filter((t) => t.riskLevel === "HIGH");
+  const highRiskEmployees = employeeRisks.filter((e) => e.riskLevel === RiskLevel.HIGH);
+  const highRiskSystems = systemRisks.filter((s) => s.riskLevel === RiskLevel.HIGH);
+  const highRiskTeams = teamRisks.filter((t) => t.riskLevel === RiskLevel.HIGH);
 
   return {
     summary: {

@@ -17,8 +17,8 @@ router.get(
   riskAnalysisController.getAllEmployeeRisk
 );
 router.get(
-  "/employee/:employeeId",
-  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  "/employee-risk",
+  authGuard(UserRole.EMPLOYEE),
   riskAnalysisController.getEmployeeRisk
 );
 
@@ -39,7 +39,7 @@ router.get(
   riskAnalysisController.getAllTeamRisk
 );
 router.get(
-  "/team/:teamId",
+  "/my-team",
   authGuard(UserRole.ADMIN, UserRole.MANAGER),
   riskAnalysisController.getTeamRisk
 );

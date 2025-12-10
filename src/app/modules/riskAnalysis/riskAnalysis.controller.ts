@@ -6,10 +6,11 @@ import catchAsync from "../../shared/catchAsync";
 import { riskFilterableFields } from "./riskAnalysis.constant";
 import { paginationTermArray } from "../../shared/paginationConstant";
 import pick from "../../shared/pick";
+import { IAuthUser } from "../../interfaces/user.interface";
 
-const getEmployeeRisk = catchAsync(async (req: Request, res: Response) => {
-  const { employeeId } = req.params;
-  const result = await riskAnalysisService.getEmployeeRisk(employeeId);
+const getEmployeeRisk = catchAsync( async (req: Request & { user?: IAuthUser }, res) => {
+  const user = req.user as IAuthUser;
+  const result = await riskAnalysisService.getEmployeeRisk(user);
 
   sendResponse(res, {
     statusCode: 200,
