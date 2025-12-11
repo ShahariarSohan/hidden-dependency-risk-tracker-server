@@ -1,7 +1,9 @@
+import  httpStatus  from 'http-status-codes';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Prisma } from "../../../../prisma/generated/client";
 import { prisma } from "../../config/prisma";
+import AppError from "../../errorHelpers/AppError";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { RiskLevel } from "../../interfaces/riskAnalysis";
 import { TaskStatus } from "../../interfaces/taskStatus";
@@ -76,9 +78,15 @@ const getSystemRisk = async (systemId: string) => {
 // ============================
 // SINGLE TEAM RISK
 // ============================
-const getTeamRisk = async (teamId: string) => {
-  const team = await prisma.team.findUniqueOrThrow({
-    where: { id: teamId,status:{not:ActiveStatus.DELETED} },
+const getManagerTeamRisk = async (user:IAuthUser) => {
+  const manager = await prisma.manager.findFirstOrThrow({
+    where: { email: user.email, isDeleted: false },
+  });
+  if (!manager.teamId) {
+    throw new AppError(httpStatus.BAD_REQUEST,"Manager do not have a team")
+  }
+  const team:any = await prisma.team.findUniqueOrThrow({
+    where: { id: manager.teamId,status:{not:ActiveStatus.DELETED} },
     include: {
       employees: {
         include: {
@@ -94,15 +102,16 @@ const getTeamRisk = async (teamId: string) => {
 
   const employeeRisks: any[] = [];
 
-  team.employees.forEach((employee) => {
+  team.employees.forEach((employee:any) => {
     let employeeRisk = 0;
-
-    employee.tasks.forEach((task) => {
+    let employeeRiskLevel;
+    employee.tasks.forEach((task:any) => {
       if (
         task.status === TaskStatus.PENDING ||
         task.status === TaskStatus.IN_PROGRESS
       ) {
         employeeRisk += Number(task.priority) * Number(task.system.criticality);
+        employeeRiskLevel = employeeRisk > 50 ? RiskLevel.HIGH : employeeRisk > 25 ? RiskLevel.MEDIUM : RiskLevel.LOW;
       }
     });
 
@@ -112,6 +121,7 @@ const getTeamRisk = async (teamId: string) => {
       employeeId: employee.id,
       employeeName: employee.name,
       riskScore: employeeRisk,
+      employeeRiskLevel
     });
   });
 
@@ -509,7 +519,7 @@ const getRiskDashboard = async () => {
 export const riskAnalysisService = {
   getEmployeeOwnRisk,
   getSystemRisk,
-  getTeamRisk,
+  getManagerTeamRisk,
   getRiskDashboard,
   getAllEmployeeRisk,
   getAllSystemRisk,

@@ -41,7 +41,7 @@ router.get(
 router.get(
   "/my-team-risk",
   authGuard(UserRole.MANAGER),
-  riskAnalysisController.getTeamRisk
+  riskAnalysisController.getManagerTeamRisk
 );
 
 

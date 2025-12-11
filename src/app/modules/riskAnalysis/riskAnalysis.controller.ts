@@ -65,9 +65,10 @@ const getAllSystemRisk = catchAsync(async (req, res) => {
   });
 });
 
-const getTeamRisk = catchAsync(async (req: Request, res: Response) => {
-  const { teamId } = req.params;
-  const result = await riskAnalysisService.getTeamRisk(teamId);
+const getManagerTeamRisk = catchAsync (async (req: Request & { user?: IAuthUser }, res) => {
+  const user = req.user as IAuthUser;
+  console.log("from manager team backend",user)
+  const result = await riskAnalysisService.getManagerTeamRisk(user);
 
   sendResponse(res, {
     statusCode: 200,
@@ -104,7 +105,7 @@ const getRiskDashboard = catchAsync(async (_req: Request, res: Response) => {
 export const riskAnalysisController = {
   getEmployeeOwnRisk,
   getSystemRisk,
-  getTeamRisk,
+  getManagerTeamRisk,
   getRiskDashboard,
   getAllEmployeeRisk,
   getAllSystemRisk,
