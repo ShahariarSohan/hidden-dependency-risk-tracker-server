@@ -4,5 +4,5 @@ export const teamRiskSearchableFields = ["name"];
 
 export const systemRiskSearchableFields = ["name"];
 
-export const riskFilterableFields = ["searchTerm", "riskLevel"];
+export const riskFilterableFields = ["searchTerm","riskLevel"];
 

@@ -13,7 +13,7 @@ router.get(
 );
 router.get(
   "/employee",
-  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  authGuard(UserRole.ADMIN),
   riskAnalysisController.getAllEmployeeRisk
 );
 router.get(
@@ -24,7 +24,7 @@ router.get(
 
 router.get(
   "/system",
-  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  authGuard(UserRole.ADMIN),
   riskAnalysisController.getAllSystemRisk
 );
 router.get(
@@ -35,7 +35,7 @@ router.get(
 
 router.get(
   "/team",
-  authGuard(UserRole.ADMIN, UserRole.MANAGER),
+  authGuard(UserRole.ADMIN),
   riskAnalysisController.getAllTeamRisk
 );
 router.get(

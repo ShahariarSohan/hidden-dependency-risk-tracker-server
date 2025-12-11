@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Prisma } from "../../../../prisma/generated/client";
 import { prisma } from "../../config/prisma";
@@ -14,7 +15,7 @@ import { employeeRiskSearchableFields, systemRiskSearchableFields, teamRiskSearc
 // ============================
 const getEmployeeOwnRisk = async (user:IAuthUser) => {
   const employee = await prisma.employee.findFirstOrThrow({
-    where:{email:user.email}
+    where:{email:user.email,isDeleted:false}
   })
   const tasks = await prisma.task.findMany({
     where: {
@@ -48,7 +49,7 @@ const getEmployeeOwnRisk = async (user:IAuthUser) => {
 // ============================
 const getSystemRisk = async (systemId: string) => {
   const system = await prisma.system.findUniqueOrThrow({
-    where: { id: systemId },
+    where: { id: systemId, status: { not: ActiveStatus.DELETED } },
     include: { tasks: true },
   });
 
@@ -77,7 +78,7 @@ const getSystemRisk = async (systemId: string) => {
 // ============================
 const getTeamRisk = async (teamId: string) => {
   const team = await prisma.team.findUniqueOrThrow({
-    where: { id: teamId },
+    where: { id: teamId,status:{not:ActiveStatus.DELETED} },
     include: {
       employees: {
         include: {
@@ -219,7 +220,7 @@ const getAllSystemRisk = async (
   const { limit, skip, page } =
     paginationHelper.calculatePagination(paginationOptions);
 
-  const andConditions: Prisma.SystemWhereInput[] = [{ status:ActiveStatus.INACTIVE }];
+  const andConditions: Prisma.SystemWhereInput[] = [{ status:{not:ActiveStatus.DELETED}}];
 
   if (searchTerm) {
     andConditions.push({
@@ -262,7 +263,7 @@ const getAllSystemRisk = async (
       systemId: system.id,
       name: system.name,
       criticality: system.criticality,
-      activeTaskCount: system.tasks.length,
+      taskCount: system.tasks.length,
       riskScore,
       riskLevel: riskLevelCalculated,
     };
@@ -291,7 +292,7 @@ const getAllTeamRisk = async (
   const { limit, skip, page } =
     paginationHelper.calculatePagination(paginationOptions);
 
-  const andConditions: Prisma.TeamWhereInput[] = [];
+  const andConditions: Prisma.TeamWhereInput[] = [{status:{not:ActiveStatus.DELETED}}];
 
   if (searchTerm) {
     andConditions.push({
@@ -324,6 +325,7 @@ const getAllTeamRisk = async (
           },
         },
       },
+      systems:true
     },
   });
 
@@ -340,6 +342,7 @@ const getAllTeamRisk = async (
       teamId: team.id,
       name: team.name,
       employeeCount: team.employees.length,
+      systemCount: team.systems.length,
       riskScore,
       riskLevel: riskLevelCalculated,
     };
@@ -396,7 +399,7 @@ const getAllEmployeeRiskForDashboard = async () => {
 };
 const getAllSystemRiskForDashboard = async () => {
   const systems = await prisma.system.findMany({
-    where: { status: "ACTIVE" },
+    where: { status:{not: ActiveStatus.DELETED }},
     include: {
       tasks: {
         where: {
@@ -424,6 +427,7 @@ const getAllSystemRiskForDashboard = async () => {
 };
 const getAllTeamRiskForDashboard = async () => {
   const teams = await prisma.team.findMany({
+    where: { status: { not: ActiveStatus.DELETED } },
     include: {
       employees: {
         include: {
