@@ -1,6 +1,6 @@
 import httpStatus from "http-status-codes";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Employee, Prisma } from "../../../../prisma/generated/client";
+
 import { prisma } from "../../config/prisma";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { ActiveStatus } from "../../interfaces/userRole";
@@ -8,6 +8,7 @@ import { paginationHelper } from "../../shared/paginationHelper";
 import { employeeSearchAbleFields } from "./employee.constant";
 import AppError from "../../errorHelpers/AppError";
 import { TaskStatus } from "../../interfaces/taskStatus";
+import { Employee, Prisma } from "@prisma/client";
 
 const getAllEmployee = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);

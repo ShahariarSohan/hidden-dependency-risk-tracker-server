@@ -1,7 +1,7 @@
 import  httpStatus  from 'http-status-codes';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Prisma } from "../../../../prisma/generated/client";
+
 import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
 import { IPaginationOptions } from "../../interfaces/pagination";
@@ -11,6 +11,7 @@ import { IAuthUser } from "../../interfaces/user.interface";
 import { ActiveStatus } from "../../interfaces/userRole";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { employeeRiskSearchableFields, systemRiskSearchableFields, teamRiskSearchableFields } from "./riskAnalysis.constant";
+import { Prisma } from '@prisma/client';
 
 // ============================
 // SINGLE EMPLOYEE RISK

@@ -3,12 +3,13 @@ import httpStatus from "http-status";
 import { Request } from "express";
 import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
-import { Prisma, Team } from "../../../../prisma/generated/client";
+
 import { teamSearchAbleFields } from "./team.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { ActiveStatus, UserRole } from "../../interfaces/userRole";
 import { IAuthUser } from "../../interfaces/user.interface";
+import { Prisma, Team } from "@prisma/client";
 
 const createTeam = async (req: Request) => {
   const isTeamExist = await prisma.team.findFirst({

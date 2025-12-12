@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status";
 import bcrypt from "bcrypt";
-import { prisma } from "../../config/prisma";
+
 import { jwtHelpers } from "../../utils/jwtHelpers";
 
 import { Secret } from "jsonwebtoken";
 import { ActiveStatus } from "../../interfaces/userRole";
 import AppError from "../../errorHelpers/AppError";
 import { envVariables } from "../../config/env";
+import { prisma } from "../../config/prisma";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUnique({

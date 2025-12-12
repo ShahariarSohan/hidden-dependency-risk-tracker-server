@@ -3,9 +3,10 @@
 
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
-import { Prisma } from "../../../prisma/generated/client";
+
 import AppError from "../errorHelpers/AppError";
 import { envVariables } from "../config/env";
+import { Prisma } from "@prisma/client";
 
 // Sanitize error to prevent exposing sensitive information in production
 const sanitizeError = (error: any) => {

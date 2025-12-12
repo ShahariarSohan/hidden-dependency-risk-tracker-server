@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-if (globalThis.process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== "production") {
   dotenv.config();
 }
 
@@ -36,27 +36,25 @@ const loadEnvVariables = (): EnvConfig => {
     "REFRESH_TOKEN_EXPIRES_IN",
   ];
   requiredVariables.forEach((key) => {
-    if (!globalThis.process.env[key]) {
+    if (!process.env[key]) {
       throw new Error(`Missing env variables ${key}`);
     }
   });
 
   return {
-    PORT: globalThis.process.env.PORT as string,
-    NODE_ENV: globalThis.process.env.NODE_ENV as string,
-    DATABASE_URL: globalThis.process.env.DATABASE_URL as string,
-    FRONTEND_URL: globalThis.process.env.FRONTEND_URL as string,
-    ADMIN_NAME: globalThis.process.env.ADMIN_NAME as string,
-    ADMIN_EMAIL: globalThis.process.env.ADMIN_EMAIL as string,
-    ADMIN_PASSWORD: globalThis.process.env.ADMIN_PASSWORD as string,
-    BCRYPT_SALT_ROUND: globalThis.process.env.BCRYPT_SALT_ROUND as string,
-    ADMIN_CONTACT_NUMBER: globalThis.process.env.ADMIN_CONTACT_NUMBER as string,
-    ACCESS_TOKEN_SECRET: globalThis.process.env.ACCESS_TOKEN_SECRET as string,
-    REFRESH_TOKEN_SECRET: globalThis.process.env.REFRESH_TOKEN_SECRET as string,
-    ACCESS_TOKEN_EXPIRES_IN: globalThis.process.env
-      .ACCESS_TOKEN_EXPIRES_IN as string,
-    REFRESH_TOKEN_EXPIRES_IN: globalThis.process.env
-      .REFRESH_TOKEN_EXPIRES_IN as string,
+    PORT: process.env.PORT as string,
+    NODE_ENV: process.env.NODE_ENV as string,
+    DATABASE_URL: process.env.DATABASE_URL as string,
+    FRONTEND_URL: process.env.FRONTEND_URL as string,
+    ADMIN_NAME: process.env.ADMIN_NAME as string,
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
+    BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string,
+    ADMIN_CONTACT_NUMBER: process.env.ADMIN_CONTACT_NUMBER as string,
+    ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
+    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET as string,
+    ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
+    REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
   };
 };
 

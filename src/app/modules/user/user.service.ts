@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status-codes";
 import bcrypt from "bcrypt";
-import {
-  Employee,
-  Manager,
-  Prisma,
-  User,
-} from "../../../../prisma/generated/client";
+
 import { prisma } from "../../config/prisma";
 
 import {
@@ -20,6 +15,7 @@ import { userSearchAbleFields } from "./user.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { envVariables } from "../../config/env";
+import { Employee, Manager, Prisma, User } from "@prisma/client";
 
 const getAllUser = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);

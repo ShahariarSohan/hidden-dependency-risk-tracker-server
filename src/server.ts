@@ -1,9 +1,10 @@
 import http, { Server } from "http";
 
 import app from "./app";
-import { prisma } from "./app/config/prisma";
+
 import seedAdmin from "./app/utils/seedAdmin";
 import { envVariables } from "./app/config/env";
+import { prisma } from "./app/config/prisma";
 
 let server: Server | null = null;
 

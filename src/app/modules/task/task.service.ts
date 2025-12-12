@@ -5,11 +5,12 @@ import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
 import { ActiveStatus, UserRole } from "../../interfaces/userRole";
 import { IAuthUser } from "../../interfaces/user.interface";
-import { Prisma, Task } from "../../../../prisma/generated/client";
+
 import { taskSearchAbleFields } from "./task.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { TaskStatus } from "../../interfaces/taskStatus";
+import { Prisma, Task } from "@prisma/client";
 
 const createTask = async (req: Request & { user?: IAuthUser }) => {
   const { email, role } = req.user as IAuthUser;

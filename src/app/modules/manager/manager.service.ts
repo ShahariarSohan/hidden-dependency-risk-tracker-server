@@ -1,6 +1,6 @@
 import httpStatus from "http-status-codes";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Manager, Prisma } from "../../../../prisma/generated/client";
+
 import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
 import { IPaginationOptions } from "../../interfaces/pagination";
@@ -9,6 +9,7 @@ import { managerSearchAbleFields } from "./manager.constant";
 import { TaskStatus } from "../../interfaces/taskStatus";
 import { ActiveStatus } from "../../interfaces/userRole";
 import { IAuthUser } from "../../interfaces/user.interface";
+import { Manager, Prisma } from "@prisma/client";
 
 const getAllManager = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
