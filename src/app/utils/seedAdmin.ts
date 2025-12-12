@@ -1,19 +1,14 @@
-
-
-
-
 import bcrypt from "bcrypt";
 import { prisma } from "../config/prisma";
-import { envVariables } from "../config/env";
+
 import { UserRole } from "../interfaces/userRole";
-
-
+import { envVariables } from "../config/env";
 
 const seedAdmin = async () => {
   try {
     const isAdminExist = await prisma.user.findFirst({
       where: {
-        role: UserRole.ADMIN
+        role: UserRole.ADMIN,
       },
     });
 
@@ -23,14 +18,14 @@ const seedAdmin = async () => {
     }
 
     const hashedPassword = await bcrypt.hash(
-      envVariables.ADMIN_PASSWORD,
+      envVariables.ADMIN_PASSWORD as string,
       Number(envVariables.BCRYPT_SALT_ROUND)
     );
 
     const adminData = await prisma.$transaction(async (tx) => {
       await tx.user.create({
         data: {
-          email: envVariables.ADMIN_EMAIL,
+          email: envVariables.ADMIN_EMAIL as string,
           password: hashedPassword,
           role: UserRole.ADMIN,
         },
@@ -38,13 +33,12 @@ const seedAdmin = async () => {
 
       return await tx.admin.create({
         data: {
-          name: envVariables.ADMIN_NAME,
-          email: envVariables.ADMIN_EMAIL,
-          contactNumber:envVariables.ADMIN_CONTACT_NUMBER
+          name: envVariables.ADMIN_NAME as string,
+          email: envVariables.ADMIN_EMAIL as string,
+          contactNumber: envVariables.ADMIN_CONTACT_NUMBER as string,
         },
       });
     });
-
     console.log("Super Admin Created Successfully!", adminData);
   } catch (err) {
     console.error(err);

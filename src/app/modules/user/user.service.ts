@@ -8,7 +8,7 @@ import {
   User,
 } from "../../../../prisma/generated/client";
 import { prisma } from "../../config/prisma";
-import { envVariables } from "../../config/env";
+
 import {
   IAuthUser,
   IEmployee,
@@ -19,6 +19,7 @@ import AppError from "../../errorHelpers/AppError";
 import { userSearchAbleFields } from "./user.constant";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
+import { envVariables } from "../../config/env";
 
 const getAllUser = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
@@ -187,9 +188,9 @@ const getMyProfile = async (user: IAuthUser) => {
       status: true,
     },
   });
- if (!userInfo) {
-   throw new AppError(httpStatus.BAD_REQUEST, "User not found");
- }
+  if (!userInfo) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User not found");
+  }
   let profileInfo;
 
   if (userInfo.role === UserRole.ADMIN) {
@@ -231,7 +232,7 @@ const getMyProfile = async (user: IAuthUser) => {
         name: true,
         email: true,
         contactNumber: true,
-        teamId:true,
+        teamId: true,
         isDeleted: true,
         createdAt: true,
         updatedAt: true,
@@ -260,7 +261,7 @@ const getMyProfile = async (user: IAuthUser) => {
         id: true,
         name: true,
         email: true,
-        teamId:true,
+        teamId: true,
         contactNumber: true,
         isDeleted: true,
         tasks: {
@@ -362,10 +363,6 @@ const updateMyProfile = async (user: IAuthUser, updateData: Partial<User>) => {
 
   return { ...profileInfo };
 };
-
-
-
-
 
 export const userService = {
   createEmployee,

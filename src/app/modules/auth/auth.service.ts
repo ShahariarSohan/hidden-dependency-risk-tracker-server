@@ -3,10 +3,11 @@ import httpStatus from "http-status";
 import bcrypt from "bcrypt";
 import { prisma } from "../../config/prisma";
 import { jwtHelpers } from "../../utils/jwtHelpers";
-import { envVariables } from "../../config/env";
+
 import { Secret } from "jsonwebtoken";
 import { ActiveStatus } from "../../interfaces/userRole";
 import AppError from "../../errorHelpers/AppError";
+import { envVariables } from "../../config/env";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUnique({
@@ -16,7 +17,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
     },
   });
   if (!userData) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    throw new AppError(httpStatus.NOT_FOUND, "Invalid user or email");
   }
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,
@@ -24,7 +25,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
   );
 
   if (!isCorrectPassword) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Password incorrect!");
+    throw new AppError(httpStatus.BAD_REQUEST, "Incorrect Password!");
   }
   const accessToken = jwtHelpers.generateToken(
     {

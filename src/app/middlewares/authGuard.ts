@@ -2,12 +2,10 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 
-
-
 import AppError from "../errorHelpers/AppError";
-import { envVariables } from "../config/env";
-import { jwtHelpers } from "../utils/jwtHelpers";
 
+import { jwtHelpers } from "../utils/jwtHelpers";
+import { envVariables } from "../config/env";
 
 const authGuard = (...roles: string[]) => {
   return async (
@@ -17,7 +15,6 @@ const authGuard = (...roles: string[]) => {
   ) => {
     try {
       const token = req.headers.authorization || req.cookies.accessToken;
-      console.log({ token });
 
       if (!token) {
         throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
@@ -25,7 +22,7 @@ const authGuard = (...roles: string[]) => {
 
       const verifiedUser = jwtHelpers.verifyToken(
         token,
-        envVariables.ACCESS_TOKEN_SECRET
+        envVariables.ACCESS_TOKEN_SECRET as string
       );
 
       req.user = verifiedUser;

@@ -5,11 +5,12 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
 import { Prisma } from "../../../prisma/generated/client";
 import AppError from "../errorHelpers/AppError";
+import { envVariables } from "../config/env";
 
 // Sanitize error to prevent exposing sensitive information in production
 const sanitizeError = (error: any) => {
   // Don't expose Prisma errors in production
-  if (process.env.NODE_ENV === "production" && error.code?.startsWith("P")) {
+  if (envVariables.NODE_ENV === "production" && error.code?.startsWith("P")) {
     return {
       message: "Database operation failed",
       errorDetails: null,
@@ -44,6 +45,11 @@ const globalErrorHandler = (
     if (err.code === "P2025") {
       statusCode = httpStatus.NOT_FOUND;
       message = "Requested resource not found";
+      error = err;
+    }
+    if (err.code === "P1001") {
+      statusCode = httpStatus.NOT_FOUND;
+      message = "Something went wrong";
       error = err;
     }
   } else if (err instanceof AppError) {

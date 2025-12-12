@@ -67,7 +67,6 @@ const getAllSystemRisk = catchAsync(async (req, res) => {
 
 const getManagerTeamRisk = catchAsync (async (req: Request & { user?: IAuthUser }, res) => {
   const user = req.user as IAuthUser;
-  console.log("from manager team backend",user)
   const result = await riskAnalysisService.getManagerTeamRisk(user);
 
   sendResponse(res, {

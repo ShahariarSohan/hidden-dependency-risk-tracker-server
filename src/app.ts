@@ -2,10 +2,11 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 
 import cookieParser from "cookie-parser";
-import { envVariables } from "./app/config/env";
+
 import { router } from "./app/routes";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import { notFound } from "./app/middlewares/notFound";
+import { envVariables } from "./app/config/env";
 
 const app = express();
 
