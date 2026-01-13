@@ -14,9 +14,14 @@ const getLandingStats = async () => {
 
   // 2. Monitoring Coverage 
   // Logic: (Systems with Tasks / Total Systems) * 100
+  // Fix: Ensure we only count ACTIVE systems with tasks, otherwise (Active + Archived / Active) > 100%
   const activeSystems = await prisma.system.count({
-    where: { tasks: { some: {} } },
+    where: { 
+      status: "ACTIVE",
+      tasks: { some: {} } 
+    },
   });
+ 
   const coverage = systemCount > 0 ? Math.round((activeSystems / systemCount) * 100) : 0;
 
   // 3. Prevented Losses (Financial Impact)
@@ -24,7 +29,7 @@ const getLandingStats = async () => {
   const resolvedHighRisks = await prisma.task.count({
     where: {
       status: "COMPLETED",
-      priority: 3, // High Priority
+      priority: 5, // High Priority
     },
   });
   const preventedLosses = resolvedHighRisks * 5000;
