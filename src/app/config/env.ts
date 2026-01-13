@@ -20,7 +20,12 @@ interface EnvConfig {
   REFRESH_TOKEN_EXPIRES_IN: string;
   REVENUE_LOSS_PER_CRITICAL_SYSTEM: string;
  DOWNTIME_MINUTES_PER_CRITICAL_SYSTEM:string;
-COST_SAVINGS_PER_RESOLVED_RISK:string;
+  COST_SAVINGS_PER_RESOLVED_RISK: string;
+  SMTP_PASS: string;
+  SMTP_HOST: string;
+  SMTP_PORT: string;
+  SMTP_USER: string;
+  SMTP_FROM: string;
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -40,6 +45,11 @@ const loadEnvVariables = (): EnvConfig => {
     "REVENUE_LOSS_PER_CRITICAL_SYSTEM",
     "DOWNTIME_MINUTES_PER_CRITICAL_SYSTEM",
     "COST_SAVINGS_PER_RESOLVED_RISK",
+    "SMTP_PASS",
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_USER",
+    "SMTP_FROM",
   ];
   requiredVariables.forEach((key) => {
     if (!process.env[key]) {
@@ -64,6 +74,11 @@ const loadEnvVariables = (): EnvConfig => {
     REVENUE_LOSS_PER_CRITICAL_SYSTEM: process.env.REVENUE_LOSS_PER_CRITICAL_SYSTEM as string,
     DOWNTIME_MINUTES_PER_CRITICAL_SYSTEM: process.env.DOWNTIME_MINUTES_PER_CRITICAL_SYSTEM as string,
     COST_SAVINGS_PER_RESOLVED_RISK: process.env.COST_SAVINGS_PER_RESOLVED_RISK as string,
+    SMTP_PASS: process.env.SMTP_PASS as string,
+    SMTP_HOST: process.env.SMTP_HOST as string,
+    SMTP_PORT: process.env.SMTP_PORT as string,
+    SMTP_USER: process.env.SMTP_USER as string,
+    SMTP_FROM: process.env.SMTP_FROM as string,
   };
 };
 
