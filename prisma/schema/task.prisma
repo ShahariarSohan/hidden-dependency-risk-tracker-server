@@ -4,6 +4,7 @@ model Task {
   description String?
   status      TaskStatus @default(PENDING)
   priority    Int        @default(1)
+  workWeight  Int        @default(1) // 1-10 Scale (New Enterprise Feature)
 
   // Assigned to Employee
   employeeId String

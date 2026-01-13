@@ -11,6 +11,13 @@ router.get(
   authGuard(UserRole.ADMIN, UserRole.MANAGER),
   riskAnalysisController.getRiskDashboard
 );
+
+router.get(
+  "/history",
+  authGuard(UserRole.ADMIN),
+  riskAnalysisController.getRiskHistory
+);
+
 router.get(
   "/employee",
   authGuard(UserRole.ADMIN),

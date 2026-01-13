@@ -1,0 +1,10 @@
+model RiskSnapshot {
+  id          String   @id @default(uuid())
+  entityType  String   // "GLOBAL", "EMPLOYEE", "TEAM", "SYSTEM"
+  entityId    String?  // Optional: Null means "Global/Organization" risk
+  riskScore   Float
+  capturedAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@map("risk_snapshots")
+}

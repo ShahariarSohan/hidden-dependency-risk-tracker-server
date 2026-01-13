@@ -9,5 +9,7 @@ model User {
   admin    Admin?
   employee Employee?
   manager  Manager?
+  auditLogs AuditLog[]
+  notifications Notification[]
   @@map("users")
 }

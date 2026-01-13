@@ -512,7 +512,12 @@ const getRiskDashboard = async () => {
       highRiskTeams,
     },
   };
-};
+}
+
+const getRiskHistory = async () => {
+    // TODO: Implement actual database call once schema is ready
+  return [];
+}
 
 // ============================
 // EXPORT
@@ -525,4 +530,5 @@ export const riskAnalysisService = {
   getAllEmployeeRisk,
   getAllSystemRisk,
   getAllTeamRisk,
+  getRiskHistory,
 };

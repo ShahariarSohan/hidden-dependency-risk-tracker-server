@@ -1,0 +1,11 @@
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String   // e.g., "TASK_CREATED", "RISK_ALERT", "TASK_ASSIGNED"
+  details   String?  // JSON string or description
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  entityId  String?  // ID of the Task/System/Employee affected
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}

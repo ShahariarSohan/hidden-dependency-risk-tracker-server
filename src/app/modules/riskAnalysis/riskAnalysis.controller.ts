@@ -101,6 +101,17 @@ const getRiskDashboard = catchAsync(async (_req: Request, res: Response) => {
   });
 });
 
+const getRiskHistory = catchAsync(async (req: Request, res: Response) => {
+  const result = await riskAnalysisService.getRiskHistory();
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Risk history fetched successfully",
+    data: result,
+  });
+});
+
 export const riskAnalysisController = {
   getEmployeeOwnRisk,
   getSystemRisk,
@@ -109,4 +120,5 @@ export const riskAnalysisController = {
   getAllEmployeeRisk,
   getAllSystemRisk,
   getAllTeamRisk,
+  getRiskHistory,
 };
