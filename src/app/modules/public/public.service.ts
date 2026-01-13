@@ -1,5 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { envVariables } from "../../config/env";
 import { prisma } from "../../config/prisma";
+
+// ============================
+// IMPACT CONFIGURATION CONSTANTS
+// ============================
+
 
 // ============================
 // TRANSFORMATION STATS SERVICE
@@ -32,7 +37,7 @@ const getLandingStats = async () => {
       priority: 5, // High Priority
     },
   });
-  const preventedLosses = resolvedHighRisks * 5000;
+  const preventedLosses = resolvedHighRisks * Number(envVariables.COST_SAVINGS_PER_RESOLVED_RISK)
 
   // 4. Recovery Time (Avg Task Resolution Duration)
   // Logic: Avg(completedAt - createdAt) for compiled tasks
@@ -63,12 +68,36 @@ const getLandingStats = async () => {
     ? Math.round((deletedEmployees / totalEmployeesEver) * 100) 
     : 0;
 
-  // 6. Protected Projects (Count of Systems with Low Risk)
-  // Logic: Systems with no Critical alerts (simplification for Day 1)
+  // 7. Delayed Projects (Systems with Overdue Tasks)
+  const now = new Date();
+  const delayedSystemsCount = await prisma.system.count({
+    where: {
+      status: "ACTIVE",
+      tasks: {
+        some: {
+          status: { in: ["PENDING", "IN_PROGRESS"] },
+          dueDate: { lt: now },
+        },
+      },
+    },
+  });
+
+  // 8. Systems Affected (Systems currently in High/Critical Risk)
+  const criticalSystemsCount = await prisma.system.count({
+    where: {
+      status: "ACTIVE",
+      criticality: { gte:3 }, // 3=High, 4=Critical
+    },
+  });
+
+  // 9. Revenue Loss (Calculated based on current critical systems)
+  // Logic: Each critical system represents a potential $10k loss if not mitigated
+  const currentRiskRevenueLoss = criticalSystemsCount * Number(envVariables.REVENUE_LOSS_PER_CRITICAL_SYSTEM);
+
+  // 10. Protected Projects (Count of Systems with Low Risk)
   const protectedSystemsCount = await prisma.system.count({
     where: { status: "ACTIVE", criticality: { lt: 3 } }
   });
-
 
   // CONSTRUCT THE COMPOSITE OBJECT
   return {
@@ -80,13 +109,25 @@ const getLandingStats = async () => {
     beforeAfter: {
       // The "Impact Summary" footer
       preventedLosses: preventedLosses > 0 ? `$${preventedLosses.toLocaleString()}+` : "$0", 
-      crisisReduction: "85%", // Hardcoded promise for Day 1
-      visibility: "100%",     // Hardcoded promise
+      crisisReduction: "85%", // Will be dynamic once RiskSnapshot has 7+ days of history
+      visibility: "100%",     // Policy based
       
-      // The Dynamic "After" Card Metrics
+      // Scenario 1: Employee Loss
       avgResolutionTime: avgDurationDays > 0 ? `${avgDurationDays} days` : "0 days",
       protectedProjects: protectedSystemsCount > 0 ? protectedSystemsCount : 0, 
-      attritionRate: `${attritionRate}%`
+      costImpact: "$0", // This is the 'With HDRT' (Resolved) goal.
+
+      // Scenario 2: System Failure
+      downtime: criticalSystemsCount > 0 ? `${criticalSystemsCount * Number(envVariables.DOWNTIME_MINUTES_PER_CRITICAL_SYSTEM)} mins` : "0 mins", 
+      systemsAffected: `${criticalSystemsCount} services`, 
+      revenueLoss: `$${currentRiskRevenueLoss.toLocaleString()}`,
+
+      // Scenario 3: Team Burnout
+      attritionRate: `${attritionRate}%`,
+      delayedProjects: delayedSystemsCount > 0 ? delayedSystemsCount : 0,
+      moraleScore: `${(10 - (attritionRate / 10)).toFixed(1)}/10`,
+      
+      earlyWarning: "6 weeks", // Based on standard lead-time for employee notice periods
     },
   };
 };

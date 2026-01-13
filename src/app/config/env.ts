@@ -18,6 +18,9 @@ interface EnvConfig {
   REFRESH_TOKEN_SECRET: string;
   ACCESS_TOKEN_EXPIRES_IN: string;
   REFRESH_TOKEN_EXPIRES_IN: string;
+  REVENUE_LOSS_PER_CRITICAL_SYSTEM: string;
+ DOWNTIME_MINUTES_PER_CRITICAL_SYSTEM:string;
+COST_SAVINGS_PER_RESOLVED_RISK:string;
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -34,6 +37,9 @@ const loadEnvVariables = (): EnvConfig => {
     "REFRESH_TOKEN_SECRET",
     "ACCESS_TOKEN_EXPIRES_IN",
     "REFRESH_TOKEN_EXPIRES_IN",
+    "REVENUE_LOSS_PER_CRITICAL_SYSTEM",
+    "DOWNTIME_MINUTES_PER_CRITICAL_SYSTEM",
+    "COST_SAVINGS_PER_RESOLVED_RISK",
   ];
   requiredVariables.forEach((key) => {
     if (!process.env[key]) {
@@ -55,6 +61,9 @@ const loadEnvVariables = (): EnvConfig => {
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET as string,
     ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
     REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
+    REVENUE_LOSS_PER_CRITICAL_SYSTEM: process.env.REVENUE_LOSS_PER_CRITICAL_SYSTEM as string,
+    DOWNTIME_MINUTES_PER_CRITICAL_SYSTEM: process.env.DOWNTIME_MINUTES_PER_CRITICAL_SYSTEM as string,
+    COST_SAVINGS_PER_RESOLVED_RISK: process.env.COST_SAVINGS_PER_RESOLVED_RISK as string,
   };
 };
 
