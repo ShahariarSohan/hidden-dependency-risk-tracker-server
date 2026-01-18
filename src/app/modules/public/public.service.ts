@@ -130,7 +130,7 @@ const getLandingStats = async () => {
       const totalWeight = emp.tasks.reduce((sum, t) => sum + (t.workWeight || 1), 0);
       const avgPrio = emp.tasks.length > 0 ? (emp.tasks.reduce((sum, t) => sum + t.priority, 0) / emp.tasks.length) : 1;
       // Note: Employee risk uses a base criticality of 3 (Standard) + their workload
-      const score = calculateRiskScore(3, avgPrio, totalWeight);
+      const score = calculateRiskScore(Number(envVariables.DEFAULT_EMPLOYEE_CRITICALITY), avgPrio, totalWeight);
       return { emp, score, totalWeight };
     }).sort((a, b) => b.score - a.score);
 
@@ -186,7 +186,7 @@ const getLandingStats = async () => {
     });
 
     // Normalize to a percentage (0-100) based on org capacity
-    const dayRisk = Math.min(Math.round((activeOnDay / (employeeCount * 3 || 1)) * 100), 100);
+    const dayRisk = Math.min(Math.round((activeOnDay / (employeeCount * Number(envVariables.TEAM_CAPACITY_FACTOR) || 1)) * 100), 100);
     
     trends.push({
       day: days[d.getDay()],
@@ -208,7 +208,7 @@ const getLandingStats = async () => {
       const activeTasks = team.employees.flatMap(e => e.tasks);
       const totalWeight = activeTasks.reduce((sum, t) => sum + (t.workWeight || 1), 0);
       const avgPrio = activeTasks.length > 0 ? (activeTasks.reduce((sum, t) => sum + t.priority, 0) / activeTasks.length) : 1;
-      const score = calculateRiskScore(3, avgPrio, totalWeight / 3); // Teams aggregate differently
+      const score = calculateRiskScore(Number(envVariables.DEFAULT_EMPLOYEE_CRITICALITY), avgPrio, totalWeight / Number(envVariables.TEAM_CAPACITY_FACTOR)); // Teams aggregate differently
       return { team, score, taskCount: activeTasks.length };
     }).sort((a, b) => b.score - a.score);
 
@@ -239,7 +239,21 @@ const getLandingStats = async () => {
   // H. Prevented Losses Update (Enterprise Logic)
   const enterprisePreventedLosses = resolvedHighTasks * Number(envVariables.COST_SAVINGS_PER_RESOLVED_RISK);
 
-  // CONSTRUCT THE COMPOSITE OBJECT
+  // I. FINAL AGGREGATION & INDICATOR COUNT
+  const moraleScoreVal = (10 - (attritionRate / 10)).toFixed(1);
+  
+  // We dynamically count how many unique data points we are providing to the UI
+  const indicators = [
+    teamCount, employeeCount, coverage,
+    enterprisePreventedLosses, crisisReduction, coverage, // visibility is same as coverage
+    avgDurationDays, protectedSystemsCount, currentRiskRevenueLoss,
+    criticalSystemsCount, attritionRate, delayedSystemsCount,
+    moraleScoreVal, trends.length, topEmployeeRisk.riskLevel,
+    topSystemRisk.riskLevel, topTeamRisk.riskLevel, actionItems.length
+  ];
+
+  const totalIndicators = indicators.filter(val => val !== undefined && val !== null).length;
+
   return {
     hero: {
       teams: teamCount,
@@ -261,14 +275,14 @@ const getLandingStats = async () => {
 
       attritionRate: `${attritionRate}%`,
       delayedProjects: delayedSystemsCount > 0 ? delayedSystemsCount : 0,
-      moraleScore: `${(10 - (attritionRate / 10)).toFixed(1)}/10`,
+      moraleScore: `${moraleScoreVal}/10`,
       earlyWarning: avgDurationDays > 0 ? `${Math.round(avgDurationDays * 1.5)} days` : "7 days", 
     },
     riskVisuals: {
       trends,
       cards: [topEmployeeRisk, topSystemRisk, topTeamRisk],
       actionItems,
-      totalIndicators: 18 // Explicitly tracked metrics
+      totalIndicators
     }
   };
 };

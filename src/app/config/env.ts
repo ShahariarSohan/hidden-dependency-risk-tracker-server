@@ -29,6 +29,9 @@ interface EnvConfig {
   RISK_WEIGHT_CRITICALITY: string;
   RISK_WEIGHT_PRIORITY: string;
   RISK_WEIGHT_WORKLOAD: string;
+  DEFAULT_EMPLOYEE_CRITICALITY: string;
+  TEAM_CAPACITY_FACTOR: string;
+  SYSTEM_CAPACITY_FACTOR: string;
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -56,6 +59,9 @@ const loadEnvVariables = (): EnvConfig => {
     "RISK_WEIGHT_CRITICALITY",
     "RISK_WEIGHT_PRIORITY",
     "RISK_WEIGHT_WORKLOAD",
+    "DEFAULT_EMPLOYEE_CRITICALITY",
+    "TEAM_CAPACITY_FACTOR",
+    "SYSTEM_CAPACITY_FACTOR",
   ];
   requiredVariables.forEach((key) => {
     if (!process.env[key]) {
@@ -88,6 +94,9 @@ const loadEnvVariables = (): EnvConfig => {
     RISK_WEIGHT_CRITICALITY: process.env.RISK_WEIGHT_CRITICALITY || "0.8",
     RISK_WEIGHT_PRIORITY: process.env.RISK_WEIGHT_PRIORITY || "0.6",
     RISK_WEIGHT_WORKLOAD: process.env.RISK_WEIGHT_WORKLOAD || "0.3",
+    DEFAULT_EMPLOYEE_CRITICALITY: process.env.DEFAULT_EMPLOYEE_CRITICALITY || "3",
+    TEAM_CAPACITY_FACTOR: process.env.TEAM_CAPACITY_FACTOR || "3",
+    SYSTEM_CAPACITY_FACTOR: process.env.SYSTEM_CAPACITY_FACTOR || "2",
   };
 };
 
