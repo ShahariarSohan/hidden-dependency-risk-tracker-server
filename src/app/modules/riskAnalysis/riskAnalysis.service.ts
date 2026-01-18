@@ -12,6 +12,26 @@ import { ActiveStatus } from "../../interfaces/userRole";
 import { paginationHelper } from "../../shared/paginationHelper";
 import { employeeRiskSearchableFields, systemRiskSearchableFields, teamRiskSearchableFields } from "./riskAnalysis.constant";
 import { Prisma } from '@prisma/client';
+import { envVariables } from '../../config/env';
+
+// ============================
+// RISK CALCULATION ENGINE
+// ============================
+const calculateRiskScore = (crit: number, prio: number, weight: number) => {
+  const wCrit = Number(envVariables.RISK_WEIGHT_CRITICALITY);
+  const wPrio = Number(envVariables.RISK_WEIGHT_PRIORITY);
+  const wWork = Number(envVariables.RISK_WEIGHT_WORKLOAD);
+  
+  // Base normalization (Expected Max Sum = 10)
+  const score = ((crit * wCrit) + (prio * wPrio) + (weight * wWork)) * 10;
+  return Math.min(Math.round(score), 100);
+};
+
+const getRiskLevel = (score: number) => {
+  if (score >= 70) return RiskLevel.HIGH;
+  if (score >= 30) return RiskLevel.MEDIUM;
+  return RiskLevel.LOW;
+};
 
 // ============================
 // SINGLE EMPLOYEE RISK
@@ -33,16 +53,21 @@ const getEmployeeOwnRisk = async (user:IAuthUser) => {
     },
   });
 
-  let riskScore = 0;
+  let totalWeight = 0;
+  let totalPrio = 0;
  
   tasks.forEach((task) => {
-    riskScore +=Number(task.priority )* Number(task.system.criticality);
+    totalWeight += task.workWeight || 1;
+    totalPrio += task.priority;
   });
+
+  const avgPrio = tasks.length > 0 ? (totalPrio / tasks.length) : 0;
+  const riskScore = tasks.length > 0 ? calculateRiskScore(3, avgPrio, totalWeight) : 0;
 
   return {
     totalActiveTasks: tasks.length,
     riskScore,
-    riskLevel: riskScore > 30 ? RiskLevel.HIGH : riskScore > 15 ? RiskLevel.MEDIUM : RiskLevel.LOW,
+    riskLevel: getRiskLevel(riskScore),
     tasks,
   };
 };
@@ -62,9 +87,12 @@ const getSystemRisk = async (systemId: string) => {
       task.status === TaskStatus.IN_PROGRESS
   );
 
-  const riskScore =
-    activeTasks.reduce((sum, task) => sum + Number(task.priority), 0) *
-    Number(system.criticality);
+  const totalWeight = activeTasks.reduce((sum, task) => sum + (task.workWeight || 1), 0);
+  const avgPrio = activeTasks.length > 0 
+    ? activeTasks.reduce((sum, task) => sum + task.priority, 0) / activeTasks.length 
+    : 0;
+
+  const riskScore = calculateRiskScore(system.criticality, avgPrio, totalWeight / 2); // Systems use adjusted weight
 
   return {
     systemId: system.id,
@@ -72,7 +100,7 @@ const getSystemRisk = async (systemId: string) => {
     criticality: system.criticality,
     activeTasks: activeTasks.length,
     riskScore,
-    riskLevel: riskScore > 40 ? RiskLevel.HIGH : riskScore > 20 ? RiskLevel.MEDIUM : RiskLevel.LOW,
+    riskLevel: getRiskLevel(riskScore),
   };
 };
 
@@ -99,32 +127,30 @@ const getManagerTeamRisk = async (user:IAuthUser) => {
     },
   });
 
-  let teamRiskScore = 0;
+  let teamTotalScore = 0;
 
-  const employeeRisks: any[] = [];
+  const employeeRisks: any[] = team.employees.map((employee: any) => {
+    const activeTasks = employee.tasks.filter((t: any) => 
+      t.status === TaskStatus.PENDING || t.status === TaskStatus.IN_PROGRESS
+    );
 
-  team.employees.forEach((employee:any) => {
-    let employeeRisk = 0;
-    let employeeRiskLevel;
-    employee.tasks.forEach((task:any) => {
-      if (
-        task.status === TaskStatus.PENDING ||
-        task.status === TaskStatus.IN_PROGRESS
-      ) {
-        employeeRisk += Number(task.priority) * Number(task.system.criticality);
-        employeeRiskLevel = employeeRisk > 50 ? RiskLevel.HIGH : employeeRisk > 25 ? RiskLevel.MEDIUM : RiskLevel.LOW;
-      }
-    });
+    const totalWeight = activeTasks.reduce((sum: number, t: any) => sum + (t.workWeight || 1), 0);
+    const avgPrio = activeTasks.length > 0 
+      ? activeTasks.reduce((sum: number, t: any) => sum + t.priority, 0) / activeTasks.length 
+      : 0;
 
-    teamRiskScore += employeeRisk;
+    const riskScore = activeTasks.length > 0 ? calculateRiskScore(3, avgPrio, totalWeight) : 0;
+    teamTotalScore += riskScore;
 
-    employeeRisks.push({
+    return {
       employeeId: employee.id,
       employeeName: employee.name,
-      riskScore: employeeRisk,
-      employeeRiskLevel
-    });
+      riskScore,
+      employeeRiskLevel: getRiskLevel(riskScore)
+    };
   });
+
+  const teamRiskScore = team.employees.length > 0 ? Math.round(teamTotalScore / team.employees.length) : 0;
 
   return {
     teamId: team.id,
@@ -132,8 +158,7 @@ const getManagerTeamRisk = async (user:IAuthUser) => {
     teamName: team.name,
     totalEmployees: team.employees.length,
     teamRiskScore,
-    teamRiskLevel:
-      teamRiskScore > 50 ? RiskLevel.HIGH : teamRiskScore > 25 ? RiskLevel.MEDIUM : RiskLevel.LOW,
+    teamRiskLevel: getRiskLevel(teamRiskScore),
     employeeRisks,
   };
 };
@@ -186,13 +211,12 @@ const getAllEmployeeRisk = async (
 
   /* ------------------ risk calculation ------------------ */
   let data = employees.map((employee) => {
-    const riskScore = employee.tasks.reduce(
-      (sum, task) => sum + Number(task.priority) * Number(task.system.criticality),
-      0
-    );
+    const totalWeight = employee.tasks.reduce((sum: number, t: any) => sum + (t.workWeight || 1), 0);
+    const avgPrio = employee.tasks.length > 0 
+      ? employee.tasks.reduce((sum: number, t: any) => sum + t.priority, 0) / employee.tasks.length 
+      : 0;
 
-    const riskLevelCalculated =
-      riskScore > 30 ? RiskLevel.HIGH : riskScore > 15 ? RiskLevel.MEDIUM : RiskLevel.LOW;
+    const riskScore = employee.tasks.length > 0 ? calculateRiskScore(3, avgPrio, totalWeight) : 0;
 
     return {
       type: "EMPLOYEE",
@@ -201,7 +225,7 @@ const getAllEmployeeRisk = async (
       email: employee.email,
       taskCount: employee.tasks.length,
       riskScore,
-      riskLevel: riskLevelCalculated,
+      riskLevel: getRiskLevel(riskScore),
     };
   });
 
@@ -261,13 +285,12 @@ const getAllSystemRisk = async (
   });
 
   let data = systems.map((system) => {
-    const riskScore = system.tasks.reduce(
-      (sum, task) => sum + Number(task.priority) * Number(system.criticality),
-      0
-    );
+    const totalWeight = system.tasks.reduce((sum: number, t: any) => sum + (t.workWeight || 1), 0);
+    const avgPrio = system.tasks.length > 0 
+      ? system.tasks.reduce((sum: number, t: any) => sum + t.priority, 0) / system.tasks.length 
+      : 0;
 
-    const riskLevelCalculated =
-      riskScore > 40 ? RiskLevel.HIGH : riskScore > 20 ? RiskLevel.MEDIUM : RiskLevel.LOW;
+    const riskScore = calculateRiskScore(system.criticality, avgPrio, totalWeight / 2);
 
     return {
       type: "SYSTEM",
@@ -276,7 +299,7 @@ const getAllSystemRisk = async (
       criticality: system.criticality,
       taskCount: system.tasks.length,
       riskScore,
-      riskLevel: riskLevelCalculated,
+      riskLevel: getRiskLevel(riskScore),
     };
   });
 
@@ -341,12 +364,16 @@ const getAllTeamRisk = async (
   });
 
   let data = teams.map((team) => {
-    const riskScore = team.employees
-      .flatMap((m) => m.tasks)
-      .reduce((sum, task) => sum + Number(task.priority) * Number(task.system.criticality), 0);
+    let teamTotalScore = 0;
+    
+    team.employees.forEach(emp => {
+      const activeTasks = emp.tasks;
+      const totalWeight = activeTasks.reduce((sum: number, t: any) => sum + (t.workWeight || 1), 0);
+      const avgPrio = activeTasks.length > 0 ? activeTasks.reduce((sum: number, t: any) => sum + t.priority, 0) / activeTasks.length : 0;
+      teamTotalScore += activeTasks.length > 0 ? calculateRiskScore(3, avgPrio, totalWeight) : 0;
+    });
 
-    const riskLevelCalculated =
-      riskScore > 50 ? RiskLevel.HIGH : riskScore > 25 ? RiskLevel.MEDIUM : RiskLevel.LOW;
+    const riskScore = team.employees.length > 0 ? Math.round(teamTotalScore / team.employees.length) : 0;
 
     return {
       type: "TEAM",
@@ -355,7 +382,7 @@ const getAllTeamRisk = async (
       employeeCount: team.employees.length,
       systemCount: team.systems.length,
       riskScore,
-      riskLevel: riskLevelCalculated,
+      riskLevel: getRiskLevel(riskScore),
     };
   });
 
@@ -394,16 +421,18 @@ const getAllEmployeeRiskForDashboard = async () => {
 
   return employees
     .map((employee) => {
-      const riskScore = employee.tasks.reduce(
-        (sum, task) => sum + Number(task.priority) * Number(task.system.criticality),
-        0
-      );
+      const totalWeight = employee.tasks.reduce((sum: number, t: any) => sum + (t.workWeight || 1), 0);
+      const avgPrio = employee.tasks.length > 0 
+        ? employee.tasks.reduce((sum: number, t: any) => sum + t.priority, 0) / employee.tasks.length 
+        : 0;
+
+      const riskScore = employee.tasks.length > 0 ? calculateRiskScore(3, avgPrio, totalWeight) : 0;
 
       return {
         employeeId: employee.id,
         name: employee.name,
         riskScore,
-        riskLevel: riskScore > 30 ? RiskLevel.HIGH : riskScore > 15 ? RiskLevel.MEDIUM : RiskLevel.LOW,
+        riskLevel: getRiskLevel(riskScore),
       };
     })
     .sort((a, b) => b.riskScore - a.riskScore);
@@ -422,16 +451,18 @@ const getAllSystemRiskForDashboard = async () => {
 
   return systems
     .map((system) => {
-      const riskScore = system.tasks.reduce(
-        (sum, task) => sum + Number(task.priority) * Number(system.criticality),
-        0
-      );
+      const totalWeight = system.tasks.reduce((sum: number, t: any) => sum + (t.workWeight || 1), 0);
+      const avgPrio = system.tasks.length > 0 
+        ? system.tasks.reduce((sum: number, t: any) => sum + t.priority, 0) / system.tasks.length 
+        : 0;
+
+      const riskScore = calculateRiskScore(system.criticality, avgPrio, totalWeight / 2);
 
       return {
         systemId: system.id,
         name: system.name,
         riskScore,
-        riskLevel: riskScore > 40 ? RiskLevel.HIGH : riskScore > 20 ? RiskLevel.MEDIUM : RiskLevel.LOW,
+        riskLevel: getRiskLevel(riskScore),
       };
     })
     .sort((a, b) => b.riskScore - a.riskScore);
@@ -457,18 +488,22 @@ const getAllTeamRiskForDashboard = async () => {
 
   return teams
     .map((team) => {
-      const riskScore = team.employees
-        .flatMap((employee) => employee.tasks)
-        .reduce(
-          (sum, task) => sum + Number(task.priority) * Number(task.system.criticality),
-          0
-        );
+      let teamTotalScore = 0;
+      
+      team.employees.forEach(emp => {
+        const activeTasks = emp.tasks;
+        const totalWeight = activeTasks.reduce((sum: number, t: any) => sum + (t.workWeight || 1), 0);
+        const avgPrio = activeTasks.length > 0 ? activeTasks.reduce((sum: number, t: any) => sum + t.priority, 0) / activeTasks.length : 0;
+        teamTotalScore += activeTasks.length > 0 ? calculateRiskScore(3, avgPrio, totalWeight) : 0;
+      });
+
+      const riskScore = team.employees.length > 0 ? Math.round(teamTotalScore / team.employees.length) : 0;
 
       return {
         teamId: team.id,
         name: team.name,
         riskScore,
-        riskLevel: riskScore > 50 ? RiskLevel.HIGH : riskScore > 25 ? RiskLevel.MEDIUM : RiskLevel.LOW,
+        riskLevel: getRiskLevel(riskScore),
       };
     })
     .sort((a, b) => b.riskScore - a.riskScore);

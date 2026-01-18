@@ -26,6 +26,9 @@ interface EnvConfig {
   SMTP_PORT: string;
   SMTP_USER: string;
   SMTP_FROM: string;
+  RISK_WEIGHT_CRITICALITY: string;
+  RISK_WEIGHT_PRIORITY: string;
+  RISK_WEIGHT_WORKLOAD: string;
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -50,6 +53,9 @@ const loadEnvVariables = (): EnvConfig => {
     "SMTP_PORT",
     "SMTP_USER",
     "SMTP_FROM",
+    "RISK_WEIGHT_CRITICALITY",
+    "RISK_WEIGHT_PRIORITY",
+    "RISK_WEIGHT_WORKLOAD",
   ];
   requiredVariables.forEach((key) => {
     if (!process.env[key]) {
@@ -79,6 +85,9 @@ const loadEnvVariables = (): EnvConfig => {
     SMTP_PORT: process.env.SMTP_PORT as string,
     SMTP_USER: process.env.SMTP_USER as string,
     SMTP_FROM: process.env.SMTP_FROM as string,
+    RISK_WEIGHT_CRITICALITY: process.env.RISK_WEIGHT_CRITICALITY || "0.8",
+    RISK_WEIGHT_PRIORITY: process.env.RISK_WEIGHT_PRIORITY || "0.6",
+    RISK_WEIGHT_WORKLOAD: process.env.RISK_WEIGHT_WORKLOAD || "0.3",
   };
 };
 
