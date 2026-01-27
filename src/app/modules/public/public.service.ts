@@ -1,25 +1,11 @@
 import { envVariables } from "../../config/env";
 import { prisma } from "../../config/prisma";
 
-// ============================
-// IMPACT CONFIGURATION CONSTANTS
-// ============================
-
-
-// ============================
-// TRANSFORMATION STATS SERVICE
-// ============================
-// Calculates "ROI", "Attrition", "Resolution Time" for Landing Page
-// Returns the EXACT Composite Object required by Frontend
 const getLandingStats = async () => {
-  // 1. Basic Counts for Hero
   const teamCount = await prisma.team.count({ where: { status: "ACTIVE" } });
   const employeeCount = await prisma.employee.count({ where: { isDeleted: false } });
   const systemCount = await prisma.system.count({ where: { status: "ACTIVE" } });
 
-  // 2. Monitoring Coverage 
-  // Logic: (Systems with Tasks / Total Systems) * 100
-  // Fix: Ensure we only count ACTIVE systems with tasks, otherwise (Active + Archived / Active) > 100%
   const activeSystems = await prisma.system.count({
     where: { 
       status: "ACTIVE",
@@ -29,22 +15,18 @@ const getLandingStats = async () => {
  
   const coverage = systemCount > 0 ? Math.round((activeSystems / systemCount) * 100) : 0;
 
-  // 3. Prevented Losses (Financial Impact)
-  // Logic: Resolved High Risks * $5,000 (Industry Standard Constant)
   const resolvedHighRisks = await prisma.task.count({
     where: {
       status: "COMPLETED",
-      priority: 5, // High Priority
+      priority: 5,
     },
   });
   const preventedLosses = resolvedHighRisks * Number(envVariables.COST_SAVINGS_PER_RESOLVED_RISK)
 
-  // 4. Recovery Time (Avg Task Resolution Duration)
-  // Logic: Avg(completedAt - createdAt) for compiled tasks
   const completedTasks = await prisma.task.findMany({
     where: { status: "COMPLETED", completedAt: { not: null } },
     select: { createdAt: true, completedAt: true },
-    take: 50, // Sample size for performance
+    take: 50,
   });
 
   let totalDurationMs = 0;
@@ -54,21 +36,16 @@ const getLandingStats = async () => {
     }
   });
   
-  // Calculate average days, default to 0 if no tasks
   const avgDurationDays = completedTasks.length > 0 
     ? Math.round(totalDurationMs / completedTasks.length / (1000 * 60 * 60 * 24)) 
     : 0;
 
-  // 5. Attrition Rate (Safety Check)
-  // Logic: (Deleted Employees / Total Ever Employees) * 100
-  // For now, we return 0% if no history table, as "Deleted" flag is soft delete
   const deletedEmployees = await prisma.employee.count({ where: { isDeleted: true } });
   const totalEmployeesEver = employeeCount + deletedEmployees;
   const attritionRate = totalEmployeesEver > 0 
     ? Math.round((deletedEmployees / totalEmployeesEver) * 100) 
     : 0;
 
-  // 7. Delayed Projects (Systems with Overdue Tasks)
   const now = new Date();
   const delayedSystemsCount = await prisma.system.count({
     where: {
@@ -82,30 +59,22 @@ const getLandingStats = async () => {
     },
   });
 
-  // 8. Systems Affected (Systems currently in High/Critical Risk)
   const criticalSystems = await prisma.system.findMany({
     where: {
       status: "ACTIVE",
-      criticality: { gte: 3 }, // 3=High, 4=Critical
+      criticality: { gte: 3 },
     },
     include: { tasks: { where: { status: { in: ["PENDING", "IN_PROGRESS"] } } } }
   });
   const criticalSystemsCount = criticalSystems.length;
 
-  // 9. Revenue Loss (Calculated based on current critical systems)
   const currentRiskRevenueLoss = criticalSystemsCount * Number(envVariables.REVENUE_LOSS_PER_CRITICAL_SYSTEM);
 
-  // 10. Protected Projects (Count of Systems with Low Risk)
   const protectedSystemsCount = await prisma.system.count({
     where: { status: "ACTIVE", criticality: { lt: 3 } }
   });
 
-  // 11. RISK VISUALS ENGINE (PHASE 2)
-  // --------------------------------
-  
-  // A. Risk Calculation Helper
   const calculateRiskScore = (crit: number, prio: number, weight: number) => {
-    // Score (0-100) based on weighted factors
     const wCrit = Number(envVariables.RISK_WEIGHT_CRITICALITY);
     const wPrio = Number(envVariables.RISK_WEIGHT_PRIORITY);
     const wWork = Number(envVariables.RISK_WEIGHT_WORKLOAD);
@@ -114,7 +83,6 @@ const getLandingStats = async () => {
     return Math.min(Math.round(score), 100);
   };
 
-  // B. Top Employee Risk
   const employees = await prisma.employee.findMany({
     where: { isDeleted: false },
     include: { 
@@ -129,7 +97,6 @@ const getLandingStats = async () => {
     const empRisks = employees.map(emp => {
       const totalWeight = emp.tasks.reduce((sum, t) => sum + (t.workWeight || 1), 0);
       const avgPrio = emp.tasks.length > 0 ? (emp.tasks.reduce((sum, t) => sum + t.priority, 0) / emp.tasks.length) : 1;
-      // Note: Employee risk uses a base criticality of 3 (Standard) + their workload
       const score = calculateRiskScore(Number(envVariables.DEFAULT_EMPLOYEE_CRITICALITY), avgPrio, totalWeight);
       return { emp, score, totalWeight };
     }).sort((a, b) => b.score - a.score);
@@ -144,14 +111,13 @@ const getLandingStats = async () => {
     }
   }
 
-  // C. Top System Risk
   let topSystemRisk = { id: "system", title: "System Vulnerabilities", riskLevel: 0, color: "orange", description: "All systems operating within safe parameters.", details: { affected: "0 Services", impact: "Low", trend: "Stable" } };
   
   if (criticalSystems.length > 0) {
     const sysRisks = criticalSystems.map(sys => {
       const totalWeight = sys.tasks.reduce((sum, t) => sum + (t.workWeight || 1), 0);
       const avgPrio = sys.tasks.length > 0 ? (sys.tasks.reduce((sum, t) => sum + t.priority, 0) / sys.tasks.length) : 1;
-      const score = calculateRiskScore(sys.criticality, avgPrio, totalWeight / 2); // Systems weighted slightly differently
+      const score = calculateRiskScore(sys.criticality, avgPrio, totalWeight / Number(envVariables.SYSTEM_CAPACITY_FACTOR));
       return { sys, score };
     }).sort((a, b) => b.score - a.score);
 
@@ -165,7 +131,6 @@ const getLandingStats = async () => {
     }
   }
 
-  // D. Dynamic 7-Day Trend (Calculated from Task Life-cycle)
   const trends = [];
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   for (let i = 6; i >= 0; i--) {
@@ -173,8 +138,6 @@ const getLandingStats = async () => {
     d.setDate(d.getDate() - i);
     d.setHours(23, 59, 59, 999);
     
-    // Count tasks that were "Active" on that specific day
-    // Active means created BEFORE or on that day, AND (not completed OR completed AFTER that day)
     const activeOnDay = await prisma.task.count({
       where: {
         createdAt: { lte: d },
@@ -185,7 +148,6 @@ const getLandingStats = async () => {
       }
     });
 
-    // Normalize to a percentage (0-100) based on org capacity
     const dayRisk = Math.min(Math.round((activeOnDay / (employeeCount * Number(envVariables.TEAM_CAPACITY_FACTOR) || 1)) * 100), 100);
     
     trends.push({
@@ -195,7 +157,6 @@ const getLandingStats = async () => {
     });
   }
 
-  // E. Team Risk Card (Aggregation)
   const teams = await prisma.team.findMany({
     where: { status: "ACTIVE" },
     include: { employees: { include: { tasks: { where: { status: { in: ["PENDING", "IN_PROGRESS"] } } } } } }
@@ -208,7 +169,7 @@ const getLandingStats = async () => {
       const activeTasks = team.employees.flatMap(e => e.tasks);
       const totalWeight = activeTasks.reduce((sum, t) => sum + (t.workWeight || 1), 0);
       const avgPrio = activeTasks.length > 0 ? (activeTasks.reduce((sum, t) => sum + t.priority, 0) / activeTasks.length) : 1;
-      const score = calculateRiskScore(Number(envVariables.DEFAULT_EMPLOYEE_CRITICALITY), avgPrio, totalWeight / Number(envVariables.TEAM_CAPACITY_FACTOR)); // Teams aggregate differently
+      const score = calculateRiskScore(Number(envVariables.DEFAULT_EMPLOYEE_CRITICALITY), avgPrio, totalWeight / Number(envVariables.TEAM_CAPACITY_FACTOR));
       return { team, score, taskCount: activeTasks.length };
     }).sort((a, b) => b.score - a.score);
 
@@ -222,7 +183,6 @@ const getLandingStats = async () => {
     }
   }
 
-  // F. Dynamic Context-Aware Action Items
   const allRisks = [topEmployeeRisk, topSystemRisk, topTeamRisk].sort((a, b) => b.riskLevel - a.riskLevel);
   const actionItems = allRisks.slice(0, 3).map(risk => {
     if (risk.id === "employee") return `Document critical knowledge held by bottlenecked employees (${risk.details.affected})`;
@@ -231,21 +191,17 @@ const getLandingStats = async () => {
     return "Continuously monitor for emerging dependencies";
   });
 
-  // G. Advanced Percentages
   const totalHighTasksEver = await prisma.task.count({ where: { priority: { gte: 4 } } });
   const resolvedHighTasks = await prisma.task.count({ where: { priority: { gte: 4 }, status: "COMPLETED" } });
   const crisisReduction = totalHighTasksEver > 0 ? `${Math.round((resolvedHighTasks / totalHighTasksEver) * 100)}%` : "0%";
 
-  // H. Prevented Losses Update (Enterprise Logic)
   const enterprisePreventedLosses = resolvedHighTasks * Number(envVariables.COST_SAVINGS_PER_RESOLVED_RISK);
 
-  // I. FINAL AGGREGATION & INDICATOR COUNT
   const moraleScoreVal = (10 - (attritionRate / 10)).toFixed(1);
   
-  // We dynamically count how many unique data points we are providing to the UI
   const indicators = [
     teamCount, employeeCount, coverage,
-    enterprisePreventedLosses, crisisReduction, coverage, // visibility is same as coverage
+    enterprisePreventedLosses, crisisReduction, coverage,
     avgDurationDays, protectedSystemsCount, currentRiskRevenueLoss,
     criticalSystemsCount, attritionRate, delayedSystemsCount,
     moraleScoreVal, trends.length, topEmployeeRisk.riskLevel,

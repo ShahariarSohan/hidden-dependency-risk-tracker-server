@@ -314,7 +314,7 @@ const getAllMyTasksPagination = async (
     role = "EMPLOYEE";
     entityId = employee.id;
   } else {
-    throw new Error("User not found in admin/manager/employee tables");
+    throw new AppError(httpStatus.NOT_FOUND, "User not found in admin/manager/employee tables");
   }
 
   // ---------------------------------------

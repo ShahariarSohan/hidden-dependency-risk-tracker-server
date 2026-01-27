@@ -1,7 +1,5 @@
 import  httpStatus  from 'http-status-codes';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { prisma } from "../../config/prisma";
 import AppError from "../../errorHelpers/AppError";
 import { IPaginationOptions } from "../../interfaces/pagination";
@@ -14,15 +12,11 @@ import { employeeRiskSearchableFields, systemRiskSearchableFields, teamRiskSearc
 import { Prisma } from '@prisma/client';
 import { envVariables } from '../../config/env';
 
-// ============================
-// RISK CALCULATION ENGINE
-// ============================
 const calculateRiskScore = (crit: number, prio: number, weight: number) => {
   const wCrit = Number(envVariables.RISK_WEIGHT_CRITICALITY);
   const wPrio = Number(envVariables.RISK_WEIGHT_PRIORITY);
   const wWork = Number(envVariables.RISK_WEIGHT_WORKLOAD);
   
-  // Base normalization (Expected Max Sum = 10)
   const score = ((crit * wCrit) + (prio * wPrio) + (weight * wWork)) * 10;
   return Math.min(Math.round(score), 100);
 };
@@ -33,9 +27,6 @@ const getRiskLevel = (score: number) => {
   return RiskLevel.LOW;
 };
 
-// ============================
-// SINGLE EMPLOYEE RISK
-// ============================
 const getEmployeeOwnRisk = async (user:IAuthUser) => {
   const employee = await prisma.employee.findFirstOrThrow({
     where:{email:user.email,isDeleted:false}
@@ -72,9 +63,6 @@ const getEmployeeOwnRisk = async (user:IAuthUser) => {
   };
 };
 
-// ============================
-// SINGLE SYSTEM RISK
-// ============================
 const getSystemRisk = async (systemId: string) => {
   const system = await prisma.system.findUniqueOrThrow({
     where: { id: systemId, status: { not: ActiveStatus.DELETED } },
@@ -92,7 +80,7 @@ const getSystemRisk = async (systemId: string) => {
     ? activeTasks.reduce((sum, task) => sum + task.priority, 0) / activeTasks.length 
     : 0;
 
-  const riskScore = calculateRiskScore(system.criticality, avgPrio, totalWeight / Number(envVariables.SYSTEM_CAPACITY_FACTOR)); // Systems use adjusted weight
+  const riskScore = calculateRiskScore(system.criticality, avgPrio, totalWeight / Number(envVariables.SYSTEM_CAPACITY_FACTOR)); 
 
   return {
     systemId: system.id,
@@ -104,9 +92,6 @@ const getSystemRisk = async (systemId: string) => {
   };
 };
 
-// ============================
-// SINGLE TEAM RISK
-// ============================
 const getManagerTeamRisk = async (user:IAuthUser) => {
   const manager = await prisma.manager.findFirstOrThrow({
     where: { email: user.email, isDeleted: false },
@@ -162,21 +147,18 @@ const getManagerTeamRisk = async (user:IAuthUser) => {
     employeeRisks,
   };
 };
-// ALL  EMPLOYEE RISKS
+
 const getAllEmployeeRisk = async (
   filters: any,
   paginationOptions: IPaginationOptions
 )=> {
   const { searchTerm, riskLevel } = filters;
 
-  /* ------------------ pagination & sorting ------------------ */
   const { limit, skip, page, sortBy, sortOrder } =
     paginationHelper.calculatePagination(paginationOptions);
 
-  /* ------------------ where conditions ------------------ */
   const andConditions: Prisma.EmployeeWhereInput[] = [{ isDeleted: false }];
 
-  // ✅ search
   if (searchTerm) {
     andConditions.push({
       OR: employeeRiskSearchableFields.map((field) => ({
@@ -191,7 +173,6 @@ const getAllEmployeeRisk = async (
   const whereCondition: Prisma.EmployeeWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  /* ------------------ fetch employees ------------------ */
   const employees = await prisma.employee.findMany({
     where: whereCondition,
     skip,
@@ -209,7 +190,6 @@ const getAllEmployeeRisk = async (
     },
   });
 
-  /* ------------------ risk calculation ------------------ */
   let data = employees.map((employee) => {
     const totalWeight = employee.tasks.reduce((sum: number, t: any) => sum + (t.workWeight || 1), 0);
     const avgPrio = employee.tasks.length > 0 
@@ -229,12 +209,10 @@ const getAllEmployeeRisk = async (
     };
   });
 
-  /* ------------------ filter by riskLevel (post-calc) ------------------ */
   if (riskLevel) {
     data = data.filter((item) => item.riskLevel === riskLevel);
   }
 
-  /* ------------------ total count ------------------ */
   const total = data.length;
 
   return {
@@ -246,7 +224,7 @@ const getAllEmployeeRisk = async (
     data,
   };
 };
-//ALL SYSTEM RISKS
+
 const getAllSystemRisk = async (
   filters: any,
   paginationOptions: IPaginationOptions
@@ -317,7 +295,6 @@ const getAllSystemRisk = async (
   };
 };
 
-//ALL TEAM RISKS
 const getAllTeamRisk = async (
   filters: any,
   paginationOptions: IPaginationOptions
@@ -400,10 +377,6 @@ const getAllTeamRisk = async (
   };
 };
 
-
-// ============================
-// DASHBOARD RISK (GLOBAL)
-// ============================
 const getAllEmployeeRiskForDashboard = async () => {
   const employees = await prisma.employee.findMany({
     where: { isDeleted: false },
@@ -516,10 +489,6 @@ const getRiskDashboard = async () => {
     getAllTeamRiskForDashboard(),
   ]);
 
-  // ========================
-  // DASHBOARD METRICS
-  // ========================
-
   const highRiskEmployees = employeeRisks.filter((e) => e.riskLevel === RiskLevel.HIGH);
   const highRiskSystems = systemRisks.filter((s) => s.riskLevel === RiskLevel.HIGH);
   const highRiskTeams = teamRisks.filter((t) => t.riskLevel === RiskLevel.HIGH);
@@ -550,13 +519,9 @@ const getRiskDashboard = async () => {
 }
 
 const getRiskHistory = async () => {
-    // TODO: Implement actual database call once schema is ready
   return [];
 }
 
-// ============================
-// EXPORT
-// ============================
 export const riskAnalysisService = {
   getEmployeeOwnRisk,
   getSystemRisk,

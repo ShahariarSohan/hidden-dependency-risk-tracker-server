@@ -10,6 +10,7 @@ import { riskAnalysisRoutes } from "../modules/riskAnalysis/riskAnalysis.route";
 import { managerRoutes } from "../modules/manager/manager.route";
 import { publicRoutes } from "../modules/public/public.route";
 import { contactRoutes } from "../modules/contact/contact.route";
+import { auditRoutes } from "../modules/audit/audit.route";
 
 
 export const router = Router();
@@ -53,10 +54,15 @@ const moduleRoutes: IModuleRoutes[] = [
   {
     path: "/public",
     route: publicRoutes,
-  }, {
+  },
+  {
     path: "/contact",
     route:contactRoutes,
+  }, {
+    path:"/audit",
+    route:auditRoutes
   }
+  
 ];
  
 
