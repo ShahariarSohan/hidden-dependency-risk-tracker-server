@@ -29,10 +29,23 @@ In many organizations:
 
 ## 🧠 Risk Calculation Logic
 
-- `Task Risk = Task Priority × System Criticality`
-- `Employee Risk = Sum of all active task risks`
-- `Team Risk = Sum of employee risks within the team`
-- `System Risk = Sum of active task risks linked to the system`
+### 🧮 Enterprise Risk Formula
+We use a **Weighted Multi-Factor Formula** to calculate risk scores (0-100) dynamically:
+
+```typescript
+// Configurable via Environment Variables
+Risk Score = [ (Criticality * wCrit) + (Priority * wPrio) + (WorkWeight * wWork) ] * 10
+```
+
+Where:
+- **Criticality (1-5)**: Importance of the System/Asset `(wCrit = 0.8)`
+- **Priority (1-5)**: Urgency of the Task `(wPrio = 0.6)`
+- **Work Weight (1-10)**: Complexity/Effort required `(wWork = 0.3)`
+
+### 📊 Aggregated Risk Metrics
+- **Employee Risk**: Calculated by aggregating the risk scores of all their active tasks.
+- **Team Risk**: Average risk score of all employees within the team, normalized by team capacity.
+- **System Risk**: Aggregate risk of all active tasks linked to a system, adjusted for system resilience.
 
 ✅ Only `PENDING` and `IN_PROGRESS` tasks contribute to risk  
 ❌ `DONE` and `CANCELLED` tasks do not contribute
@@ -195,37 +208,13 @@ Supports pagination, filtering, searching, and sorting
 
 ---
 
-## 📈 Risk Levels For Employee
+## 📈 Risk Levels 
 
 | Score   | Level  |
 | ------- | ------ |
-| 0 – 15  | LOW    |
-| 16 – 30 | MEDIUM |
-| 31+     | HIGH   |
-
----
-
----
-
-## 📈 Risk Levels For System
-
-| Score   | Level  |
-| ------- | ------ |
-| 0 – 20  | LOW    |
-| 21 – 40 | MEDIUM |
-| 40+     | HIGH   |
-
----
-
----
-
-## 📈 Risk Levels For Team
-
-| Score   | Level  |
-| ------- | ------ |
-| 0 – 25  | LOW    |
-| 26 – 50 | MEDIUM |
-| 50+     | HIGH   |
+| 0-29    | LOW    |
+| 30-69   | MEDIUM |
+| 70+     | HIGH   |
 
 ---
 
