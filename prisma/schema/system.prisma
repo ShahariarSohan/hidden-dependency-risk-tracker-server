@@ -3,8 +3,8 @@ model System {
   name        String  
   description String?
   criticality Int      @default(1)
-  teamId      String?
-  team        Team?    @relation(fields: [teamId], references: [id])
+  teamId      String
+  team        Team     @relation(fields: [teamId], references: [id])
   tasks       Task[]
   status      Status     @default(ACTIVE)
   createdAt   DateTime @default(now())

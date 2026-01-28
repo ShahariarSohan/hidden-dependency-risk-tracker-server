@@ -15,10 +15,11 @@ const createSystem = async (req: Request) => {
   const isTeamExist = await prisma.team.findFirst({
     where: {
       id: req.body.teamId,
+      status: { not: ActiveStatus.DELETED },
     },
   });
   if (!isTeamExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Team does't exist");
+    throw new AppError(httpStatus.BAD_REQUEST, "Team does't exist or is deleted");
   }
   const isSystemExist = await prisma.system.findFirst({
     where: {
