@@ -187,12 +187,12 @@ const updateSystem = async (
     if (!team) {
       throw new AppError(httpStatus.NOT_FOUND, "Team not found or inactive");
     }
-     if (system.teamId === payload.teamId) {
-       throw new AppError(
-         httpStatus.BAD_REQUEST,
-         "System is already assigned to this team"
-       );
-     }
+    //  if (system.teamId === payload.teamId) {
+    //    throw new AppError(
+    //      httpStatus.BAD_REQUEST,
+    //      "System is already assigned to this team"
+    //    );
+    //  }
   }
 
   // 3. Prevent re-assigning to same team (optional but professional)
