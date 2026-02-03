@@ -84,7 +84,7 @@ const getMyAssignedTasks = catchAsync(
 const updateTask = catchAsync(async (req: Request, res: Response) => {
   const { taskId } = req.params;
 
-  // Validate body
+ console.log(req.body)
  
 
   const updatedTask = await taskService.updateTask(taskId, req.body);
@@ -98,7 +98,7 @@ const updateTask = catchAsync(async (req: Request, res: Response) => {
 });
 export const getAllMyTasksPagination = catchAsync(
   async (req: Request & { user?: IAuthUser }, res) => {
-    const email = (req.user as IAuthUser).email as string; // from IAuthUser
+    const email = (req.user as IAuthUser).email as string; 
 
     const filters = pick(req.query, taskFilterableFields);
     const paginationOptions = pick(req.query, paginationTermArray);

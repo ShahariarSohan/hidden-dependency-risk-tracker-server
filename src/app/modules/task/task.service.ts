@@ -272,17 +272,21 @@ const getMyAssignedTasks = async (authUser: IAuthUser) => {
   // Fetch the task first
   const task = await prisma.task.findUnique({ where: { id: taskId } });
   if (!task) throw new AppError(404, "Task not found");
-
+if (task.status === "COMPLETED") {
+    throw new AppError(httpStatus.BAD_REQUEST, "Task is already completed");
+  }
   // Validate dueDate
   if (data.dueDate && new Date(data.dueDate) < task.createdAt) {
     throw new AppError(400, "Due date cannot be earlier than task creation date");
   }
 
   const updatedTask = await prisma.task.update({
-    where: { id: taskId },
+    where: { id: taskId, status: { in: [TaskStatus.PENDING, TaskStatus.IN_PROGRESS] } },
     data: {
       title: data.title,
       description: data.description,
+      priority:Number(data.priority),
+      workWeight:Number(data.workWeight),
       dueDate: data.dueDate ? new Date(data.dueDate) : null,
     },
   });
