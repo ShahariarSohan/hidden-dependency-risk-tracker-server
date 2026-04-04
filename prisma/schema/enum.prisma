@@ -16,5 +16,12 @@ enum Status {
   DELETED
 }
 
+enum AuditLogAction {
+  TASK_CREATED
+  TASK_IN_PROGRESS
+  TASK_COMPLETED
+  TASK_CANCELLED
+}
+
 
 

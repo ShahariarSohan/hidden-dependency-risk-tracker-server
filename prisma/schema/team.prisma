@@ -4,8 +4,8 @@ model Team {
   employees Employee[]
   systems   System[]
   manager  Manager?
-  status    Status     @default(ACTIVE)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  status    Status   @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   @@map("teams")
 }
