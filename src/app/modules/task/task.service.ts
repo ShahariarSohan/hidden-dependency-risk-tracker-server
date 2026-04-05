@@ -60,20 +60,19 @@ const createTask = async (req: Request & { user?: IAuthUser }) => {
 
     const baseUser = await tx.user.findUnique({ where: { email } });
 
+    let auditLog = null;
     if (baseUser) {
-      await tx.auditLog.create({
+      auditLog = await tx.auditLog.create({
         data: {
           userId: baseUser.id,
           action: "TASK_CREATED",
           entityId: newTask.id,
-          details: JSON.stringify({
-            message: `Task '${newTask.title}' was created`,
-          }),
+          details: `Task '${newTask.title}' was created`,
         },
       });
     }
 
-    return newTask;
+    return auditLog ? { ...newTask, auditLog } : newTask;
   });
 
   return result;
@@ -162,26 +161,25 @@ const softDeleteTask = async (taskId: string, email: string) => {
     });
 
     const baseUser = await tx.user.findUnique({ where: { email } });
+    let auditLog = null;
     if (baseUser) {
-      await tx.auditLog.create({
+      auditLog = await tx.auditLog.create({
         data: {
           userId: baseUser.id,
           action: "TASK_CANCELLED",
           entityId: taskId,
-          details: JSON.stringify({
-            message: `Task was cancelled. Previous status was ${task.status}.`,
-          }),
+          details: `Task was cancelled. Previous status was ${task.status}.`,
         },
       });
     }
 
-    return cancelledTask;
+    return auditLog ? { ...cancelledTask, auditLog } : cancelledTask;
   });
 
   return updated;
 };
 const getTaskById = async (id: string) => {
-  return prisma.task.findFirstOrThrow({
+  const task = await prisma.task.findFirstOrThrow({
     where: {
       id,
       status: {
@@ -195,6 +193,18 @@ const getTaskById = async (id: string) => {
       system: true,
     },
   });
+
+  const auditLogs = await prisma.auditLog.findMany({
+    where: { entityId: id },
+    orderBy: { createdAt: "desc" },
+    include: {
+       user: {
+         select: { email: true, role: true }
+       }
+    }
+  });
+
+  return { ...task, auditLogs };
 };
 const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatus.IN_PROGRESS|TaskStatus.COMPLETED, email: string) => {
   const task = await prisma.task.findUniqueOrThrow({
@@ -207,6 +217,14 @@ const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatu
       httpStatus.BAD_REQUEST,
       "Completed task cannot be modified"
     );
+   
+  }
+    if (task.status === TaskStatus.CANCELLED) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Cancelled task cannot be modified"
+    );
+
   }
 
   return prisma.$transaction(async (tx) => {
@@ -219,21 +237,20 @@ const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatu
     });
 
     const baseUser = await tx.user.findUnique({ where: { email } });
+    let auditLog = null;
     if (baseUser) {
       const action = status === TaskStatus.COMPLETED ? "TASK_COMPLETED" : "TASK_IN_PROGRESS";
-      await tx.auditLog.create({
+      auditLog = await tx.auditLog.create({
         data: {
           userId: baseUser.id,
           action,
           entityId: id,
-          details: JSON.stringify({
-            message: `Task status changed from ${task.status} to ${status}.`,
-          }),
+          details: `Task status changed from ${task.status} to ${status}.`,
         },
       });
     }
 
-    return updatedTask;
+    return auditLog ? { ...updatedTask, auditLog } : updatedTask;
   });
 };
 const getMyAssignedTasks = async (authUser: IAuthUser) => {

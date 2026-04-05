@@ -26,6 +26,9 @@ app.use("/api/v1", router);
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: "This is a Hidden Dependency Risk Tracker Server",
+    environment: envVariables.NODE_ENV,
+    uptime: process.uptime().toFixed(2) + "sec",
+    timeStamp: new Date().toISOString(),
   });
 });
 
