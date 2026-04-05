@@ -53,8 +53,27 @@ const createTask = async (req: Request & { user?: IAuthUser }) => {
     assignedByManagerId = manager.id;
   }
 
-  const result = await prisma.task.create({
-    data: { ...req.body, assignedByAdminId, assignedByManagerId },
+  const result = await prisma.$transaction(async (tx) => {
+    const newTask = await tx.task.create({
+      data: { ...req.body, assignedByAdminId, assignedByManagerId },
+    });
+
+    const baseUser = await tx.user.findUnique({ where: { email } });
+
+    if (baseUser) {
+      await tx.auditLog.create({
+        data: {
+          userId: baseUser.id,
+          action: "TASK_CREATED",
+          entityId: newTask.id,
+          details: JSON.stringify({
+            message: `Task '${newTask.title}' was created`,
+          }),
+        },
+      });
+    }
+
+    return newTask;
   });
 
   return result;
@@ -121,7 +140,7 @@ if (filterData.priority) {
     data: result,
   };
 };
-const softDeleteTask = async (taskId: string) => {
+const softDeleteTask = async (taskId: string, email: string) => {
   const task = await prisma.task.findUnique({
     where: { id: taskId },
   });
@@ -134,11 +153,29 @@ const softDeleteTask = async (taskId: string) => {
     throw new AppError(httpStatus.BAD_REQUEST, "Task is already completed");
   }
 
-  const updated = await prisma.task.update({
-    where: { id: taskId },
-    data: {
-      status: TaskStatus.CANCELLED,
-    },
+  const updated = await prisma.$transaction(async (tx) => {
+    const cancelledTask = await tx.task.update({
+      where: { id: taskId },
+      data: {
+        status: TaskStatus.CANCELLED,
+      },
+    });
+
+    const baseUser = await tx.user.findUnique({ where: { email } });
+    if (baseUser) {
+      await tx.auditLog.create({
+        data: {
+          userId: baseUser.id,
+          action: "TASK_CANCELLED",
+          entityId: taskId,
+          details: JSON.stringify({
+            message: `Task was cancelled. Previous status was ${task.status}.`,
+          }),
+        },
+      });
+    }
+
+    return cancelledTask;
   });
 
   return updated;
@@ -159,7 +196,7 @@ const getTaskById = async (id: string) => {
     },
   });
 };
-const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatus.IN_PROGRESS|TaskStatus.COMPLETED) => {
+const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatus.IN_PROGRESS|TaskStatus.COMPLETED, email: string) => {
   const task = await prisma.task.findUniqueOrThrow({
     where: { id },
   });
@@ -172,12 +209,31 @@ const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatu
     );
   }
 
-  return prisma.task.update({
-    where: { id },
-    data: {
-      status,
-      completedAt: status === TaskStatus.COMPLETED ? new Date() : task.completedAt,
-    },
+  return prisma.$transaction(async (tx) => {
+    const updatedTask = await tx.task.update({
+      where: { id },
+      data: {
+        status,
+        completedAt: status === TaskStatus.COMPLETED ? new Date() : task.completedAt,
+      },
+    });
+
+    const baseUser = await tx.user.findUnique({ where: { email } });
+    if (baseUser) {
+      const action = status === TaskStatus.COMPLETED ? "TASK_COMPLETED" : "TASK_IN_PROGRESS";
+      await tx.auditLog.create({
+        data: {
+          userId: baseUser.id,
+          action,
+          entityId: id,
+          details: JSON.stringify({
+            message: `Task status changed from ${task.status} to ${status}.`,
+          }),
+        },
+      });
+    }
+
+    return updatedTask;
   });
 };
 const getMyAssignedTasks = async (authUser: IAuthUser) => {

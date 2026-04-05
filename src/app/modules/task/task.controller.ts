@@ -34,9 +34,10 @@ const getAllTask = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
-const softDeleteTask = catchAsync(async (req: Request, res: Response) => {
+const softDeleteTask = catchAsync(async (req: Request & { user?: IAuthUser }, res: Response) => {
   const { id } = req.params;
-  const result = await taskService.softDeleteTask(id);
+  const email = (req.user as IAuthUser).email;
+  const result = await taskService.softDeleteTask(id, email);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -54,11 +55,12 @@ const getTaskById = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const updateTaskStatus = catchAsync(async (req, res) => {
+const updateTaskStatus = catchAsync(async (req: Request & { user?: IAuthUser }, res: Response) => {
   const { id } = req.params;
   const { status } = req.body;
+  const email = (req.user as IAuthUser).email;
 
-  const result = await taskService.updateTaskStatus(id, status);
+  const result = await taskService.updateTaskStatus(id, status, email);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
