@@ -65,6 +65,7 @@ const createTask = async (req: Request & { user?: IAuthUser }) => {
       auditLog = await tx.auditLog.create({
         data: {
           userId: baseUser.id,
+          systemId: newTask.systemId,
           action: "TASK_CREATED",
           entityId: newTask.id,
           details: `Task '${newTask.title}' was created`,
@@ -166,6 +167,7 @@ const softDeleteTask = async (taskId: string, email: string) => {
       auditLog = await tx.auditLog.create({
         data: {
           userId: baseUser.id,
+          systemId: cancelledTask.systemId,
           action: "TASK_CANCELLED",
           entityId: taskId,
           details: `Task was cancelled. Previous status was ${task.status}.`,
@@ -243,6 +245,7 @@ const updateTaskStatus = async (id: string, status: TaskStatus.PENDING|TaskStatu
       auditLog = await tx.auditLog.create({
         data: {
           userId: baseUser.id,
+          systemId: updatedTask.systemId,
           action,
           entityId: id,
           details: `Task status changed from ${task.status} to ${status}.`,

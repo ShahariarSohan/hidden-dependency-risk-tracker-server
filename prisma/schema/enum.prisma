@@ -10,6 +10,7 @@ enum TaskStatus {
   CANCELLED
   COMPLETED
 }
+
 enum Status {
   ACTIVE
   INACTIVE
@@ -22,6 +23,3 @@ enum AuditLogAction {
   TASK_COMPLETED
   TASK_CANCELLED
 }
-
-
-

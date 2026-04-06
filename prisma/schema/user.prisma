@@ -1,15 +1,16 @@
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  role      Role     @default(EMPLOYEE)
-  status    Status   @default(ACTIVE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  admin    Admin?
-  employee Employee?
-  manager  Manager?
-  auditLogs AuditLog[]
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  role          Role           @default(EMPLOYEE)
+  status        Status         @default(ACTIVE)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  admin         Admin?
+  employee      Employee?
+  manager       Manager?
+  auditLogs     AuditLog[]
   notifications Notification[]
+
   @@map("users")
 }

@@ -5,7 +5,7 @@ model Notification {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   isRead    Boolean  @default(false)
-  type      String   // "INFO", "WARNING", "CRITICAL"
+  type      String // "INFO", "WARNING", "CRITICAL"
   createdAt DateTime @default(now())
 
   @@map("notifications")

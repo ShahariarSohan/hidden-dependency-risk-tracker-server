@@ -1,14 +1,16 @@
 model System {
-  id          String   @id @default(uuid())
-  name        String  
+  id          String     @id @default(uuid())
+  name        String
   description String?
-  criticality Int      @default(1)
+  criticality Int        @default(1)
   teamId      String
-  team        Team     @relation(fields: [teamId], references: [id])
+  team        Team       @relation(fields: [teamId], references: [id])
   tasks       Task[]
-  status      Status   @default(ACTIVE)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  @@unique([name,teamId])
+  auditLogs   AuditLog[]
+  status      Status     @default(ACTIVE)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([name, teamId])
   @@map("systems")
 }

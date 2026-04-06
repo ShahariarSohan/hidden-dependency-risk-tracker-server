@@ -1,12 +1,13 @@
 model AuditLog {
-  id        String   @id @default(uuid())
+  id        String         @id @default(uuid())
   action    AuditLogAction
-  details   String?  // JSON string or description
+  details   String?
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  entityId  String?  // ID of the Task/System/Employee affected
-  createdAt DateTime @default(now())
-
+  user      User           @relation(fields: [userId], references: [id])
+  entityId  String? // ID of the Task/System/Employee affected
+  systemId  String?
+  system    System?        @relation(fields: [systemId], references: [id])
+  createdAt DateTime       @default(now())
 
   @@map("audit_logs")
 }
